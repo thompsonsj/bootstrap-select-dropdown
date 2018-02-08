@@ -1,0 +1,20 @@
+@import "~bootstrap/scss/bootstrap";
+@import "~highlight.js/styles/default.css";
+@import "./bootstrap-select-dropdown";
+
+/**
+ * Styles for docs only (not for dist).
+ */
+.hljs {
+  padding: $spacer;
+}
+.nav-secondary {
+  margin-top: map-get($spacers, 5);
+}
+.page-header {
+  margin: map-get($spacers, 5) 0 map-get($spacers, 3);
+  border-bottom: 1px solid $gray-400;
+  small {
+    @extend .text-muted;
+  }
+}
