@@ -7,8 +7,7 @@
 }(function($, window, document, undefined) {
   // Assign index numbers to each instance of the plugin
   var index = 0;
-  // Append require SVG.
-  $('body').append('<svg xmlns="http://www.w3.org/2000/svg" style="display: none;"><symbol viewBox="0 0 512 512" id="ion-close-circled"><path d="M256 33C132.3 33 32 133.3 32 257s100.3 224 224 224 224-100.3 224-224S379.7 33 256 33zm108.3 299.5c1.5 1.5 2.3 3.5 2.3 5.6 0 2.1-.8 4.2-2.3 5.6l-21.6 21.7c-1.6 1.6-3.6 2.3-5.6 2.3-2 0-4.1-.8-5.6-2.3L256 289.8l-75.4 75.7c-1.5 1.6-3.6 2.3-5.6 2.3-2 0-4.1-.8-5.6-2.3l-21.6-21.7c-1.5-1.5-2.3-3.5-2.3-5.6 0-2.1.8-4.2 2.3-5.6l75.7-76-75.9-75c-3.1-3.1-3.1-8.2 0-11.3l21.6-21.7c1.5-1.5 3.5-2.3 5.6-2.3 2.1 0 4.1.8 5.6 2.3l75.7 74.7 75.7-74.7c1.5-1.5 3.5-2.3 5.6-2.3 2.1 0 4.1.8 5.6 2.3l21.6 21.7c3.1 3.1 3.1 8.2 0 11.3l-75.9 75 75.6 75.9z"></path></symbol></svg>');
+
   // Create the defaults once
   var pluginName = "selectDropdown",
     defaults = {
@@ -20,6 +19,8 @@
       maxListLength: 4, // Maximum number of <option> text() values to display within the button.
       hideSelect: true, // Hide the select element.
       multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
+      search: true,
+      observeDomMutations: false,
 
       // Classes
       classDropdown: "dropdown",
@@ -55,17 +56,59 @@
 
       // Elements.
       _.elements = {}
+      _.elements.dropdownContainerId = _._name + 'Container' + _.index;
       _.elements.dropdownButtonId = _._name + 'Button' + _.index;
       _.elements.searchControlId = _._name + 'Search' + _.index;
       _.elements.button = _.buildButton();
       _.elements.dropdownItemsSelector = 'a' + _.classListToSelector( _.settings.classItem );
+      if ( _.settings.search ) {
+        _.elements.searchControl = _.buildSearchControl();
+        _.elements.searchContainer = _.buildSearchContainer();
+      }
       _.elements.dropdownMenu = _.buildDropdownMenu();
+      _.elements.dropdownMenuItems = _.elements.dropdownMenu.find( _.elements.dropdownItemsSelector );
+
+      // Initialise FuzzySet.
+      if ( _.settings.search ) {
+        _.fuzzySet = FuzzySet();
+        _.elements.dropdownMenuItems.each( function(){
+          _.fuzzySet.add( $(this).text() );
+        });
+        _.elements.searchControl.on('keyup', function(){
+          _.elements.dropdownMenuItems.data('sort', 0);
+          var s = $(this).val();
+          var results = null;
+          if ( s != '' ) {
+            results = _.fuzzySet.get( $(this).val() );
+          }
+          if ( results ) {
+            $.each( results, function( index, value ) {
+              _.elements.dropdownMenuItems
+                .filter(function(){
+                  return $(this).text() === value[1];
+                })
+                .data('sort', value[0] );
+            });
+          }
+          _.sort();
+        });
+      }
 
       // Build.
       _.setButtonText();
       var $dropdown = _.buildDropdown();
+      if ( _.settings.search ) {
+        $dropdown
+          .append( _.elements.searchContainer )
+          .find('.input-group-append')
+          .first()
+          .append( _.elements.button  );
+        _.elements.dropdownMenu.addClass('dropdown-menu-right');
+      } else {
+        $dropdown
+          .append( _.elements.button );
+      }
       $dropdown
-        .append( _.elements.button )
         .append( _.elements.dropdownMenu );
       $el.after( $dropdown );
       if ( _.settings.hideSelect ) {
@@ -73,7 +116,8 @@
       }
 
       // Assign click handler.
-      $dropdown.on('click', _.elements.dropdownItemsSelector, function(){
+      $dropdown.on('click', _.elements.dropdownItemsSelector, function( event ){
+        event.preventDefault();
         if ( $el.data( _._name + 'Multiselect') ) {
           $el.data( _._name + 'PreventHideDropdown', true );
         }
@@ -85,7 +129,7 @@
         }
         else {
           if ( !$el.data( _._name + 'Multiselect' ) ) {
-            $dropdown.find( _.elements.dropdownItemsSelector ).removeClass('active');
+            _.elements.dropdownMenu.find( _.elements.dropdownItemsSelector ).removeClass('active');
           }
           $option.prop('selected', true);
           $(this).addClass('active');
@@ -104,20 +148,25 @@
       }
 
       // DOM mutation observer
-      var config = { childList: true, subtree: true };
-      var callback = function( mutationsList ) {
-        for( var mutation of mutationsList ) {
-          if ( mutation.type == 'childList') {
-            _.refresh();
+      if ( _.settings.observeDomMutations ) {
+        var config = { childList: true, subtree: true };
+        var callback = function( mutationsList ) {
+          for( var mutation of mutationsList ) {
+            if ( mutation.type == 'childList') {
+              _.refresh();
+            }
           }
-        }
-      };
-      var observer = new MutationObserver( callback );
-      observer.observe( $el[0], config );
+        };
+        var observer = new MutationObserver( callback );
+        observer.observe( $el[0], config );
+      }
     },
     buildDropdown: function() {
       var _ = this;
-      return $dropdown = $('<div>', {class : _.settings.classDropdown });
+      return $dropdown = $('<div>', {
+        id : _.elements.dropdownContainerId,
+        class : _.settings.classDropdown
+      });
     },
     buildButton: function() {
       var _ = this;
@@ -126,6 +175,7 @@
         type: 'button',
         id: _.elements.dropdownButtonId,
         'data-toggle': 'dropdown',
+        'data-target': '#' + _.elements.dropdownContainerId,
         'aria-haspopup': 'true',
         'aria-expanded': 'false'
       });
@@ -136,7 +186,6 @@
         class: _.settings.classMenu,
         'aria-labelledby': _.elements.dropdownButtonId
       });
-      $dropdownMenu.append( _.buildSearchControl() );
       $.each( _.buildDropdownMenuItems(), function(){
         $dropdownMenu.append( $(this) );
       });
@@ -144,28 +193,25 @@
     },
     buildSearchControl: function() {
       var _ = this;
-      var $searchContainer = $('<div>', {
-        class: 'input-group input-group-sm dropdown-item'
-      });
-      var $input = $('<input>', {
+      return $input = $('<input>', {
         type: 'text',
         class: 'form-control',
         placeholder: 'Search',
         'aria-label': 'Search',
         'aria-describedby': _.elements.searchControlId
       });
-      var $button = $('<div>', {
+    },
+    buildSearchContainer: function() {
+      var _ = this;
+      var $searchContainer = $('<div>', {
+        class: 'input-group'
+      });
+      var $buttonContainer = $('<div>', {
         class: 'input-group-append'
-      }).append(
-        $('<button>', {
-          class: 'btn btn-outline-secondary',
-          type: 'button',
-          html: '<svg class="ion ion-close-circled" style="height: 0.875rem; width: 0.875rem;"><use xlink:href="#ion-close-circled"></use></svg>'
-        })
-      );
+      });
       return $searchContainer
-        .append( $input )
-        .append( $button );
+        .append( _.elements.searchControl )
+        .append( $buttonContainer );
     },
     buildDropdownMenuItems: function() {
       var _ = this;
@@ -195,11 +241,15 @@
     buildDropdownItem: function( $option ) {
       var _ = this;
       var $dropdownItem = $( '<a>', {
+        href: '#',
         class: _.settings.classItem,
         text: $option.text()
       });
       if ( $option.is(':selected') ) {
         $dropdownItem.addClass('active');
+      }
+      if ( _.settings.search ) {
+        $dropdownItem.data('sort', 0);
       }
       return $dropdownItem;
     },
@@ -231,6 +281,20 @@
       $.each( _.buildDropdownMenuItems(), function(){
         _.elements.dropdownMenu.append( $(this) );
       });
+    },
+    sort: function() {
+      //console.log('sort');
+      var _ = this;
+      _.elements.dropdownMenuItems.each( function() {
+        //console.log( $(this).data() );
+      });
+      //_.elements.dropdownMenu.html('');
+      var sorted = _.elements.dropdownMenuItems.sort( function( a, b ) {
+            //console.log( $(a).data('sort') + ' ' + $(b).data('sort') );
+           return parseFloat( $(a).data('sort') ) > parseFloat( $(b).data('sort') );
+      });
+      _.elements.dropdownMenu.html('').append( sorted );
+
     },
     classListToSelector: function( classList ) {
       var selector = classList;

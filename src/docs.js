@@ -2,6 +2,7 @@ require('./scss/docs.scss');
 import $ from 'jquery';
 import 'bootstrap';
 import 'popper.js';
+import 'fuzzyset.js';
 import hljs from 'highlight.js';
 hljs.initHighlightingOnLoad();
 require('./js/bootstrap-select-dropdown.js');
