@@ -5,4 +5,9 @@
   &.disabled {
     @extend .text-muted;
   }
+  &.hover {
+    color: $dropdown-link-hover-color;
+    text-decoration: none;
+    background-color: $dropdown-link-hover-bg;
+  }
 }

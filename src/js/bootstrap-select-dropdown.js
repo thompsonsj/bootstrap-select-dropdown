@@ -21,6 +21,7 @@
       multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
       search: true,
       observeDomMutations: false,
+      maxHeight: '300px', // Make the dropdown scrollable if beyond this height. Set as false to disable.
 
       // Classes
       classDropdown: "dropdown",
@@ -54,82 +55,116 @@
         $el.data( _._name + 'Multiselect', true );
       }
 
-      // Elements.
-      _.elements = {}
-      _.elements.dropdownContainerId = _._name + 'Container' + _.index;
-      _.elements.dropdownButtonId = _._name + 'Button' + _.index;
-      _.elements.searchControlId = _._name + 'Search' + _.index;
-      _.elements.button = _.buildButton();
-      _.elements.dropdownItemsSelector = 'a' + _.classListToSelector( _.settings.classItem );
+      // Properties: IDs.
+      _.ids = {};
+      _.ids.dropdownContainerId = _._name + 'Container' + _.index;
+      _.ids.dropdownButtonId = _._name + 'Button' + _.index;
+      _.ids.searchControlId = _._name + 'Search' + _.index;
+
+      // Properties: Selectors.
+      _.selectors = {};
+      _.selectors.dropdownItems = 'a' + _.classListToSelector( _.settings.classItem );
+
+      // Properties: Elements.
+      _.els = {};
+      _.els.button = _.buildButton();
       if ( _.settings.search ) {
-        _.elements.searchControl = _.buildSearchControl();
-        _.elements.searchContainer = _.buildSearchContainer();
+        _.els.searchControl = _.buildSearchControl();
+        _.els.searchContainer = _.buildSearchContainer();
       }
-      _.elements.dropdownMenu = _.buildDropdownMenu();
-      _.elements.dropdownMenuItems = _.elements.dropdownMenu.find( _.elements.dropdownItemsSelector );
+      _.els.dropdownMenu = _.buildDropdownMenu();
+      _.els.dropdownMenuItems = _.buildDropdownMenuItems();
+
+      // Observe the occurences of the following.
+      // _.els.dropdownMenu.find( _.selectors.dropdownItems );
+      // Why do we need to find tham again? Dows jQuery not store the reference when we append?
 
       // Initialise FuzzySet.
       if ( _.settings.search ) {
         _.fuzzySet = FuzzySet();
-        _.elements.dropdownMenuItems.each( function(){
+        _.els.dropdownMenuItems.each( function() {
           _.fuzzySet.add( $(this).text() );
         });
-        _.elements.searchControl.on('keyup', function(){
-          _.elements.dropdownMenuItems.data('sort', 0);
+        _.els.searchControl.on('keyup', function() {
+          var menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
+          menuItems.each( function(){
+            $(this).data('sort', '0');
+          });
           var s = $(this).val();
           var results = null;
-          if ( s != '' ) {
+          if ( $.trim( s ) == '' ) {
+            _.refresh();
+            return;
+          } else {
             results = _.fuzzySet.get( $(this).val() );
           }
           if ( results ) {
+            console.log(results);
             $.each( results, function( index, value ) {
-              _.elements.dropdownMenuItems
+              menuItems
                 .filter(function(){
                   return $(this).text() === value[1];
                 })
                 .data('sort', value[0] );
             });
+          } else {
+            _.refresh();
+            return;
           }
           _.sort();
+          _.hide();
         });
       }
+
+      // Handle cut and paste.
+      _.els.searchControl.bind({
+          paste : function(){
+            $(this).trigger('keyup');
+          },
+          cut : function(){
+            $(this).trigger('keyup');
+          }
+      });
+
 
       // Build.
       _.setButtonText();
       var $dropdown = _.buildDropdown();
       if ( _.settings.search ) {
         $dropdown
-          .append( _.elements.searchContainer )
+          .append( _.els.searchContainer )
           .find('.input-group-append')
           .first()
-          .append( _.elements.button  );
-        _.elements.dropdownMenu.addClass('dropdown-menu-right');
+          .append( _.els.button  );
+          _.els.dropdownMenu.addClass('dropdown-menu-right');
       } else {
         $dropdown
-          .append( _.elements.button );
+          .append( _.els.button );
       }
       $dropdown
-        .append( _.elements.dropdownMenu );
+        .append( _.els.dropdownMenu );
+      _.els.dropdownMenu
+        .append( _.els.dropdownMenuItems );
       $el.after( $dropdown );
       if ( _.settings.hideSelect ) {
         $el.hide();
       }
 
       // Assign click handler.
-      $dropdown.on('click', _.elements.dropdownItemsSelector, function( event ){
+      $dropdown.on('click', _.selectors.dropdownItems, function( event ){
         event.preventDefault();
         if ( $el.data( _._name + 'Multiselect') ) {
           $el.data( _._name + 'PreventHideDropdown', true );
         }
-        var itemIndex = $dropdown.find( _.elements.dropdownItemsSelector ).index( $(this) );
-        var $option = $el.find('option').eq(itemIndex);
+        var itemIndex = $(this).data('index');
+        var $option = $el.find('option').eq( itemIndex );
         if ( $option.is(':selected') ) {
           $option.prop('selected', false);
           $(this).removeClass('active');
         }
         else {
           if ( !$el.data( _._name + 'Multiselect' ) ) {
-            _.elements.dropdownMenu.find( _.elements.dropdownItemsSelector ).removeClass('active');
+            _.els.dropdownMenuItems.removeClass('active');
           }
           $option.prop('selected', true);
           $(this).addClass('active');
@@ -143,6 +178,20 @@
           if ( $el.data( _._name + 'PreventHideDropdown' ) ) {
             event.preventDefault();
             $el.data( _._name + 'PreventHideDropdown', false );
+          }
+        });
+      }
+
+      // On search focus: Toggle dropdown.
+      // - Can reliance on setTimeout be removed?
+      // - Should we depend on an aria attribute for plugin logic?
+      if ( _.settings.search ) {
+        _.els.searchControl.on('focusin', function(){
+          if ( _.els.button.attr('aria-expanded') == 'false' ) {
+            _.els.button.dropdown('toggle');
+            setTimeout(function(){
+              _.els.searchControl.focus();
+            }, 1);
           }
         });
       }
@@ -164,7 +213,7 @@
     buildDropdown: function() {
       var _ = this;
       return $dropdown = $('<div>', {
-        id : _.elements.dropdownContainerId,
+        id : _.ids.dropdownContainerId,
         class : _.settings.classDropdown
       });
     },
@@ -173,9 +222,9 @@
       return $('<button>', {
         class: _.settings.classBtn + ' dropdown-toggle',
         type: 'button',
-        id: _.elements.dropdownButtonId,
+        id: _.ids.dropdownButtonId,
         'data-toggle': 'dropdown',
-        'data-target': '#' + _.elements.dropdownContainerId,
+        'data-target': '#' + _.ids.dropdownContainerId,
         'aria-haspopup': 'true',
         'aria-expanded': 'false'
       });
@@ -184,11 +233,16 @@
       var _ = this;
       var $dropdownMenu = $('<div>', {
         class: _.settings.classMenu,
-        'aria-labelledby': _.elements.dropdownButtonId
+        'aria-labelledby': _.ids.dropdownButtonId
       });
-      $.each( _.buildDropdownMenuItems(), function(){
-        $dropdownMenu.append( $(this) );
-      });
+      if ( _.settings.maxHeight ) {
+        $dropdownMenu
+          .css({
+            'height': 'auto',
+            'max-height': _.settings.maxHeight,
+            'overflow-x': 'hidden'
+          });
+      }
       return $dropdownMenu;
     },
     buildSearchControl: function() {
@@ -198,7 +252,7 @@
         class: 'form-control',
         placeholder: 'Search',
         'aria-label': 'Search',
-        'aria-describedby': _.elements.searchControlId
+        'aria-describedby': _.ids.searchControlId
       });
     },
     buildSearchContainer: function() {
@@ -210,24 +264,26 @@
         class: 'input-group-append'
       });
       return $searchContainer
-        .append( _.elements.searchControl )
+        .append( _.els.searchControl )
         .append( $buttonContainer );
     },
     buildDropdownMenuItems: function() {
       var _ = this;
       var $el = $( _.element );
-      var $items = [];
+      var $items = $();
       var $optgroups = $el.find('optgroup');
       if ( $optgroups.length ) {
+        var i = 0;
         $optgroups.each( function(){
-          $items.push( _.buildDropdownHeader( $(this).attr('label') ) );
-          $(this).find('option').each(function(){
-            $items.push( _.buildDropdownItem( $(this) ) );
+          $items = $items.add( _.buildDropdownHeader( $( this ).attr('label') ) );
+          $( this ).find('option').each( function() {
+            $items = $items.add( _.buildDropdownItem( $( this ), i ) );
+            i++;
           });
         });
       } else {
-        $el.find('option').each(function(){
-          $items.push( _.buildDropdownItem( $(this) ) );
+        $el.find('option').each( function( index, value ) {
+          $items = $items.add( _.buildDropdownItem( $( this ), index ) );
         });
       }
       return $items;
@@ -238,25 +294,26 @@
         text: text
       });
     },
-    buildDropdownItem: function( $option ) {
+    buildDropdownItem: function( $option, index ) {
       var _ = this;
       var $dropdownItem = $( '<a>', {
         href: '#',
         class: _.settings.classItem,
-        text: $option.text()
+        text: $option.text(),
+        'data-index': index
       });
       if ( $option.is(':selected') ) {
         $dropdownItem.addClass('active');
       }
       if ( _.settings.search ) {
-        $dropdownItem.data('sort', 0);
+        $dropdownItem.data('sort', '0');
       }
       return $dropdownItem;
     },
     setButtonText: function() {
       var _ = this;
       var $el = $( _.element );
-      var $btn = _.elements.button;
+      var $btn = _.els.button;
       var selected = $el.val();
       if ( selected.length < 1 ) {
         $btn.text( _.settings.textNoneSelected );
@@ -276,25 +333,34 @@
     },
     refresh: function() {
       var _ = this;
-      var items = _.buildDropdownMenuItems();
-      _.elements.dropdownMenu.html('');
+      _.els.dropdownMenuItems = _.buildDropdownMenuItems();
+      _.els.dropdownMenu.html('');
       $.each( _.buildDropdownMenuItems(), function(){
-        _.elements.dropdownMenu.append( $(this) );
+        _.els.dropdownMenu.append( $(this) );
       });
     },
-    sort: function() {
-      //console.log('sort');
+    hide: function() {
       var _ = this;
-      _.elements.dropdownMenuItems.each( function() {
-        //console.log( $(this).data() );
+      var menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
+      menuItems.show();
+      menuItems.each( function() {
+        if ( $(this).data('sort') === '0' ) {
+          $(this).hide();
+        }
       });
-      //_.elements.dropdownMenu.html('');
-      var sorted = _.elements.dropdownMenuItems.sort( function( a, b ) {
-            //console.log( $(a).data('sort') + ' ' + $(b).data('sort') );
-           return parseFloat( $(a).data('sort') ) > parseFloat( $(b).data('sort') );
-      });
-      _.elements.dropdownMenu.html('').append( sorted );
-
+      _.els.button.dropdown('update');
+    },
+    sort: function() {
+      var _ = this;
+      var $menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
+      $menuItems.removeClass('hover');
+      $menuItems.sort( function( a, b ) {
+           return parseFloat( $(a).data('sort') ) < parseFloat( $(b).data('sort') );
+      }).appendTo( _.els.dropdownMenu );
+      $menuItems.first().addClass('hover');
+      _.els.dropdownMenu.animate({
+          scrollTop: 0
+      }, 500);
     },
     classListToSelector: function( classList ) {
       var selector = classList;
