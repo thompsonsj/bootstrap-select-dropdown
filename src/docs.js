@@ -2,7 +2,8 @@ require('./scss/docs.scss');
 import $ from 'jquery';
 import 'bootstrap';
 import 'popper.js';
-import 'fuzzyset.js';
+import Fuse from 'fuse.js';
+window.Fuse = Fuse;
 import hljs from 'highlight.js';
 hljs.initHighlightingOnLoad();
 require('./js/bootstrap-select-dropdown.js');
@@ -18,7 +19,7 @@ $(document).ready(function(){
   });
   $.each( demoIds, function( index, value ){
     $('#' + value ).selectDropdown({
-      hideSelect: false
+      //hideSelect: false
     });
   });
 });

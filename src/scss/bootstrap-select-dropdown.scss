@@ -9,5 +9,9 @@
     color: $dropdown-link-hover-color;
     text-decoration: none;
     background-color: $dropdown-link-hover-bg;
+    &.active {
+      /* Ensure `.active` overrides `.hover`. */
+      @extend .active;
+    }
   }
 }
