@@ -58,7 +58,7 @@
         _.data.multiselect = true;
       }
       _.data.status = 'initial';
-      _.data.count = 0;
+      _.data.indexes = [];
 
       // Properties: IDs.
       _.ids = {};
@@ -70,11 +70,11 @@
 
       // Properties: Classes.
       _.classes = {};
-      _.classes.dropdownItem = _.prefix + 'item';
+      _.classes.dropdownOption = _.prefix + 'option';
 
       // Properties: Selectors.
       _.selectors = {};
-      _.selectors.dropdownItems = 'a.' + _.classes.dropdownItem;
+      _.selectors.dropdownOptions = 'a.' + _.classes.dropdownOption;
       _.selectors.dropdownItemDeselect = 'a#' + _.ids.dropdownItemDeselect;
       _.selectors.dropdownItemShowSelected = 'a#' + _.ids.dropdownItemShowSelected;
 
@@ -85,8 +85,17 @@
         _.els.searchControl = _.buildSearchControl();
         _.els.searchContainer = _.buildSearchContainer();
       }
+      _.els.controlDeselect = _.buildDeselectAll();
+      _.els.controlSelected = _.buildShowSelected()
       _.els.dropdownMenu = _.buildDropdownMenu();
       _.els.dropdownMenuItems = _.buildDropdownMenuItems();
+      _.els.dropdownMenuOptions = _.els.dropdownMenuItems.filter( function() {
+        var attr = $( this ).data('option');
+        if (typeof attr !== typeof undefined && attr !== false) {
+          return true;
+        }
+        return false;
+      });
 
       // Observe the occurences of the following.
       // _.els.dropdownMenu.find( _.selectors.dropdownItems );
@@ -99,17 +108,13 @@
           keys: ['text'],
           id: 'index'
         };
-        _.els.dropdownMenuItems.filter( _.selectors.dropdownItems ).each( function( index ) {
+        _.els.dropdownMenuOptions.each( function( index ) {
           haystack[ index ] = {
             index : $( this ).data('index'),
             text : $( this ).text()
           };
         });
         _.els.searchControl.on('keyup', function() {
-          var menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
-          menuItems.each( function(){
-            $(this).data('sort', '0');
-          });
           var s = $(this).val();
           var results = null;
           if ( $.trim( s ) == '' ) {
@@ -120,19 +125,13 @@
             results = fuse.search( $(this).val() );
           }
           if ( results ) {
-            $.each( results, function( index, value ) {
-              menuItems
-                .filter(function(){
-                  return $(this).data('index') == value;
-                })
-                .data('sort', index );
-            });
+            // Continue.
           } else {
             _.refresh();
             return;
           }
           //_.sort();
-          _.hide();
+          _.hide( results );
           _.reorder( results );
         });
       }
@@ -171,27 +170,31 @@
       }
 
       // Assign click handler: Select item.
-      $dropdown.on('click', _.selectors.dropdownItems, function( event ){
+      _.els.dropdownMenuOptions.on('click', function( event ){
         event.preventDefault();
         _.toggle( $(this) );
       });
 
       // Assign click handler: Deselect all.
-      $dropdown.on('click', _.selectors.dropdownItemDeselect, function( event ){
+      _.els.controlDeselect.on('click', function( event ){
         event.preventDefault();
         $dropdown.one('hide.bs.dropdown', function ( event ) {
           event.preventDefault();
         });
-        _.deselectAll();
+        if ( !$(this).hasClass('disabled') ) {
+          _.deselectAll();
+        }
       });
 
       // Assign click handler: Show selected.
-      $dropdown.on('click', _.selectors.dropdownItemShowSelected, function( event ){
+      _.els.controlSelected.on('click', function( event ){
         event.preventDefault();
         $dropdown.one('hide.bs.dropdown', function ( event ) {
           event.preventDefault();
         });
-        _.sortSelected();
+        if ( !$(this).hasClass('disabled') ) {
+          _.sortSelected();
+        }
       });
 
       // Assign 'Enter' key listener for search.
@@ -224,6 +227,8 @@
           }
         });
       }
+
+      _.refreshInitialControls();
 
       // DOM mutation observer
       if ( _.settings.observeDomMutations ) {
@@ -299,25 +304,38 @@
     buildDropdownMenuItems: function() {
       var _ = this;
       var $el = $( _.element );
+      var s = 0; // Sort index
+      var o = 0; // Option index
       //var $items = $();
-      var $items = _.buildDeselectAll();
-      var $items = $items.add( _.buildShowSelected() );
+      var $items = _.els.controlDeselect.data('index', s );
+      s = _.incrementIndex( s );
+      $items = $items.add( _.els.controlSelected.data('index', s ) );
+      s = _.incrementIndex( s );
       var $optgroups = $el.find('optgroup');
       if ( $optgroups.length ) {
-        var i = 0;
         $optgroups.each( function(){
-          $items = $items.add( _.buildDropdownHeader( $( this ).attr('label') ) );
+          $items = $items.add( _.buildDropdownHeader( $( this ).attr('label') ).data('index', s ) );
+          s = _.incrementIndex( s );
           $( this ).find('option').each( function() {
-            $items = $items.add( _.buildDropdownItem( $( this ), i ) );
-            i++;
+            $items = $items.add( _.buildDropdownOption( $( this ) ).data('index', s ).data('option', o) );
+            s = _.incrementIndex( s );
+            o++;
           });
         });
       } else {
         $el.find('option').each( function( index, value ) {
-          $items = $items.add( _.buildDropdownItem( $( this ), index ) );
+          $items = $items.add( _.buildDropdownOption( $( this ) ).data('index', s ).data('option', o) );
+          s = _.incrementIndex( s );
+          o++;
         });
       }
       return $items;
+    },
+    incrementIndex: function( index ) {
+      var _ = this;
+      _.data.indexes.push( index.toString() );
+      index++;
+      return index;
     },
     buildDropdownHeader: function( text ) {
       return $( '<h6>', {
@@ -325,21 +343,37 @@
         text: text
       });
     },
-    buildDropdownItem: function( $option, index ) {
+    buildDropdownOption: function( $option ) {
       var _ = this;
-      var $dropdownItem = $( '<a>', {
+      var $dropdownOption = $( '<a>', {
         href: '#',
-        class: _.settings.classItem + ' ' + _.classes.dropdownItem,
-        text: $option.text(),
-        'data-index': index
+        class: _.settings.classItem + ' ' + _.classes.dropdownOption,
+        text: $option.text()
       });
       if ( $option.is(':selected') ) {
-        $dropdownItem.addClass('active');
+        $dropdownOption.addClass('active');
       }
-      if ( _.settings.search ) {
-        $dropdownItem.data('sort', '0');
-      }
-      return $dropdownItem;
+      return $dropdownOption;
+    },
+    buildDeselectAll: function() {
+      var _ = this;
+      var $deselectItem = $('<a>', {
+        href: '#',
+        id: _.ids.dropdownItemDeselect,
+        class:  _.settings.classItem,
+        text: 'Deselect all'
+      });
+      return $deselectItem;
+    },
+    buildShowSelected: function() {
+      var _ = this;
+      var $showSelectedItem = $('<a>', {
+        href: '#',
+        id: _.ids.dropdownItemShowSelected,
+        class:  _.settings.classItem,
+        text: 'Show selected'
+      });
+      return $showSelectedItem;
     },
     toggle: function( $dropdownItem ) {
       var _ = this;
@@ -347,7 +381,7 @@
       if ( _.data.multiselect ) {
         _.data.preventHideDropdown = true;
       }
-      var itemIndex = $dropdownItem.data('index');
+      var itemIndex = $dropdownItem.data('option');
       var $option = $el.find('option').eq( itemIndex );
       if ( $option.is(':selected') ) {
         $option.prop('selected', false);
@@ -355,17 +389,18 @@
       }
       else {
         if ( !_.data.multiselect ) {
-          _.els.dropdownMenuItems.removeClass('active');
+          _.els.dropdownMenuOptions.removeClass('active');
         }
         $option.prop('selected', true);
         $dropdownItem.addClass('active');
       }
       _.setButtonText();
+      _.refreshInitialControls();
     },
     deselectAll: function() {
       var _ = this;
       var $el =  $( _.element );
-      _.els.dropdownMenuItems.each( function(){
+      _.els.dropdownMenuOptions.each( function(){
         _.deselect( $( this ) );
       });
       if ( _.data.status == 'sort-selected' ) {
@@ -375,7 +410,7 @@
     deselect: function( $dropdownItem ){
       var _ = this;
       var $el =  $( _.element );
-      var itemIndex = $dropdownItem.data('index');
+      var itemIndex = $dropdownItem.data('option');
       var $option = $el.find('option').eq( itemIndex );
       if ( $option.is(':selected') ) {
         _.toggle( $dropdownItem );
@@ -405,27 +440,30 @@
     refresh: function() {
       var _ = this;
       _.data.status = 'initial';
-      _.els.dropdownMenuItems.removeClass('hover').show();
+      _.els.dropdownMenuOptions.removeClass('hover').show();
       _.sortReset();
       _.showInitialControls();
     },
-    hide: function() {
+    hide: function( results ) {
       var _ = this;
-      var $menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
-      $menuItems.show().removeClass('hover');
-      _.hideInitialControls();
-      $menuItems.each( function() {
-        if ( $(this).data('sort') === '0' ) {
-          $(this).hide();
-        }
+      var notResults = $(_.data.indexes).not(results).get();
+      _.els.dropdownMenuOptions.show().removeClass('hover');
+      $.each( notResults, function( index, value ) {
+        _.dropdownItemByIndex( value ).hide();
       });
-      $menuItems.each( function () {
+      _.els.dropdownMenuOptions.each( function () {
         if ($(this).css('display') != 'none') {
           $(this).addClass('hover');
           return false;
         }
       });
       _.els.button.dropdown('update');
+    },
+    dropdownItemByIndex: function( index ) {
+      var _ = this;
+      return _.els.dropdownMenuItems.filter( function(){
+        return $(this).data('index') == index;
+      });
     },
     reorder: function( indexes ) {
       var _ = this;
@@ -439,54 +477,48 @@
     },
     hideInitialControls: function() {
       var _ = this;
-      _.els.dropdownMenu.find( _.selectors.dropdownItemDeselect ).hide();
-      _.els.dropdownMenu.find( _.selectors.dropdownItemShowSelected ).hide();
+      _.els.controlDeselect.hide();
+      _.els.controlSelected.hide();
     },
-    showInitialControls: function() {
+    showInitialControls: function( prepend ) {
+      prepend = (typeof prepend !== 'undefined') ?  prepend : false;
       var _ = this;
-      _.els.dropdownMenu.find( _.selectors.dropdownItemShowSelected ).prependTo( _.els.dropdownMenu ).show();
-      _.els.dropdownMenu.find( _.selectors.dropdownItemDeselect ).prependTo( _.els.dropdownMenu ).show();
+      if ( prepend ) {
+        _.els.controlSelected.prependTo( _.els.dropdownMenu );
+        _.els.controlDeselect.prependTo( _.els.dropdownMenu );
+      }
+      _.els.controlSelected.show();
+      _.els.controlDeselect.show();
+    },
+    refreshInitialControls: function() {
+      var _ = this;
+      var $el = $( _.element );
+      if ( !$el.val() || $el.val().length == 0 ) {
+        _.els.controlDeselect.addClass('disabled');
+        _.els.controlSelected.addClass('disabled');
+      } else {
+        _.els.controlDeselect.removeClass('disabled');
+        _.els.controlSelected.removeClass('disabled');
+      }
     },
     sortReset: function() {
       var _ = this;
-      for ( i = _.els.dropdownMenuItems.length; i > 0; i--) {
-        _.els.dropdownMenu.find( '[data-index="' + i + '"]' ).prependTo( _.els.dropdownMenu );
+      for ( i = _.els.dropdownMenuItems.length; i >= 0; i--) {
+        _.dropdownItemByIndex( i ).prependTo( _.els.dropdownMenu );
       }
     },
     sortSelected: function() {
       var _ = this;
-      var $el =  $( _.element );
-      var $menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
-      $menuItems.removeClass('hover');
-      $menuItems.sort( function( a, b ) {
-        var aSelected = $(a).hasClass('active');
-        var bSelected = $(b).hasClass('active');
-        return (aSelected === bSelected) ? 0 : aSelected ? -1 : 1;
-      }).appendTo( _.els.dropdownMenu );
+      var $el = $( _.element );
+      _.els.dropdownMenuOptions.removeClass('hover');
+      $( _.els.dropdownMenu.find('.active').get().reverse() ).each( function(){
+        $( this ).prependTo( _.els.dropdownMenu );
+      });
+      _.showInitialControls( true );
       _.data.status = 'sort-selected';
       _.els.dropdownMenu.animate({
           scrollTop: 0
       }, 500);
-    },
-    buildDeselectAll: function() {
-      var _ = this;
-      var $deselectItem = $('<a>', {
-        href: '#',
-        id: _.ids.dropdownItemDeselect,
-        class:  _.settings.classItem,
-        text: 'Deselect all'
-      });
-      return $deselectItem;
-    },
-    buildShowSelected: function() {
-      var _ = this;
-      var $showSelectedItem = $('<a>', {
-        href: '#',
-        id: _.ids.dropdownItemShowSelected,
-        class:  _.settings.classItem,
-        text: 'Show selected'
-      });
-      return $showSelectedItem;
     },
     classListToSelector: function( classList ) {
       var selector = classList;
