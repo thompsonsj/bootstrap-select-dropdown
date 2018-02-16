@@ -45,8 +45,9 @@
   // Avoid Plugin.prototype conflicts
   $.extend( Plugin.prototype, {
     init: function() {
-      var _ = this; //Deep reference to this.
+      var _ = this; // Deep reference to this.
       var $el = $( _.element );
+      _.prefix = 'bsd' + _.index + '-'; // Prefix for unique labelling.
 
       // Data.
       $el.data( _._name + 'Multiselect', false );
@@ -59,15 +60,15 @@
 
       // Properties: IDs.
       _.ids = {};
-      _.ids.dropdownContainerId = _._name + 'Container' + _.index;
-      _.ids.dropdownButtonId = _._name + 'Button' + _.index;
-      _.ids.searchControlId = _._name + 'Search' + _.index;
-      _.ids.dropdownItemDeselect = _._name + 'Deselect' + _.index;
-      _.ids.dropdownItemShowSelected = _._name + 'ShowSelected' + _.index;
+      _.ids.dropdownContainerId = _.prefix + 'container';
+      _.ids.dropdownButtonId = _.prefix + 'button';
+      _.ids.searchControlId = _.prefix + 'search';
+      _.ids.dropdownItemDeselect = _.prefix + 'deselect';
+      _.ids.dropdownItemShowSelected = _.prefix + 'selected';
 
       // Properties: Classes.
       _.classes = {};
-      _.classes.dropdownItem = _._name + 'Item' + _.index;
+      _.classes.dropdownItem = _.prefix + 'item';
 
       // Properties: Selectors.
       _.selectors = {};
