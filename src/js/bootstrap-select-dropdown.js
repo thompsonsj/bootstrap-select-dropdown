@@ -49,14 +49,15 @@
       var $el = $( _.element );
       _.prefix = 'bsd' + _.index + '-'; // Prefix for unique labelling.
 
-      // Data.
-      $el.data( _._name + 'Multiselect', false );
-      $el.data( _._name + 'PreventHideDropdown', false );
+      // Properties: Data.
+      _.data = {};
+      _.data.multiselect = false;
+      _.data.preventHideDropdown = false;
       var attrMultiple = $el.attr('multiple');
       if ( typeof attrMultiple !== typeof undefined && attrMultiple !== false ) {
-        $el.data( _._name + 'Multiselect', true );
+        _.data.multiselect = true;
       }
-      $el.data( _._name + 'Status', 'initial' );
+      _.data.status = 'initial';
 
       // Properties: IDs.
       _.ids = {};
@@ -131,7 +132,7 @@
           }
           //_.sort();
           _.hide();
-          _.sortByValues( results );
+          _.reorder( results );
         });
       }
 
@@ -200,11 +201,11 @@
       });
 
       // Prevent dropdown hide on interaction for multiselect.
-      if ( $el.data( _._name + 'Multiselect' ) && _.settings.multiselectStayOpen ) {
+      if ( _.data.multiselect && _.settings.multiselectStayOpen ) {
         $dropdown.on('hide.bs.dropdown', function ( event ) {
-          if ( $el.data( _._name + 'PreventHideDropdown' ) ) {
+          if ( _.data.preventHideDropdown ) {
             event.preventDefault();
-            $el.data( _._name + 'PreventHideDropdown', false );
+            _.data.preventHideDropdown = false;
           }
         });
       }
@@ -342,8 +343,8 @@
     toggle: function( $dropdownItem ) {
       var _ = this;
       var $el =  $( _.element );
-      if ( $el.data( _._name + 'Multiselect') ) {
-        $el.data( _._name + 'PreventHideDropdown', true );
+      if ( _.data.multiselect ) {
+        _.data.preventHideDropdown = true;
       }
       var itemIndex = $dropdownItem.data('index');
       var $option = $el.find('option').eq( itemIndex );
@@ -352,7 +353,7 @@
         $dropdownItem.removeClass('active');
       }
       else {
-        if ( !$el.data( _._name + 'Multiselect' ) ) {
+        if ( !_.data.multiselect ) {
           _.els.dropdownMenuItems.removeClass('active');
         }
         $option.prop('selected', true);
@@ -366,7 +367,7 @@
       _.els.dropdownMenuItems.each( function(){
         _.deselect( $( this ) );
       });
-      if ( $el.data( _._name + 'Status' ) == 'sort-selected' ) {
+      if ( _.data.status == 'sort-selected' ) {
         _.refresh();
       }
     },
@@ -403,7 +404,7 @@
     refresh: function() {
       var _ = this;
       $el = $( _.element );
-      $el.data( _._name + 'Status', 'initial' );
+      _.data.status = 'initial';
       _.els.dropdownMenuItems = _.buildDropdownMenuItems();
       _.els.dropdownMenu.html('');
       $.each( _.buildDropdownMenuItems(), function(){
@@ -429,7 +430,7 @@
       });
       _.els.button.dropdown('update');
     },
-    sortByValues: function( indexes ) {
+    reorder: function( indexes ) {
       var _ = this;
       if ( indexes === undefined || indexes.length == 0) {
         return;
@@ -439,14 +440,13 @@
         _.els.dropdownMenu.find( '[data-index="' + value + '"]' ).prependTo( _.els.dropdownMenu );
       });
     },
-    sort: function() {
+    sortReset: function() {
       var _ = this;
       var $el =  $( _.element );
       var $menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
       $menuItems.sort( function( a, b ) {
         return parseInt( $(a).data('sort') ) > parseInt( $(b).data('sort') );
       }).appendTo( _.els.dropdownMenu );
-      //$el.data( _._name + 'Status', 'sort-search' );
       _.els.dropdownMenu.animate({
           scrollTop: 0
       }, 500);
@@ -461,7 +461,7 @@
         var bSelected = $(b).hasClass('active');
         return (aSelected === bSelected) ? 0 : aSelected ? -1 : 1;
       }).appendTo( _.els.dropdownMenu );
-      $el.data( _._name + 'Status', 'sort-selected' );
+      _.data.status = 'sort-selected';
       _.els.dropdownMenu.animate({
           scrollTop: 0
       }, 500);
