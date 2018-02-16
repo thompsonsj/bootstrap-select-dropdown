@@ -58,6 +58,7 @@
         _.data.multiselect = true;
       }
       _.data.status = 'initial';
+      _.data.count = 0;
 
       // Properties: IDs.
       _.ids = {};
@@ -403,20 +404,16 @@
     },
     refresh: function() {
       var _ = this;
-      $el = $( _.element );
       _.data.status = 'initial';
-      _.els.dropdownMenuItems = _.buildDropdownMenuItems();
-      _.els.dropdownMenu.html('');
-      $.each( _.buildDropdownMenuItems(), function(){
-        _.els.dropdownMenu.append( $(this) );
-      });
+      _.els.dropdownMenuItems.removeClass('hover').show();
+      _.sortReset();
+      _.showInitialControls();
     },
     hide: function() {
       var _ = this;
       var $menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
       $menuItems.show().removeClass('hover');
-      _.els.dropdownMenu.find( _.selectors.dropdownItemDeselect ).hide();
-      _.els.dropdownMenu.find( _.selectors.dropdownItemShowSelected ).hide();
+      _.hideInitialControls();
       $menuItems.each( function() {
         if ( $(this).data('sort') === '0' ) {
           $(this).hide();
@@ -440,16 +437,21 @@
         _.els.dropdownMenu.find( '[data-index="' + value + '"]' ).prependTo( _.els.dropdownMenu );
       });
     },
+    hideInitialControls: function() {
+      var _ = this;
+      _.els.dropdownMenu.find( _.selectors.dropdownItemDeselect ).hide();
+      _.els.dropdownMenu.find( _.selectors.dropdownItemShowSelected ).hide();
+    },
+    showInitialControls: function() {
+      var _ = this;
+      _.els.dropdownMenu.find( _.selectors.dropdownItemShowSelected ).prependTo( _.els.dropdownMenu ).show();
+      _.els.dropdownMenu.find( _.selectors.dropdownItemDeselect ).prependTo( _.els.dropdownMenu ).show();
+    },
     sortReset: function() {
       var _ = this;
-      var $el =  $( _.element );
-      var $menuItems = _.els.dropdownMenu.find( _.selectors.dropdownItems );
-      $menuItems.sort( function( a, b ) {
-        return parseInt( $(a).data('sort') ) > parseInt( $(b).data('sort') );
-      }).appendTo( _.els.dropdownMenu );
-      _.els.dropdownMenu.animate({
-          scrollTop: 0
-      }, 500);
+      for ( i = _.els.dropdownMenuItems.length; i > 0; i--) {
+        _.els.dropdownMenu.find( '[data-index="' + i + '"]' ).prependTo( _.els.dropdownMenu );
+      }
     },
     sortSelected: function() {
       var _ = this;
