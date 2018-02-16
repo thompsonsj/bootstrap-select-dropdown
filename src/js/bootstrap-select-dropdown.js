@@ -133,6 +133,7 @@
           //_.sort();
           _.hide( results );
           _.reorder( results );
+          _.resetScroll();
         });
       }
 
@@ -440,7 +441,7 @@
     refresh: function() {
       var _ = this;
       _.data.status = 'initial';
-      _.els.dropdownMenuOptions.removeClass('hover').show();
+      _.els.dropdownMenuItems.removeClass('hover').show();
       _.sortReset();
       _.showInitialControls();
     },
@@ -448,14 +449,9 @@
       var _ = this;
       var notResults = $(_.data.indexes).not(results).get();
       _.els.dropdownMenuOptions.show().removeClass('hover');
+      _.dropdownItemByIndex( results[0] ).addClass('hover');
       $.each( notResults, function( index, value ) {
         _.dropdownItemByIndex( value ).hide();
-      });
-      _.els.dropdownMenuOptions.each( function () {
-        if ($(this).css('display') != 'none') {
-          $(this).addClass('hover');
-          return false;
-        }
       });
       _.els.button.dropdown('update');
     },
@@ -465,21 +461,11 @@
         return $(this).data('index') == index;
       });
     },
-    reorder: function( indexes ) {
-      var _ = this;
-      if ( indexes === undefined || indexes.length == 0) {
-        return;
-      }
-      indexes = indexes.reverse();
-      $.each( indexes, function( index, value ) {
-        _.els.dropdownMenu.find( '[data-index="' + value + '"]' ).prependTo( _.els.dropdownMenu );
-      });
-    },
-    hideInitialControls: function() {
+    /*hideInitialControls: function() {
       var _ = this;
       _.els.controlDeselect.hide();
       _.els.controlSelected.hide();
-    },
+    },*/
     showInitialControls: function( prepend ) {
       prepend = (typeof prepend !== 'undefined') ?  prepend : false;
       var _ = this;
@@ -501,12 +487,38 @@
         _.els.controlSelected.removeClass('disabled');
       }
     },
+    /**
+     * Sort: Reset sort order.
+     * @return void
+     */
     sortReset: function() {
       var _ = this;
       for ( i = _.els.dropdownMenuItems.length; i >= 0; i--) {
         _.dropdownItemByIndex( i ).prependTo( _.els.dropdownMenu );
       }
     },
+    /**
+     * Sort: Order by array values.
+     *
+     * Reorder according to an array of index values.
+     * @param  {array} indexes Array of index values (strings).
+     * @return void
+     */
+    reorder: function( indexes ) {
+      var _ = this;
+      if ( indexes === undefined || indexes.length == 0) {
+        return;
+      }
+      indexes = indexes.reverse();
+      $.each( indexes, function( index, value ) {
+        _.dropdownItemByIndex( value ).prependTo( _.els.dropdownMenu );
+      });
+      _.showInitialControls( true );
+    },
+    /**
+     * Sort: Move selected items to the top.
+     * @return void
+     */
     sortSelected: function() {
       var _ = this;
       var $el = $( _.element );
@@ -516,10 +528,27 @@
       });
       _.showInitialControls( true );
       _.data.status = 'sort-selected';
+      _.resetScroll();
+    },
+    /**
+     * Helper: Reset scroll.
+     *
+     * Scroll the dropdown menu to the top.
+     * @return {[type]} [description]
+     */
+    resetScroll: function() {
+      var _ = this;
       _.els.dropdownMenu.animate({
           scrollTop: 0
-      }, 500);
+      }, 50);
     },
+    /**
+     * Helper: Class to selector.
+     *
+     * Convert a space separated class list to a selector.
+     * @param  {string} classList Space separated list of classes.
+     * @return {string}           Selector.
+     */
     classListToSelector: function( classList ) {
       var selector = classList;
       if ( classList.length ) {
