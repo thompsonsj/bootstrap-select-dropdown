@@ -129,8 +129,9 @@
             _.refresh();
             return;
           }
-          _.sort();
+          //_.sort();
           _.hide();
+          _.sortByValues( results );
         });
       }
 
@@ -427,6 +428,16 @@
         }
       });
       _.els.button.dropdown('update');
+    },
+    sortByValues: function( indexes ) {
+      var _ = this;
+      if ( indexes === undefined || indexes.length == 0) {
+        return;
+      }
+      indexes = indexes.reverse();
+      $.each( indexes, function( index, value ) {
+        _.els.dropdownMenu.find( '[data-index="' + value + '"]' ).prependTo( _.els.dropdownMenu );
+      });
     },
     sort: function() {
       var _ = this;
