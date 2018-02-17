@@ -44,7 +44,7 @@
 
   // Avoid Plugin.prototype conflicts
   $.extend( Plugin.prototype, {
-    init: function() {
+    init() {
       var _ = this; // Deep reference to this.
       var $el = $( _.element );
       _.prefix = 'bsd' + _.index + '-'; // Prefix for unique labelling.
@@ -139,10 +139,10 @@
 
       // Handle cut and paste.
       _.els.searchControl.bind({
-          paste : function(){
+          paste (){
             $(this).trigger('keyup');
           },
-          cut : function(){
+          cut (){
             $(this).trigger('keyup');
           }
       });
@@ -245,14 +245,14 @@
         observer.observe( $el[0], config );
       }
     },
-    buildDropdown: function() {
+    buildDropdown() {
       var _ = this;
       return $dropdown = $('<div>', {
         id : _.ids.dropdownContainerId,
         class : _.settings.classDropdown
       });
     },
-    buildButton: function() {
+    buildButton() {
       var _ = this;
       return $('<button>', {
         class: _.settings.classBtn + ' dropdown-toggle',
@@ -264,7 +264,7 @@
         'aria-expanded': 'false'
       });
     },
-    buildDropdownMenu: function() {
+    buildDropdownMenu() {
       var _ = this;
       var $dropdownMenu = $('<div>', {
         class: _.settings.classMenu,
@@ -280,7 +280,7 @@
       }
       return $dropdownMenu;
     },
-    buildSearchControl: function() {
+    buildSearchControl() {
       var _ = this;
       return $input = $('<input>', {
         type: 'text',
@@ -290,7 +290,7 @@
         'aria-describedby': _.ids.searchControlId
       });
     },
-    buildSearchContainer: function() {
+    buildSearchContainer() {
       var _ = this;
       var $searchContainer = $('<div>', {
         class: 'input-group'
@@ -302,7 +302,7 @@
         .append( _.els.searchControl )
         .append( $buttonContainer );
     },
-    buildDropdownMenuItems: function() {
+    buildDropdownMenuItems() {
       var _ = this;
       var $el = $( _.element );
       var s = 0; // Sort index
@@ -332,19 +332,19 @@
       }
       return $items;
     },
-    incrementIndex: function( index ) {
+    incrementIndex( index ) {
       var _ = this;
       _.data.indexes.push( index.toString() );
       index++;
       return index;
     },
-    buildDropdownHeader: function( text ) {
+    buildDropdownHeader( text ) {
       return $( '<h6>', {
         class: 'dropdown-header',
         text: text
       });
     },
-    buildDropdownOption: function( $option ) {
+    buildDropdownOption( $option ) {
       var _ = this;
       var $dropdownOption = $( '<a>', {
         href: '#',
@@ -356,7 +356,7 @@
       }
       return $dropdownOption;
     },
-    buildDeselectAll: function() {
+    buildDeselectAll() {
       var _ = this;
       var $deselectItem = $('<a>', {
         href: '#',
@@ -366,7 +366,7 @@
       });
       return $deselectItem;
     },
-    buildShowSelected: function() {
+    buildShowSelected() {
       var _ = this;
       var $showSelectedItem = $('<a>', {
         href: '#',
@@ -376,7 +376,7 @@
       });
       return $showSelectedItem;
     },
-    toggle: function( $dropdownItem ) {
+    toggle( $dropdownItem ) {
       var _ = this;
       var $el =  $( _.element );
       if ( _.data.multiselect ) {
@@ -398,7 +398,7 @@
       _.setButtonText();
       _.refreshInitialControls();
     },
-    deselectAll: function() {
+    deselectAll() {
       var _ = this;
       var $el =  $( _.element );
       _.els.dropdownMenuOptions.each( function(){
@@ -408,7 +408,7 @@
         _.refresh();
       }
     },
-    deselect: function( $dropdownItem ){
+    deselect( $dropdownItem ){
       var _ = this;
       var $el =  $( _.element );
       var itemIndex = $dropdownItem.data('option');
@@ -417,7 +417,7 @@
         _.toggle( $dropdownItem );
       }
     },
-    setButtonText: function() {
+    setButtonText() {
       var _ = this;
       var $el = $( _.element );
       var $btn = _.els.button;
@@ -438,14 +438,14 @@
         $btn.text( _.settings.textMultipleSelected );
       }
     },
-    refresh: function() {
+    refresh() {
       var _ = this;
       _.data.status = 'initial';
       _.els.dropdownMenuItems.removeClass('hover').show();
       _.sortReset();
       _.showInitialControls();
     },
-    hide: function( results ) {
+    hide( results ) {
       var _ = this;
       var notResults = $(_.data.indexes).not(results).get();
       _.els.dropdownMenuOptions.show().removeClass('hover');
@@ -455,18 +455,18 @@
       });
       _.els.button.dropdown('update');
     },
-    dropdownItemByIndex: function( index ) {
+    dropdownItemByIndex( index ) {
       var _ = this;
       return _.els.dropdownMenuItems.filter( function(){
         return $(this).data('index') == index;
       });
     },
-    /*hideInitialControls: function() {
+    /*hideInitialControls() {
       var _ = this;
       _.els.controlDeselect.hide();
       _.els.controlSelected.hide();
     },*/
-    showInitialControls: function( prepend ) {
+    showInitialControls( prepend ) {
       prepend = (typeof prepend !== 'undefined') ?  prepend : false;
       var _ = this;
       if ( prepend ) {
@@ -476,7 +476,7 @@
       _.els.controlSelected.show();
       _.els.controlDeselect.show();
     },
-    refreshInitialControls: function() {
+    refreshInitialControls() {
       var _ = this;
       var $el = $( _.element );
       if ( !$el.val() || $el.val().length == 0 ) {
@@ -491,7 +491,7 @@
      * Sort: Reset sort order.
      * @return void
      */
-    sortReset: function() {
+    sortReset() {
       var _ = this;
       for ( i = _.els.dropdownMenuItems.length; i >= 0; i--) {
         _.dropdownItemByIndex( i ).prependTo( _.els.dropdownMenu );
@@ -504,7 +504,7 @@
      * @param  {array} indexes Array of index values (strings).
      * @return void
      */
-    reorder: function( indexes ) {
+    reorder( indexes ) {
       var _ = this;
       if ( indexes === undefined || indexes.length == 0) {
         return;
@@ -519,7 +519,7 @@
      * Sort: Move selected items to the top.
      * @return void
      */
-    sortSelected: function() {
+    sortSelected() {
       var _ = this;
       var $el = $( _.element );
       _.els.dropdownMenuOptions.removeClass('hover');
@@ -536,7 +536,7 @@
      * Scroll the dropdown menu to the top.
      * @return {[type]} [description]
      */
-    resetScroll: function() {
+    resetScroll() {
       var _ = this;
       _.els.dropdownMenu.animate({
           scrollTop: 0
@@ -549,7 +549,7 @@
      * @param  {string} classList Space separated list of classes.
      * @return {string}           Selector.
      */
-    classListToSelector: function( classList ) {
+    classListToSelector( classList ) {
       var selector = classList;
       if ( classList.length ) {
         var classes = classList.split(/\s+/);
