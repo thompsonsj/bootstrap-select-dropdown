@@ -1,3 +1,6 @@
+const extractVendor = new ExtractTextPlugin('../docs/vendor-libraries.css');
+const extractPlugin = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
+
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 
