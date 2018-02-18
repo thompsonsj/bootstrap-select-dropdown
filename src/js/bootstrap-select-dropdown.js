@@ -83,6 +83,7 @@
       _.els.controlDeselect = _.buildDeselectAll();
       _.els.controlSelected = _.buildShowSelected()
       _.els.dropdownMenu = _.buildDropdownMenu();
+      _.els.dropdownMenuItemsContainer = _.buildDropdownMenuItemsContainer();
       _.els.dropdownMenuItems = _.buildDropdownMenuItems();
       _.els.dropdownMenuOptions = _.els.dropdownMenuItems.filter( function() {
         var attr = $( this ).data('option');
@@ -158,8 +159,12 @@
       }
       $dropdown
         .append( _.els.dropdownMenu );
-      _.els.dropdownMenu
+      _.els.dropdownMenuItemsContainer
         .append( _.els.dropdownMenuItems );
+      _.els.dropdownMenu
+        .append( _.els.controlDeselect )
+        .append( _.els.controlSelected )
+        .append( _.els.dropdownMenuItemsContainer );
       $el.after( $dropdown );
       if ( _.settings.hideSelect ) {
         $el.hide();
@@ -297,16 +302,15 @@
         .append( _.els.searchControl )
         .append( $buttonContainer );
     },
+    buildDropdownMenuItemsContainer() {
+      return $('<div>');
+    },
     buildDropdownMenuItems() {
       var _ = this;
       var $el = $( _.element );
       var s = 0; // Sort index
       var o = 0; // Option index
-      //var $items = $();
-      var $items = _.els.controlDeselect.data('index', s );
-      s = _.incrementIndex( s );
-      $items = $items.add( _.els.controlSelected.data('index', s ) );
-      s = _.incrementIndex( s );
+      var $items = $();
       var $optgroups = $el.find('optgroup');
       if ( $optgroups.length ) {
         $optgroups.each( function(){
@@ -489,7 +493,7 @@
     sortReset() {
       var _ = this;
       for ( i = _.els.dropdownMenuItems.length; i >= 0; i--) {
-        _.dropdownItemByIndex( i ).prependTo( _.els.dropdownMenu );
+        _.dropdownItemByIndex( i ).prependTo( _.els.dropdownMenuItemsContainer );
       }
     },
     /**
@@ -506,7 +510,7 @@
       }
       indexes = indexes.reverse();
       $.each( indexes, function( index, value ) {
-        _.dropdownItemByIndex( value ).prependTo( _.els.dropdownMenu );
+        _.dropdownItemByIndex( value ).prependTo( _.els.dropdownMenuItemsContainer );
       });
       _.showInitialControls( true );
     },
@@ -519,7 +523,7 @@
       var $el = $( _.element );
       _.els.dropdownMenuOptions.removeClass('hover');
       $( _.els.dropdownMenu.find('.active').get().reverse() ).each( function(){
-        $( this ).prependTo( _.els.dropdownMenu );
+        $( this ).prependTo( _.els.dropdownMenuItemsContainer );
       });
       _.showInitialControls( true );
       _.data.status = 'sort-selected';
