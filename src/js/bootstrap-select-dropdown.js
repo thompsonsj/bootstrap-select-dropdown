@@ -68,13 +68,8 @@
       _.ids.dropdownItemDeselect = _.prefix + 'deselect';
       _.ids.dropdownItemShowSelected = _.prefix + 'selected';
 
-      // Properties: Classes.
-      _.classes = {};
-      _.classes.dropdownOption = _.prefix + 'option';
-
       // Properties: Selectors.
       _.selectors = {};
-      _.selectors.dropdownOptions = 'a.' + _.classes.dropdownOption;
       _.selectors.dropdownItemDeselect = 'a#' + _.ids.dropdownItemDeselect;
       _.selectors.dropdownItemShowSelected = 'a#' + _.ids.dropdownItemShowSelected;
 
@@ -348,7 +343,7 @@
       var _ = this;
       var $dropdownOption = $( '<a>', {
         href: '#',
-        class: _.settings.classItem + ' ' + _.classes.dropdownOption,
+        class: _.settings.classItem,
         text: $option.text()
       });
       if ( $option.is(':selected') ) {
