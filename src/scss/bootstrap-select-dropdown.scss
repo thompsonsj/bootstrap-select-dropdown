@@ -14,4 +14,9 @@
       @extend .active;
     }
   }
+  &.no-results {
+    &.hover {
+      background-color: transparent;
+    }
+  }
 }

@@ -15,14 +15,14 @@
       maxListLength: 4, // Maximum number of <option> text() values to display within the button.
       hideSelect: true, // Hide the select element.
       multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
-      search: true,
-      observeDomMutations: false,
+      search: true, // Wrap the dropdown button in an input group with search form controls.
+      observeDomMutations: false, // Respect dynamic changes to the select options.
       maxHeight: '300px', // Make the dropdown scrollable if beyond this height. Set as false to disable.
-      appendSelectedList: true,
 
       // Text.
       textNoneSelected: "None selected",
       textMultipleSelected: "Multiple selected",
+      textNoResults: "No results",
 
       // HTML.
       htmlClear: "Clear search",
@@ -84,10 +84,11 @@
       _.els.searchControl = _.buildSearchControl();
       _.els.controlDeselect = _.buildDeselectAll();
       _.els.controlSelected = _.buildShowSelected();
-      _.els.dropdownMenu = _.buildDropdownMenu();
-      _.els.dropdownMenuItemsContainer = _.buildDropdownMenuItemsContainer();
-      _.els.dropdownMenuItems = _.buildDropdownMenuItems();
-      _.els.dropdownMenuOptions = _.els.dropdownMenuItems.filter( function() {
+      _.els.dropdown = _.buildDropdownMenu();
+      _.els.dropdownItemsContainer = _.buildDropdownItemsContainer();
+      _.els.dropdownItemNoResults = _.buildDropdownItemNoResults();
+      _.els.dropdownItems = _.buildDropdownItems();
+      _.els.dropdownOptions = _.els.dropdownItems.filter( function() {
         var attr = $( this ).data('option');
         if (typeof attr !== typeof undefined && attr !== false) {
           return true;
@@ -96,7 +97,7 @@
       });
 
       // Observe the occurences of the following.
-      // _.els.dropdownMenu.find( _.selectors.dropdownItems );
+      // _.els.dropdown.find( _.selectors.dropdownItems );
       // Why do we need to find tham again? Dows jQuery not store the reference when we append?
 
       // Initialise Search.
@@ -106,7 +107,7 @@
           keys: ['text'],
           id: 'index'
         };
-        _.els.dropdownMenuOptions.each( function( index ) {
+        _.els.dropdownOptions.each( function( index ) {
           haystack[ index ] = {
             index : $( this ).data('index'),
             text : $( this ).text()
@@ -149,23 +150,23 @@
       _.setButtonText();
       var $dropdown = _.buildDropdown();
       $dropdown
-        .append( _.els.dropdownMenu );
-      _.els.dropdownMenuItemsContainer
-        .append( _.els.dropdownMenuItems );
+        .append( _.els.dropdown );
+      _.els.dropdownItemsContainer
+        .append( _.els.dropdownItems );
       if ( _.data.multiselect ) {
-        _.els.dropdownMenu
+        _.els.dropdown
           .append( _.els.controlDeselect )
           .append( _.els.controlSelected );
       }
-      _.els.dropdownMenu
-        .append( _.els.dropdownMenuItemsContainer );
+      _.els.dropdown
+        .append( _.els.dropdownItemsContainer );
       $el.after( $dropdown );
       if ( _.settings.hideSelect ) {
         $el.hide();
       }
 
       // Assign click handler: Select item.
-      _.els.dropdownMenuOptions.on('click', function( event ){
+      _.els.dropdownOptions.on('click', function( event ){
         event.preventDefault();
         _.toggle( $(this) );
       });
@@ -203,10 +204,18 @@
         _.refresh();
       });
 
+      // Assign click handler: No results.
+      _.els.dropdownItemNoResults.on('click', function( event ) {
+        event.preventDefault();
+        $dropdown.one('hide.bs.dropdown', function ( event ) {
+          event.preventDefault();
+        });
+      });
+
       // Assign 'Enter' key listener for search.
       _.els.searchControl.keypress(function(e) {
         if(e.which == 13) {
-          _.toggle( _.els.dropdownMenu.find('.hover').first() );
+          _.toggle( _.els.dropdown.find('.hover').first() );
         }
       });
 
@@ -281,7 +290,7 @@
         );
 
         // Move dropdown menu to the right.
-        _.els.dropdownMenu.addClass('dropdown-menu-right');
+        _.els.dropdown.addClass('dropdown-menu-right');
       } else {
 
         // Build dropdown.
@@ -337,10 +346,10 @@
       }
       return $dropdownMenu;
     },
-    buildDropdownMenuItemsContainer() {
+    buildDropdownItemsContainer() {
       return $('<div>');
     },
-    buildDropdownMenuItems() {
+    buildDropdownItems() {
       var _ = this;
       var $el = $( _.element );
       var s = 0; // Sort index
@@ -352,17 +361,20 @@
           $items = $items.add( _.buildDropdownHeader( $( this ).attr('label') ).data('index', s ) );
           s = _.incrementIndex( s );
           $( this ).find('option').each( function() {
-            $items = $items.add( _.buildDropdownOption( $( this ) ).data('index', s ).data('option', o) );
+            $items = $items.add( _.buildDropdownItem( $( this ) ).data('index', s ).data('option', o) );
             s = _.incrementIndex( s );
             o++;
           });
         });
       } else {
         $el.find('option').each( function( index, value ) {
-          $items = $items.add( _.buildDropdownOption( $( this ) ).data('index', s ).data('option', o) );
+          $items = $items.add( _.buildDropdownItem( $( this ) ).data('index', s ).data('option', o) );
           s = _.incrementIndex( s );
           o++;
         });
+      }
+      if ( _.settings.search ) {
+        $items = $items.add( _.els.dropdownItemNoResults );
       }
       return $items;
     },
@@ -378,17 +390,24 @@
         text: text
       });
     },
-    buildDropdownOption( $option ) {
+    buildDropdownItem( $option ) {
       var _ = this;
-      var $dropdownOption = $( '<a>', {
+      var $dropdownItem = $( '<a>', {
         href: '#',
         class: _.settings.classItem,
         text: $option.text()
       });
       if ( $option.is(':selected') ) {
-        $dropdownOption.addClass('active');
+        $dropdownItem.addClass('active');
       }
-      return $dropdownOption;
+      return $dropdownItem;
+    },
+    buildDropdownItemNoResults() {
+      var _ = this;
+      return $( '<span>', {
+        class: _.settings.classItem + ' ' + 'text-muted no-results',
+        text: _.settings.textNoResults
+      }).hide();
     },
     buildDeselectAll() {
       var _ = this;
@@ -412,7 +431,7 @@
     },
     dropdownActive() {
       var _ = this;
-      if ( _.els.dropdownMenu.hasClass('show') ) {
+      if ( _.els.dropdown.hasClass('show') ) {
         return true;
       }
       return false;
@@ -431,7 +450,7 @@
       }
       else {
         if ( !_.data.multiselect ) {
-          _.els.dropdownMenuOptions.removeClass('active');
+          _.els.dropdownOptions.removeClass('active');
         }
         $option.prop('selected', true);
         $dropdownItem.addClass('active');
@@ -442,7 +461,7 @@
     deselectAll() {
       var _ = this;
       var $el =  $( _.element );
-      _.els.dropdownMenuOptions.each( function(){
+      _.els.dropdownOptions.each( function(){
         _.deselect( $( this ) );
       });
       if ( _.data.status == 'sort-selected' ) {
@@ -482,14 +501,15 @@
     refresh() {
       var _ = this;
       _.data.status = 'initial';
-      _.els.dropdownMenuItems.removeClass('hover').show();
+      _.els.dropdownItems.removeClass('hover').show();
+      _.els.dropdownItemNoResults.hide();
       _.sortReset();
       _.showInitialControls();
     },
     hide( results ) {
       var _ = this;
       var notResults = $(_.data.indexes).not(results).get();
-      _.els.dropdownMenuOptions.show().removeClass('hover');
+      _.els.dropdownOptions.show().removeClass('hover');
       _.dropdownItemByIndex( results[0] ).addClass('hover');
       $.each( notResults, function( index, value ) {
         _.dropdownItemByIndex( value ).hide();
@@ -498,7 +518,7 @@
     },
     dropdownItemByIndex( index ) {
       var _ = this;
-      return _.els.dropdownMenuItems.filter( function(){
+      return _.els.dropdownItems.filter( function(){
         return $(this).data('index') == index;
       });
     },
@@ -511,8 +531,8 @@
       prepend = (typeof prepend !== 'undefined') ?  prepend : false;
       var _ = this;
       if ( prepend ) {
-        _.els.controlSelected.prependTo( _.els.dropdownMenu );
-        _.els.controlDeselect.prependTo( _.els.dropdownMenu );
+        _.els.controlSelected.prependTo( _.els.dropdown );
+        _.els.controlDeselect.prependTo( _.els.dropdown );
       }
       _.els.controlSelected.show();
       _.els.controlDeselect.show();
@@ -534,8 +554,8 @@
      */
     sortReset() {
       var _ = this;
-      for ( i = _.els.dropdownMenuItems.length; i >= 0; i--) {
-        _.dropdownItemByIndex( i ).prependTo( _.els.dropdownMenuItemsContainer );
+      for ( i = _.els.dropdownItems.length; i >= 0; i--) {
+        _.dropdownItemByIndex( i ).prependTo( _.els.dropdownItemsContainer );
       }
     },
     /**
@@ -547,12 +567,14 @@
      */
     reorder( indexes ) {
       var _ = this;
+      _.els.dropdownItemNoResults.hide();
       if ( indexes === undefined || indexes.length == 0) {
+        _.els.dropdownItemNoResults.show();
         return;
       }
       indexes = indexes.reverse();
       $.each( indexes, function( index, value ) {
-        _.dropdownItemByIndex( value ).prependTo( _.els.dropdownMenuItemsContainer );
+        _.dropdownItemByIndex( value ).prependTo( _.els.dropdownItemsContainer );
       });
       _.hideInitialControls();
     },
@@ -563,9 +585,9 @@
     sortSelected() {
       var _ = this;
       var $el = $( _.element );
-      _.els.dropdownMenuOptions.removeClass('hover');
-      $( _.els.dropdownMenu.find('.active').get().reverse() ).each( function(){
-        $( this ).prependTo( _.els.dropdownMenuItemsContainer );
+      _.els.dropdownOptions.removeClass('hover');
+      $( _.els.dropdown.find('.active').get().reverse() ).each( function(){
+        $( this ).prependTo( _.els.dropdownItemsContainer );
       });
       _.showInitialControls( true );
       _.data.status = 'sort-selected';
@@ -579,7 +601,7 @@
      */
     resetScroll() {
       var _ = this;
-      _.els.dropdownMenu.animate({
+      _.els.dropdown.animate({
           scrollTop: 0
       }, 50);
     },
