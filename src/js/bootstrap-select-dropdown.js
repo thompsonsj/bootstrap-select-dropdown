@@ -76,12 +76,10 @@
       // Properties: Elements.
       _.els = {};
       _.els.button = _.buildButton();
-      if ( _.settings.search ) {
-        _.els.searchControl = _.buildSearchControl();
-        _.els.searchContainer = _.buildSearchContainer();
-      }
+      _.els.buttonClear = _.buildButtonClear();
+      _.els.searchControl = _.buildSearchControl();
       _.els.controlDeselect = _.buildDeselectAll();
-      _.els.controlSelected = _.buildShowSelected()
+      _.els.controlSelected = _.buildShowSelected();
       _.els.dropdownMenu = _.buildDropdownMenu();
       _.els.dropdownMenuItemsContainer = _.buildDropdownMenuItemsContainer();
       _.els.dropdownMenuItems = _.buildDropdownMenuItems();
@@ -146,17 +144,7 @@
       // Build.
       _.setButtonText();
       var $dropdown = _.buildDropdown();
-      if ( _.settings.search ) {
-        $dropdown
-          .append( _.els.searchContainer )
-          .find('.input-group-append')
-          .first()
-          .append( _.els.button  );
-          _.els.dropdownMenu.addClass('dropdown-menu-right');
-      } else {
-        $dropdown
-          .append( _.els.button );
-      }
+
       $dropdown
         .append( _.els.dropdownMenu );
       _.els.dropdownMenuItemsContainer
@@ -247,10 +235,44 @@
     },
     buildDropdown() {
       var _ = this;
-      return $dropdown = $('<div>', {
+
+      var $dropdown = $('<div>', {
         id : _.ids.dropdownContainerId,
         class : _.settings.classDropdown
       });
+
+      if ( _.settings.search ) {
+
+        // Build dropdown.
+        $dropdown.append(
+          $('<div>', {
+            class: 'input-group'
+          })
+          .append( _.els.searchControl )
+          .append(
+            $('<div>', {
+              class: 'input-group-append'
+            })
+            .append( _.els.buttonClear )
+          )
+          .append(
+            $('<div>', {
+              class: 'input-group-append'
+            })
+            .append( _.els.button )
+          )
+        );
+
+        // Move dropdown menu to the right.
+        _.els.dropdownMenu.addClass('dropdown-menu-right');
+      } else {
+
+        // Build dropdown.
+        $dropdown
+          .append( _.els.button );
+      }
+
+      return $dropdown;
     },
     buildButton() {
       var _ = this;
@@ -262,6 +284,24 @@
         'data-target': '#' + _.ids.dropdownContainerId,
         'aria-haspopup': 'true',
         'aria-expanded': 'false'
+      });
+    },
+    buildButtonClear(){
+      var _ = this;
+      return $('<button>', {
+        type: 'button',
+        class: 'btn btn-outline-secondary'
+      })
+      .text('Clear');
+    },
+    buildSearchControl() {
+      var _ = this;
+      return $('<input>', {
+        type: 'text',
+        class: 'form-control',
+        placeholder: 'Search',
+        'aria-label': 'Search',
+        'aria-describedby': _.ids.searchControlId
       });
     },
     buildDropdownMenu() {
@@ -279,28 +319,6 @@
           });
       }
       return $dropdownMenu;
-    },
-    buildSearchControl() {
-      var _ = this;
-      return $input = $('<input>', {
-        type: 'text',
-        class: 'form-control',
-        placeholder: 'Search',
-        'aria-label': 'Search',
-        'aria-describedby': _.ids.searchControlId
-      });
-    },
-    buildSearchContainer() {
-      var _ = this;
-      var $searchContainer = $('<div>', {
-        class: 'input-group'
-      });
-      var $buttonContainer = $('<div>', {
-        class: 'input-group-append'
-      });
-      return $searchContainer
-        .append( _.els.searchControl )
-        .append( $buttonContainer );
     },
     buildDropdownMenuItemsContainer() {
       return $('<div>');
@@ -460,11 +478,11 @@
         return $(this).data('index') == index;
       });
     },
-    /*hideInitialControls() {
+    hideInitialControls() {
       var _ = this;
       _.els.controlDeselect.hide();
       _.els.controlSelected.hide();
-    },*/
+    },
     showInitialControls( prepend ) {
       prepend = (typeof prepend !== 'undefined') ?  prepend : false;
       var _ = this;
@@ -512,7 +530,7 @@
       $.each( indexes, function( index, value ) {
         _.dropdownItemByIndex( value ).prependTo( _.els.dropdownMenuItemsContainer );
       });
-      _.showInitialControls( true );
+      _.hideInitialControls();
     },
     /**
      * Sort: Move selected items to the top.
