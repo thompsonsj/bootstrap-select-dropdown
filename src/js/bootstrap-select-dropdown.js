@@ -11,10 +11,6 @@
   // Create the defaults once
   var pluginName = "selectDropdown",
     defaults = {
-      // Text.
-      textNoneSelected: "None selected",
-      textMultipleSelected: "Multiple selected",
-
       // Behaviour
       maxListLength: 4, // Maximum number of <option> text() values to display within the button.
       hideSelect: true, // Hide the select element.
@@ -24,9 +20,17 @@
       maxHeight: '300px', // Make the dropdown scrollable if beyond this height. Set as false to disable.
       appendSelectedList: true,
 
+      // Text.
+      textNoneSelected: "None selected",
+      textMultipleSelected: "Multiple selected",
+
+      // HTML.
+      htmlClear: "Clear search",
+
       // Classes
       classDropdown: "dropdown",
-      classBtn: "btn btn-primary",
+      classBtnClear: "btn btn-outline-secondary",
+      classBtnSearch: "btn btn-primary",
       classMenu: "dropdown-menu",
       classItem: "dropdown-item",
 
@@ -144,7 +148,6 @@
       // Build.
       _.setButtonText();
       var $dropdown = _.buildDropdown();
-
       $dropdown
         .append( _.els.dropdownMenu );
       _.els.dropdownMenuItemsContainer
@@ -184,6 +187,17 @@
         if ( !$(this).hasClass('disabled') ) {
           _.sortSelected();
         }
+      });
+
+      // Assign click handler: Clear search.
+      _.els.buttonClear.on('click', function() {
+        _.els.searchControl.val('');
+        if ( _.dropdownActive() ) {
+          $dropdown.one('hide.bs.dropdown', function ( event ) {
+            event.preventDefault();
+          });
+        }
+        _.refresh();
       });
 
       // Assign 'Enter' key listener for search.
@@ -277,7 +291,7 @@
     buildButton() {
       var _ = this;
       return $('<button>', {
-        class: _.settings.classBtn + ' dropdown-toggle',
+        class: _.settings.classBtnSearch + ' dropdown-toggle',
         type: 'button',
         id: _.ids.dropdownButtonId,
         'data-toggle': 'dropdown',
@@ -290,9 +304,9 @@
       var _ = this;
       return $('<button>', {
         type: 'button',
-        class: 'btn btn-outline-secondary'
+        class: _.settings.classBtnClear
       })
-      .text('Clear');
+      .text( _.settings.htmlClear );
     },
     buildSearchControl() {
       var _ = this;
@@ -392,6 +406,13 @@
         text: 'Show selected'
       });
       return $showSelectedItem;
+    },
+    dropdownActive() {
+      var _ = this;
+      if ( _.els.dropdownMenu.hasClass('show') ) {
+        return true;
+      }
+      return false;
     },
     toggle( $dropdownItem ) {
       var _ = this;
