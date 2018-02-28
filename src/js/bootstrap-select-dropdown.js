@@ -152,9 +152,12 @@
         .append( _.els.dropdownMenu );
       _.els.dropdownMenuItemsContainer
         .append( _.els.dropdownMenuItems );
+      if ( _.data.multiselect ) {
+        _.els.dropdownMenu
+          .append( _.els.controlDeselect )
+          .append( _.els.controlSelected );
+      }
       _.els.dropdownMenu
-        .append( _.els.controlDeselect )
-        .append( _.els.controlSelected )
         .append( _.els.dropdownMenuItemsContainer );
       $el.after( $dropdown );
       if ( _.settings.hideSelect ) {
