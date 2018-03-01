@@ -25,3 +25,20 @@ $container-max-widths: (
     @extend .text-muted;
   }
 }
+.btn {
+  .ion {
+    display: inline-block;
+    width: $font-size-base;
+    height: $font-size-base;
+    stroke-width: 0;
+    stroke: $body-color;
+    fill: $body-color;
+    transition: $transition-base;
+  }
+  @include hover {
+    .ion {
+      stroke: $white;
+      fill: $white;
+    }
+  }
+}

@@ -318,7 +318,7 @@
         type: 'button',
         class: _.settings.classBtnClear
       })
-      .text( _.settings.htmlClear );
+      .html( _.settings.htmlClear );
     },
     buildSearchControl() {
       var _ = this;

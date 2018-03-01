@@ -22,4 +22,7 @@ $(document).ready(function(){
       //hideSelect: false
     });
   });
+  $("select#demo_select_htmlclear").selectDropdown({
+    'htmlClear': '<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>'
+  });
 });
