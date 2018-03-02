@@ -60,6 +60,9 @@
       var attrMultiple = $el.attr('multiple');
       if ( typeof attrMultiple !== typeof undefined && attrMultiple !== false ) {
         _.data.multiselect = true;
+        if ( _.settings.multiselectStayOpen ) {
+          _.data.preventHideDropdown = true;
+        }
       }
       _.data.status = 'initial';
       _.data.indexes = [];
@@ -116,13 +119,24 @@
           // Detect cursor up and down.
           if ( e.which == 13 ) { // Enter.
             _.toggle( _.els.dropdown.find('.hover').first() );
+            if ( !_.data.preventHideDropdown ) {
+              _.els.button.dropdown('toggle');
+            }
             return;
           }
           else if ( e.which == 38 ) { // Up.
+            if ( !_.dropdownActive() ) {
+              _.els.button.dropdown('toggle');
+              _.els.searchControl.focus();
+            }
             _.hoverUp();
             return;
           }
           else if ( e.which == 40 ) { // Down.
+            if ( !_.dropdownActive() ) {
+              _.els.button.dropdown('toggle');
+              _.els.searchControl.focus();
+            }
             _.hoverDown();
             return;
           }
@@ -457,7 +471,6 @@
       }
       return false;
     },
-
     /**
      * Set hover class position.
      *
@@ -500,9 +513,6 @@
     toggle( $dropdownItem ) {
       var _ = this;
       var $el =  $( _.element );
-      if ( _.data.multiselect ) {
-        _.data.preventHideDropdown = true;
-      }
       var itemIndex = $dropdownItem.data('option');
       var $option = $el.find('option').eq( itemIndex );
       if ( $option.is(':selected') ) {
