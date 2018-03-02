@@ -128,36 +128,39 @@
           _.data.resultsChanged = true;
           if ( results ) {
             if (
-              typeof _.data.lastSearch !== undefined &&
+              typeof _.data.lastSearch !== null &&
               _.arraysEqual( results, _.data.lastSearch )
             ) {
               _.data.resultsChanged = false;
             }
-            _.data.lastSearch = results;
+
           } else {
             _.refresh();
             return;
           }
           if ( _.data.resultsChanged ) {
+            _.setHover( results[0] );
             _.hide( results );
             _.reorder( results );
             _.resetScroll();
           }
+          _.data.lastSearch = results;
         });
       }
 
       // Handle cut and paste.
       _.els.searchControl.bind({
           paste (){
-            $(this).trigger('keyup');
+            $(this).trigger('keydown');
           },
           cut (){
-            $(this).trigger('keyup');
+            $(this).trigger('keydown');
           }
       });
 
       // Build.
       _.setButtonText();
+      _.setHover();
       var $dropdown = _.buildDropdown();
       $dropdown
         .append( _.els.dropdown );
@@ -228,30 +231,37 @@
       up.which = 38; // Up cursor key..
       var down = $.Event("keydown");
       down.which = 40; // Down cursor key.
-      _.els.searchControl.keydown(function(e) {
+      _.els.searchControl.on('keydown', function(e) {
         if( e.which == 13 ) { // Enter.
           _.toggle( _.els.dropdown.find('.hover').first() );
         }
         else if ( e.which == 38 ) { // Up.
-          console.log(38);
           var current = _.els.dropdown.find('.hover').first();
-          if ( current.length ) {
-            var prev = current.prev('a:visible');
+          if (
+            typeof current !== undefined &&
+            current.length
+          ) {
+            //var prev = _.getPrev( current );
+            var prev = current.prevAll('a:visible').first();
           }
           if ( typeof prev !== undefined && prev.length ) {
             current.removeClass('hover');
             prev.addClass('hover');
+            console.log('Sought to move the hover class to the previous item.');
           }
         }
         else if ( e.which == 40 ) { // Down.
-          console.log(40);
           var current = _.els.dropdown.find('.hover').first();
-          if ( current.length ) {
-            var next = current.next('a:visible');
+          if (
+            typeof current !== undefined &&
+            current.length
+          ) {
+            var next = current.nextAll('a:visible').first();
           }
           if ( typeof next !== undefined && next.length ) {
             current.removeClass('hover');
             next.addClass('hover');
+            console.log('Sought to move the hover class to the next item.');
           }
         }
       });
@@ -473,6 +483,22 @@
       }
       return false;
     },
+    /**
+     * Set hover class position.
+     *
+     * Move the hover class to a designated dropdown option.
+     * @param {integer} index Dropdown menu item index.
+     */
+    setHover( index = 1 ) {
+      var _ = this;
+      //console.log( _.dropdownItemByIndex( index ) );
+      _.els.dropdownOptions.removeClass('hover');
+      _.dropdownItemByIndex( index ).addClass('hover');
+    },
+    getPrev( $current ) {
+      var _ = this;
+      var prev = current.prevAll('a:visible:first').first();
+    },
     toggle( $dropdownItem ) {
       var _ = this;
       var $el =  $( _.element );
@@ -546,8 +572,6 @@
     hide( results ) {
       var _ = this;
       var notResults = $(_.data.indexes).not(results).get();
-      _.els.dropdownOptions.show().removeClass('hover');
-      _.dropdownItemByIndex( results[0] ).addClass('hover');
       $.each( notResults, function( index, value ) {
         _.dropdownItemByIndex( value ).hide();
       });
@@ -598,7 +622,8 @@
     /**
      * Sort: Order by array values.
      *
-     * Reorder according to an array of index values.
+     * Reorder according to an array of index values. The order of the index
+     * array is preserved, to make change detection easier elsewhere.
      * @param  {array} indexes Array of index values (strings).
      * @return void
      */
@@ -609,8 +634,9 @@
         _.els.dropdownItemNoResults.show();
         return;
       }
-      indexes = indexes.reverse();
-      $.each( indexes, function( index, value ) {
+      var indexesReversed = indexes.slice(0); // Clone
+      indexesReversed = indexesReversed.reverse();
+      $.each( indexesReversed, function( index, value ) {
         _.dropdownItemByIndex( value ).prependTo( _.els.dropdownItemsContainer );
       });
       _.hideInitialControls();
