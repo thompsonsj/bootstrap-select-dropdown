@@ -68,6 +68,7 @@
       _.data.indexes = [];
       _.data.lastSearch = null;
       _.data.resultsChanged = false;
+      _.data.hoverItem = $();
 
       // Properties: IDs.
       _.ids = {};
@@ -94,11 +95,7 @@
       _.els.dropdownItemNoResults = _.buildDropdownItemNoResults();
       _.els.dropdownItems = _.buildDropdownItems();
       _.els.dropdownOptions = _.els.dropdownItems.filter( function() {
-        var attr = $( this ).data('option');
-        if (typeof attr !== typeof undefined && attr !== false) {
-          return true;
-        }
-        return false;
+        return _.isOption( $( this ) );
       });
 
       // Initialise Search.
@@ -189,7 +186,6 @@
 
       // Build.
       _.setButtonText();
-      _.setHover();
       var $dropdown = _.buildDropdown();
       $dropdown
         .append( _.els.dropdown );
@@ -206,6 +202,7 @@
       if ( _.settings.hideSelect ) {
         $el.hide();
       }
+      _.setHover();
 
       // Assign click handler: Select item.
       _.els.dropdownOptions.on('click', function( event ){
@@ -472,42 +469,63 @@
       return false;
     },
     /**
+     * Check if a dropdown item refers to a select option.
+     * @param  {object}  $item jQuery object.
+     * @return {Boolean}
+     */
+    isOption( $item ) {
+      var attr = $item.data('option');
+      if (typeof attr !== typeof undefined && attr !== false) {
+        return true;
+      }
+      return false;
+    },
+    /**
      * Set hover class position.
      *
-     * Move the hover class to a designated dropdown option.
+     * Move the hover class to a designated dropdown option. If the index points
+     * to a non-option, the next option will be modified.
      * @param {integer} index Dropdown menu item index.
      */
-    setHover( index = 0 ) {
+    setHover( index ) {
       var _ = this;
       _.els.dropdownOptions.removeClass('hover');
-      _.dropdownItemByIndex( index ).addClass('hover');
+      if ( typeof index === typeof undefined ) {
+        var $item = _.els.dropdownOptions.first();
+      } else {
+        var $item = _.dropdownItemByIndex( index );
+      }
+      _.data.hoverItem = $item;
+      $item.addClass('hover');
     },
     hoverUp() {
       var _ = this;
-      var current = _.els.dropdown.find('.hover').first();
+      var current = _.data.hoverItem;
       if (
-        typeof current !== undefined &&
+        typeof current !== typeof undefined &&
         current.length
       ) {
         var prev = current.prevAll('a:visible').first();
       }
-      if ( typeof prev !== undefined && prev.length ) {
+      if ( typeof prev !== typeof undefined && prev.length ) {
         current.removeClass('hover');
         prev.addClass('hover');
+        _.data.hoverItem = prev;
       }
     },
     hoverDown() {
       var _ = this;
-      var current = _.els.dropdown.find('.hover').first();
+      var current = _.data.hoverItem;
       if (
-        typeof current !== undefined &&
+        typeof current !== typeof undefined &&
         current.length
       ) {
         var next = current.nextAll('a:visible').first();
       }
-      if ( typeof next !== undefined && next.length ) {
+      if ( typeof next !== typeof undefined && next.length ) {
         current.removeClass('hover');
         next.addClass('hover');
+        _.data.hoverItem = next;
       }
     },
     toggle( $dropdownItem ) {
@@ -597,7 +615,7 @@
       _.els.controlSelected.hide();
     },
     showInitialControls( prepend ) {
-      prepend = (typeof prepend !== 'undefined') ?  prepend : false;
+      prepend = (typeof prepend !== typeof undefined ) ?  prepend : false;
       var _ = this;
       if ( prepend ) {
         _.els.controlSelected.prependTo( _.els.dropdown );
@@ -638,7 +656,7 @@
     reorder( indexes ) {
       var _ = this;
       _.els.dropdownItemNoResults.hide();
-      if ( indexes === undefined || indexes.length == 0) {
+      if ( typeof indexes === typeof undefined || indexes.length == 0) {
         _.els.dropdownItemNoResults.show();
         return;
       }

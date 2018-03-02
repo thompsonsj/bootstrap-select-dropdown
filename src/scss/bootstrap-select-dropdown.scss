@@ -6,9 +6,10 @@
     @extend .text-muted;
   }
   &.hover {
-    color: $dropdown-link-hover-color;
+    //color: $dropdown-link-hover-color;
+    color: color-yiq( darken( $dropdown-link-hover-bg, 10%) );
     text-decoration: none;
-    background-color: $dropdown-link-hover-bg;
+    background-color: darken( $dropdown-link-hover-bg, 10%);
     &.active {
       /* Ensure `.active` overrides `.hover`. */
       @extend .active;
