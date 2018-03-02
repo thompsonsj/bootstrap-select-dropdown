@@ -464,9 +464,8 @@
      * Move the hover class to a designated dropdown option.
      * @param {integer} index Dropdown menu item index.
      */
-    setHover( index = 1 ) {
+    setHover( index = 0 ) {
       var _ = this;
-      //console.log( _.dropdownItemByIndex( index ) );
       _.els.dropdownOptions.removeClass('hover');
       _.dropdownItemByIndex( index ).addClass('hover');
     },
