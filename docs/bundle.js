@@ -2554,15 +2554,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_bootstrap__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_bootstrap___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_bootstrap__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_popper_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_highlight_js__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_highlight_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_highlight_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_fuse_js__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_fuse_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_fuse_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_highlight_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_highlight_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_highlight_js__);
 __webpack_require__(4);
 
 
 
 
-__WEBPACK_IMPORTED_MODULE_3_highlight_js___default.a.initHighlightingOnLoad();
-__webpack_require__(185);
+window.Fuse = __WEBPACK_IMPORTED_MODULE_3_fuse_js___default.a;
+
+__WEBPACK_IMPORTED_MODULE_4_highlight_js___default.a.initHighlightingOnLoad();
+__webpack_require__(186);
+var demoIds = [
+  'demo_select',
+  'demo_select_optgroups',
+  'demo_multiselect',
+  'demo_multiselect_optgroups'
+];
+__WEBPACK_IMPORTED_MODULE_0_jquery___default()(document).ready(function(){
+  __WEBPACK_IMPORTED_MODULE_0_jquery___default()("select[data-role='dropdown']").each( function(){
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()(this).selectDropdown();
+  });
+  __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.each( demoIds, function( index, value ){
+    __WEBPACK_IMPORTED_MODULE_0_jquery___default()('#' + value ).selectDropdown({
+      //hideSelect: false
+    });
+  });
+  __WEBPACK_IMPORTED_MODULE_0_jquery___default()("select#demo_select_htmlclear").selectDropdown({
+    'htmlClear': '<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>'
+  });
+});
 
 
 /***/ }),
@@ -14502,6 +14525,7 @@ var Dropdown = function ($$$1) {
       // only needed because of broken event delegation on iOS
       // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
 
+
       if ('ontouchstart' in document.documentElement && $$$1(parent).closest(Selector.NAVBAR_NAV).length === 0) {
         $$$1('body').children().on('mouseover', null, $$$1.noop);
       }
@@ -16845,189 +16869,1190 @@ Object.defineProperty(exports, '__esModule', { value: true });
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var hljs = __webpack_require__(8);
+/*!
+ * Fuse.js v3.2.0 - Lightweight fuzzy-search (http://fusejs.io)
+ * 
+ * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
+ * All Rights Reserved. Apache Software License 2.0
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("Fuse", [], factory);
+	else if(typeof exports === 'object')
+		exports["Fuse"] = factory();
+	else
+		root["Fuse"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
 
-hljs.registerLanguage('1c', __webpack_require__(9));
-hljs.registerLanguage('abnf', __webpack_require__(10));
-hljs.registerLanguage('accesslog', __webpack_require__(11));
-hljs.registerLanguage('actionscript', __webpack_require__(12));
-hljs.registerLanguage('ada', __webpack_require__(13));
-hljs.registerLanguage('apache', __webpack_require__(14));
-hljs.registerLanguage('applescript', __webpack_require__(15));
-hljs.registerLanguage('cpp', __webpack_require__(16));
-hljs.registerLanguage('arduino', __webpack_require__(17));
-hljs.registerLanguage('armasm', __webpack_require__(18));
-hljs.registerLanguage('xml', __webpack_require__(19));
-hljs.registerLanguage('asciidoc', __webpack_require__(20));
-hljs.registerLanguage('aspectj', __webpack_require__(21));
-hljs.registerLanguage('autohotkey', __webpack_require__(22));
-hljs.registerLanguage('autoit', __webpack_require__(23));
-hljs.registerLanguage('avrasm', __webpack_require__(24));
-hljs.registerLanguage('awk', __webpack_require__(25));
-hljs.registerLanguage('axapta', __webpack_require__(26));
-hljs.registerLanguage('bash', __webpack_require__(27));
-hljs.registerLanguage('basic', __webpack_require__(28));
-hljs.registerLanguage('bnf', __webpack_require__(29));
-hljs.registerLanguage('brainfuck', __webpack_require__(30));
-hljs.registerLanguage('cal', __webpack_require__(31));
-hljs.registerLanguage('capnproto', __webpack_require__(32));
-hljs.registerLanguage('ceylon', __webpack_require__(33));
-hljs.registerLanguage('clean', __webpack_require__(34));
-hljs.registerLanguage('clojure', __webpack_require__(35));
-hljs.registerLanguage('clojure-repl', __webpack_require__(36));
-hljs.registerLanguage('cmake', __webpack_require__(37));
-hljs.registerLanguage('coffeescript', __webpack_require__(38));
-hljs.registerLanguage('coq', __webpack_require__(39));
-hljs.registerLanguage('cos', __webpack_require__(40));
-hljs.registerLanguage('crmsh', __webpack_require__(41));
-hljs.registerLanguage('crystal', __webpack_require__(42));
-hljs.registerLanguage('cs', __webpack_require__(43));
-hljs.registerLanguage('csp', __webpack_require__(44));
-hljs.registerLanguage('css', __webpack_require__(45));
-hljs.registerLanguage('d', __webpack_require__(46));
-hljs.registerLanguage('markdown', __webpack_require__(47));
-hljs.registerLanguage('dart', __webpack_require__(48));
-hljs.registerLanguage('delphi', __webpack_require__(49));
-hljs.registerLanguage('diff', __webpack_require__(50));
-hljs.registerLanguage('django', __webpack_require__(51));
-hljs.registerLanguage('dns', __webpack_require__(52));
-hljs.registerLanguage('dockerfile', __webpack_require__(53));
-hljs.registerLanguage('dos', __webpack_require__(54));
-hljs.registerLanguage('dsconfig', __webpack_require__(55));
-hljs.registerLanguage('dts', __webpack_require__(56));
-hljs.registerLanguage('dust', __webpack_require__(57));
-hljs.registerLanguage('ebnf', __webpack_require__(58));
-hljs.registerLanguage('elixir', __webpack_require__(59));
-hljs.registerLanguage('elm', __webpack_require__(60));
-hljs.registerLanguage('ruby', __webpack_require__(61));
-hljs.registerLanguage('erb', __webpack_require__(62));
-hljs.registerLanguage('erlang-repl', __webpack_require__(63));
-hljs.registerLanguage('erlang', __webpack_require__(64));
-hljs.registerLanguage('excel', __webpack_require__(65));
-hljs.registerLanguage('fix', __webpack_require__(66));
-hljs.registerLanguage('flix', __webpack_require__(67));
-hljs.registerLanguage('fortran', __webpack_require__(68));
-hljs.registerLanguage('fsharp', __webpack_require__(69));
-hljs.registerLanguage('gams', __webpack_require__(70));
-hljs.registerLanguage('gauss', __webpack_require__(71));
-hljs.registerLanguage('gcode', __webpack_require__(72));
-hljs.registerLanguage('gherkin', __webpack_require__(73));
-hljs.registerLanguage('glsl', __webpack_require__(74));
-hljs.registerLanguage('go', __webpack_require__(75));
-hljs.registerLanguage('golo', __webpack_require__(76));
-hljs.registerLanguage('gradle', __webpack_require__(77));
-hljs.registerLanguage('groovy', __webpack_require__(78));
-hljs.registerLanguage('haml', __webpack_require__(79));
-hljs.registerLanguage('handlebars', __webpack_require__(80));
-hljs.registerLanguage('haskell', __webpack_require__(81));
-hljs.registerLanguage('haxe', __webpack_require__(82));
-hljs.registerLanguage('hsp', __webpack_require__(83));
-hljs.registerLanguage('htmlbars', __webpack_require__(84));
-hljs.registerLanguage('http', __webpack_require__(85));
-hljs.registerLanguage('hy', __webpack_require__(86));
-hljs.registerLanguage('inform7', __webpack_require__(87));
-hljs.registerLanguage('ini', __webpack_require__(88));
-hljs.registerLanguage('irpf90', __webpack_require__(89));
-hljs.registerLanguage('java', __webpack_require__(90));
-hljs.registerLanguage('javascript', __webpack_require__(91));
-hljs.registerLanguage('jboss-cli', __webpack_require__(92));
-hljs.registerLanguage('json', __webpack_require__(93));
-hljs.registerLanguage('julia', __webpack_require__(94));
-hljs.registerLanguage('julia-repl', __webpack_require__(95));
-hljs.registerLanguage('kotlin', __webpack_require__(96));
-hljs.registerLanguage('lasso', __webpack_require__(97));
-hljs.registerLanguage('ldif', __webpack_require__(98));
-hljs.registerLanguage('leaf', __webpack_require__(99));
-hljs.registerLanguage('less', __webpack_require__(100));
-hljs.registerLanguage('lisp', __webpack_require__(101));
-hljs.registerLanguage('livecodeserver', __webpack_require__(102));
-hljs.registerLanguage('livescript', __webpack_require__(103));
-hljs.registerLanguage('llvm', __webpack_require__(104));
-hljs.registerLanguage('lsl', __webpack_require__(105));
-hljs.registerLanguage('lua', __webpack_require__(106));
-hljs.registerLanguage('makefile', __webpack_require__(107));
-hljs.registerLanguage('mathematica', __webpack_require__(108));
-hljs.registerLanguage('matlab', __webpack_require__(109));
-hljs.registerLanguage('maxima', __webpack_require__(110));
-hljs.registerLanguage('mel', __webpack_require__(111));
-hljs.registerLanguage('mercury', __webpack_require__(112));
-hljs.registerLanguage('mipsasm', __webpack_require__(113));
-hljs.registerLanguage('mizar', __webpack_require__(114));
-hljs.registerLanguage('perl', __webpack_require__(115));
-hljs.registerLanguage('mojolicious', __webpack_require__(116));
-hljs.registerLanguage('monkey', __webpack_require__(117));
-hljs.registerLanguage('moonscript', __webpack_require__(118));
-hljs.registerLanguage('n1ql', __webpack_require__(119));
-hljs.registerLanguage('nginx', __webpack_require__(120));
-hljs.registerLanguage('nimrod', __webpack_require__(121));
-hljs.registerLanguage('nix', __webpack_require__(122));
-hljs.registerLanguage('nsis', __webpack_require__(123));
-hljs.registerLanguage('objectivec', __webpack_require__(124));
-hljs.registerLanguage('ocaml', __webpack_require__(125));
-hljs.registerLanguage('openscad', __webpack_require__(126));
-hljs.registerLanguage('oxygene', __webpack_require__(127));
-hljs.registerLanguage('parser3', __webpack_require__(128));
-hljs.registerLanguage('pf', __webpack_require__(129));
-hljs.registerLanguage('php', __webpack_require__(130));
-hljs.registerLanguage('pony', __webpack_require__(131));
-hljs.registerLanguage('powershell', __webpack_require__(132));
-hljs.registerLanguage('processing', __webpack_require__(133));
-hljs.registerLanguage('profile', __webpack_require__(134));
-hljs.registerLanguage('prolog', __webpack_require__(135));
-hljs.registerLanguage('protobuf', __webpack_require__(136));
-hljs.registerLanguage('puppet', __webpack_require__(137));
-hljs.registerLanguage('purebasic', __webpack_require__(138));
-hljs.registerLanguage('python', __webpack_require__(139));
-hljs.registerLanguage('q', __webpack_require__(140));
-hljs.registerLanguage('qml', __webpack_require__(141));
-hljs.registerLanguage('r', __webpack_require__(142));
-hljs.registerLanguage('rib', __webpack_require__(143));
-hljs.registerLanguage('roboconf', __webpack_require__(144));
-hljs.registerLanguage('routeros', __webpack_require__(145));
-hljs.registerLanguage('rsl', __webpack_require__(146));
-hljs.registerLanguage('ruleslanguage', __webpack_require__(147));
-hljs.registerLanguage('rust', __webpack_require__(148));
-hljs.registerLanguage('scala', __webpack_require__(149));
-hljs.registerLanguage('scheme', __webpack_require__(150));
-hljs.registerLanguage('scilab', __webpack_require__(151));
-hljs.registerLanguage('scss', __webpack_require__(152));
-hljs.registerLanguage('shell', __webpack_require__(153));
-hljs.registerLanguage('smali', __webpack_require__(154));
-hljs.registerLanguage('smalltalk', __webpack_require__(155));
-hljs.registerLanguage('sml', __webpack_require__(156));
-hljs.registerLanguage('sqf', __webpack_require__(157));
-hljs.registerLanguage('sql', __webpack_require__(158));
-hljs.registerLanguage('stan', __webpack_require__(159));
-hljs.registerLanguage('stata', __webpack_require__(160));
-hljs.registerLanguage('step21', __webpack_require__(161));
-hljs.registerLanguage('stylus', __webpack_require__(162));
-hljs.registerLanguage('subunit', __webpack_require__(163));
-hljs.registerLanguage('swift', __webpack_require__(164));
-hljs.registerLanguage('taggerscript', __webpack_require__(165));
-hljs.registerLanguage('yaml', __webpack_require__(166));
-hljs.registerLanguage('tap', __webpack_require__(167));
-hljs.registerLanguage('tcl', __webpack_require__(168));
-hljs.registerLanguage('tex', __webpack_require__(169));
-hljs.registerLanguage('thrift', __webpack_require__(170));
-hljs.registerLanguage('tp', __webpack_require__(171));
-hljs.registerLanguage('twig', __webpack_require__(172));
-hljs.registerLanguage('typescript', __webpack_require__(173));
-hljs.registerLanguage('vala', __webpack_require__(174));
-hljs.registerLanguage('vbnet', __webpack_require__(175));
-hljs.registerLanguage('vbscript', __webpack_require__(176));
-hljs.registerLanguage('vbscript-html', __webpack_require__(177));
-hljs.registerLanguage('verilog', __webpack_require__(178));
-hljs.registerLanguage('vhdl', __webpack_require__(179));
-hljs.registerLanguage('vim', __webpack_require__(180));
-hljs.registerLanguage('x86asm', __webpack_require__(181));
-hljs.registerLanguage('xl', __webpack_require__(182));
-hljs.registerLanguage('xquery', __webpack_require__(183));
-hljs.registerLanguage('zephir', __webpack_require__(184));
+"use strict";
+
+
+module.exports = function (obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]';
+};
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var bitapRegexSearch = __webpack_require__(5);
+var bitapSearch = __webpack_require__(7);
+var patternAlphabet = __webpack_require__(4);
+
+var Bitap = function () {
+  function Bitap(pattern, _ref) {
+    var _ref$location = _ref.location,
+        location = _ref$location === undefined ? 0 : _ref$location,
+        _ref$distance = _ref.distance,
+        distance = _ref$distance === undefined ? 100 : _ref$distance,
+        _ref$threshold = _ref.threshold,
+        threshold = _ref$threshold === undefined ? 0.6 : _ref$threshold,
+        _ref$maxPatternLength = _ref.maxPatternLength,
+        maxPatternLength = _ref$maxPatternLength === undefined ? 32 : _ref$maxPatternLength,
+        _ref$isCaseSensitive = _ref.isCaseSensitive,
+        isCaseSensitive = _ref$isCaseSensitive === undefined ? false : _ref$isCaseSensitive,
+        _ref$tokenSeparator = _ref.tokenSeparator,
+        tokenSeparator = _ref$tokenSeparator === undefined ? / +/g : _ref$tokenSeparator,
+        _ref$findAllMatches = _ref.findAllMatches,
+        findAllMatches = _ref$findAllMatches === undefined ? false : _ref$findAllMatches,
+        _ref$minMatchCharLeng = _ref.minMatchCharLength,
+        minMatchCharLength = _ref$minMatchCharLeng === undefined ? 1 : _ref$minMatchCharLeng;
+
+    _classCallCheck(this, Bitap);
+
+    this.options = {
+      location: location,
+      distance: distance,
+      threshold: threshold,
+      maxPatternLength: maxPatternLength,
+      isCaseSensitive: isCaseSensitive,
+      tokenSeparator: tokenSeparator,
+      findAllMatches: findAllMatches,
+      minMatchCharLength: minMatchCharLength
+    };
+
+    this.pattern = this.options.isCaseSensitive ? pattern : pattern.toLowerCase();
+
+    if (this.pattern.length <= maxPatternLength) {
+      this.patternAlphabet = patternAlphabet(this.pattern);
+    }
+  }
+
+  _createClass(Bitap, [{
+    key: 'search',
+    value: function search(text) {
+      if (!this.options.isCaseSensitive) {
+        text = text.toLowerCase();
+      }
+
+      // Exact match
+      if (this.pattern === text) {
+        return {
+          isMatch: true,
+          score: 0,
+          matchedIndices: [[0, text.length - 1]]
+        };
+      }
+
+      // When pattern length is greater than the machine word length, just do a a regex comparison
+      var _options = this.options,
+          maxPatternLength = _options.maxPatternLength,
+          tokenSeparator = _options.tokenSeparator;
+
+      if (this.pattern.length > maxPatternLength) {
+        return bitapRegexSearch(text, this.pattern, tokenSeparator);
+      }
+
+      // Otherwise, use Bitap algorithm
+      var _options2 = this.options,
+          location = _options2.location,
+          distance = _options2.distance,
+          threshold = _options2.threshold,
+          findAllMatches = _options2.findAllMatches,
+          minMatchCharLength = _options2.minMatchCharLength;
+
+      return bitapSearch(text, this.pattern, this.patternAlphabet, {
+        location: location,
+        distance: distance,
+        threshold: threshold,
+        findAllMatches: findAllMatches,
+        minMatchCharLength: minMatchCharLength
+      });
+    }
+  }]);
+
+  return Bitap;
+}();
+
+// let x = new Bitap("od mn war", {})
+// let result = x.search("Old Man's War")
+// console.log(result)
+
+module.exports = Bitap;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isArray = __webpack_require__(0);
+
+var deepValue = function deepValue(obj, path, list) {
+  if (!path) {
+    // If there's no path left, we've gotten to the object we care about.
+    list.push(obj);
+  } else {
+    var dotIndex = path.indexOf('.');
+    var firstSegment = path;
+    var remaining = null;
+
+    if (dotIndex !== -1) {
+      firstSegment = path.slice(0, dotIndex);
+      remaining = path.slice(dotIndex + 1);
+    }
+
+    var value = obj[firstSegment];
+
+    if (value !== null && value !== undefined) {
+      if (!remaining && (typeof value === 'string' || typeof value === 'number')) {
+        list.push(value.toString());
+      } else if (isArray(value)) {
+        // Search each item in the array.
+        for (var i = 0, len = value.length; i < len; i += 1) {
+          deepValue(value[i], remaining, list);
+        }
+      } else if (remaining) {
+        // An object. Recurse further.
+        deepValue(value, remaining, list);
+      }
+    }
+  }
+
+  return list;
+};
+
+module.exports = function (obj, path) {
+  return deepValue(obj, path, []);
+};
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function () {
+  var matchmask = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var minMatchCharLength = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+
+  var matchedIndices = [];
+  var start = -1;
+  var end = -1;
+  var i = 0;
+
+  for (var len = matchmask.length; i < len; i += 1) {
+    var match = matchmask[i];
+    if (match && start === -1) {
+      start = i;
+    } else if (!match && start !== -1) {
+      end = i - 1;
+      if (end - start + 1 >= minMatchCharLength) {
+        matchedIndices.push([start, end]);
+      }
+      start = -1;
+    }
+  }
+
+  // (i-1 - start) + 1 => i - start
+  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
+    matchedIndices.push([start, i - 1]);
+  }
+
+  return matchedIndices;
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (pattern) {
+  var mask = {};
+  var len = pattern.length;
+
+  for (var i = 0; i < len; i += 1) {
+    mask[pattern.charAt(i)] = 0;
+  }
+
+  for (var _i = 0; _i < len; _i += 1) {
+    mask[pattern.charAt(_i)] |= 1 << len - _i - 1;
+  }
+
+  return mask;
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var SPECIAL_CHARS_REGEX = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+
+module.exports = function (text, pattern) {
+  var tokenSeparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : / +/g;
+
+  var regex = new RegExp(pattern.replace(SPECIAL_CHARS_REGEX, '\\$&').replace(tokenSeparator, '|'));
+  var matches = text.match(regex);
+  var isMatch = !!matches;
+  var matchedIndices = [];
+
+  if (isMatch) {
+    for (var i = 0, matchesLen = matches.length; i < matchesLen; i += 1) {
+      var match = matches[i];
+      matchedIndices.push([text.indexOf(match), match.length - 1]);
+    }
+  }
+
+  return {
+    // TODO: revisit this score
+    score: isMatch ? 0.5 : 1,
+    isMatch: isMatch,
+    matchedIndices: matchedIndices
+  };
+};
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (pattern, _ref) {
+  var _ref$errors = _ref.errors,
+      errors = _ref$errors === undefined ? 0 : _ref$errors,
+      _ref$currentLocation = _ref.currentLocation,
+      currentLocation = _ref$currentLocation === undefined ? 0 : _ref$currentLocation,
+      _ref$expectedLocation = _ref.expectedLocation,
+      expectedLocation = _ref$expectedLocation === undefined ? 0 : _ref$expectedLocation,
+      _ref$distance = _ref.distance,
+      distance = _ref$distance === undefined ? 100 : _ref$distance;
+
+  var accuracy = errors / pattern.length;
+  var proximity = Math.abs(expectedLocation - currentLocation);
+
+  if (!distance) {
+    // Dodge divide by zero error.
+    return proximity ? 1.0 : accuracy;
+  }
+
+  return accuracy + proximity / distance;
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var bitapScore = __webpack_require__(6);
+var matchedIndices = __webpack_require__(3);
+
+module.exports = function (text, pattern, patternAlphabet, _ref) {
+  var _ref$location = _ref.location,
+      location = _ref$location === undefined ? 0 : _ref$location,
+      _ref$distance = _ref.distance,
+      distance = _ref$distance === undefined ? 100 : _ref$distance,
+      _ref$threshold = _ref.threshold,
+      threshold = _ref$threshold === undefined ? 0.6 : _ref$threshold,
+      _ref$findAllMatches = _ref.findAllMatches,
+      findAllMatches = _ref$findAllMatches === undefined ? false : _ref$findAllMatches,
+      _ref$minMatchCharLeng = _ref.minMatchCharLength,
+      minMatchCharLength = _ref$minMatchCharLeng === undefined ? 1 : _ref$minMatchCharLeng;
+
+  var expectedLocation = location;
+  // Set starting location at beginning text and initialize the alphabet.
+  var textLen = text.length;
+  // Highest score beyond which we give up.
+  var currentThreshold = threshold;
+  // Is there a nearby exact match? (speedup)
+  var bestLocation = text.indexOf(pattern, expectedLocation);
+
+  var patternLen = pattern.length;
+
+  // a mask of the matches
+  var matchMask = [];
+  for (var i = 0; i < textLen; i += 1) {
+    matchMask[i] = 0;
+  }
+
+  if (bestLocation !== -1) {
+    var score = bitapScore(pattern, {
+      errors: 0,
+      currentLocation: bestLocation,
+      expectedLocation: expectedLocation,
+      distance: distance
+    });
+    currentThreshold = Math.min(score, currentThreshold);
+
+    // What about in the other direction? (speed up)
+    bestLocation = text.lastIndexOf(pattern, expectedLocation + patternLen);
+
+    if (bestLocation !== -1) {
+      var _score = bitapScore(pattern, {
+        errors: 0,
+        currentLocation: bestLocation,
+        expectedLocation: expectedLocation,
+        distance: distance
+      });
+      currentThreshold = Math.min(_score, currentThreshold);
+    }
+  }
+
+  // Reset the best location
+  bestLocation = -1;
+
+  var lastBitArr = [];
+  var finalScore = 1;
+  var binMax = patternLen + textLen;
+
+  var mask = 1 << patternLen - 1;
+
+  for (var _i = 0; _i < patternLen; _i += 1) {
+    // Scan for the best match; each iteration allows for one more error.
+    // Run a binary search to determine how far from the match location we can stray
+    // at this error level.
+    var binMin = 0;
+    var binMid = binMax;
+
+    while (binMin < binMid) {
+      var _score3 = bitapScore(pattern, {
+        errors: _i,
+        currentLocation: expectedLocation + binMid,
+        expectedLocation: expectedLocation,
+        distance: distance
+      });
+
+      if (_score3 <= currentThreshold) {
+        binMin = binMid;
+      } else {
+        binMax = binMid;
+      }
+
+      binMid = Math.floor((binMax - binMin) / 2 + binMin);
+    }
+
+    // Use the result from this iteration as the maximum for the next.
+    binMax = binMid;
+
+    var start = Math.max(1, expectedLocation - binMid + 1);
+    var finish = findAllMatches ? textLen : Math.min(expectedLocation + binMid, textLen) + patternLen;
+
+    // Initialize the bit array
+    var bitArr = Array(finish + 2);
+
+    bitArr[finish + 1] = (1 << _i) - 1;
+
+    for (var j = finish; j >= start; j -= 1) {
+      var currentLocation = j - 1;
+      var charMatch = patternAlphabet[text.charAt(currentLocation)];
+
+      if (charMatch) {
+        matchMask[currentLocation] = 1;
+      }
+
+      // First pass: exact match
+      bitArr[j] = (bitArr[j + 1] << 1 | 1) & charMatch;
+
+      // Subsequent passes: fuzzy match
+      if (_i !== 0) {
+        bitArr[j] |= (lastBitArr[j + 1] | lastBitArr[j]) << 1 | 1 | lastBitArr[j + 1];
+      }
+
+      if (bitArr[j] & mask) {
+        finalScore = bitapScore(pattern, {
+          errors: _i,
+          currentLocation: currentLocation,
+          expectedLocation: expectedLocation,
+          distance: distance
+        });
+
+        // This match will almost certainly be better than any existing match.
+        // But check anyway.
+        if (finalScore <= currentThreshold) {
+          // Indeed it is
+          currentThreshold = finalScore;
+          bestLocation = currentLocation;
+
+          // Already passed `loc`, downhill from here on in.
+          if (bestLocation <= expectedLocation) {
+            break;
+          }
+
+          // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
+          start = Math.max(1, 2 * expectedLocation - bestLocation);
+        }
+      }
+    }
+
+    // No hope for a (better) match at greater error levels.
+    var _score2 = bitapScore(pattern, {
+      errors: _i + 1,
+      currentLocation: expectedLocation,
+      expectedLocation: expectedLocation,
+      distance: distance
+    });
+
+    if (_score2 > currentThreshold) {
+      break;
+    }
+
+    lastBitArr = bitArr;
+  }
+
+  // Count exact matches (those with a score of 0) to be "almost" exact
+  return {
+    isMatch: bestLocation >= 0,
+    score: finalScore === 0 ? 0.001 : finalScore,
+    matchedIndices: matchedIndices(matchMask, minMatchCharLength)
+  };
+};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Bitap = __webpack_require__(1);
+var deepValue = __webpack_require__(2);
+var isArray = __webpack_require__(0);
+
+var Fuse = function () {
+  function Fuse(list, _ref) {
+    var _ref$location = _ref.location,
+        location = _ref$location === undefined ? 0 : _ref$location,
+        _ref$distance = _ref.distance,
+        distance = _ref$distance === undefined ? 100 : _ref$distance,
+        _ref$threshold = _ref.threshold,
+        threshold = _ref$threshold === undefined ? 0.6 : _ref$threshold,
+        _ref$maxPatternLength = _ref.maxPatternLength,
+        maxPatternLength = _ref$maxPatternLength === undefined ? 32 : _ref$maxPatternLength,
+        _ref$caseSensitive = _ref.caseSensitive,
+        caseSensitive = _ref$caseSensitive === undefined ? false : _ref$caseSensitive,
+        _ref$tokenSeparator = _ref.tokenSeparator,
+        tokenSeparator = _ref$tokenSeparator === undefined ? / +/g : _ref$tokenSeparator,
+        _ref$findAllMatches = _ref.findAllMatches,
+        findAllMatches = _ref$findAllMatches === undefined ? false : _ref$findAllMatches,
+        _ref$minMatchCharLeng = _ref.minMatchCharLength,
+        minMatchCharLength = _ref$minMatchCharLeng === undefined ? 1 : _ref$minMatchCharLeng,
+        _ref$id = _ref.id,
+        id = _ref$id === undefined ? null : _ref$id,
+        _ref$keys = _ref.keys,
+        keys = _ref$keys === undefined ? [] : _ref$keys,
+        _ref$shouldSort = _ref.shouldSort,
+        shouldSort = _ref$shouldSort === undefined ? true : _ref$shouldSort,
+        _ref$getFn = _ref.getFn,
+        getFn = _ref$getFn === undefined ? deepValue : _ref$getFn,
+        _ref$sortFn = _ref.sortFn,
+        sortFn = _ref$sortFn === undefined ? function (a, b) {
+      return a.score - b.score;
+    } : _ref$sortFn,
+        _ref$tokenize = _ref.tokenize,
+        tokenize = _ref$tokenize === undefined ? false : _ref$tokenize,
+        _ref$matchAllTokens = _ref.matchAllTokens,
+        matchAllTokens = _ref$matchAllTokens === undefined ? false : _ref$matchAllTokens,
+        _ref$includeMatches = _ref.includeMatches,
+        includeMatches = _ref$includeMatches === undefined ? false : _ref$includeMatches,
+        _ref$includeScore = _ref.includeScore,
+        includeScore = _ref$includeScore === undefined ? false : _ref$includeScore,
+        _ref$verbose = _ref.verbose,
+        verbose = _ref$verbose === undefined ? false : _ref$verbose;
+
+    _classCallCheck(this, Fuse);
+
+    this.options = {
+      location: location,
+      distance: distance,
+      threshold: threshold,
+      maxPatternLength: maxPatternLength,
+      isCaseSensitive: caseSensitive,
+      tokenSeparator: tokenSeparator,
+      findAllMatches: findAllMatches,
+      minMatchCharLength: minMatchCharLength,
+      id: id,
+      keys: keys,
+      includeMatches: includeMatches,
+      includeScore: includeScore,
+      shouldSort: shouldSort,
+      getFn: getFn,
+      sortFn: sortFn,
+      verbose: verbose,
+      tokenize: tokenize,
+      matchAllTokens: matchAllTokens
+    };
+
+    this.setCollection(list);
+  }
+
+  _createClass(Fuse, [{
+    key: 'setCollection',
+    value: function setCollection(list) {
+      this.list = list;
+      return list;
+    }
+  }, {
+    key: 'search',
+    value: function search(pattern) {
+      this._log('---------\nSearch pattern: "' + pattern + '"');
+
+      var _prepareSearchers2 = this._prepareSearchers(pattern),
+          tokenSearchers = _prepareSearchers2.tokenSearchers,
+          fullSearcher = _prepareSearchers2.fullSearcher;
+
+      var _search2 = this._search(tokenSearchers, fullSearcher),
+          weights = _search2.weights,
+          results = _search2.results;
+
+      this._computeScore(weights, results);
+
+      if (this.options.shouldSort) {
+        this._sort(results);
+      }
+
+      return this._format(results);
+    }
+  }, {
+    key: '_prepareSearchers',
+    value: function _prepareSearchers() {
+      var pattern = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+
+      var tokenSearchers = [];
+
+      if (this.options.tokenize) {
+        // Tokenize on the separator
+        var tokens = pattern.split(this.options.tokenSeparator);
+        for (var i = 0, len = tokens.length; i < len; i += 1) {
+          tokenSearchers.push(new Bitap(tokens[i], this.options));
+        }
+      }
+
+      var fullSearcher = new Bitap(pattern, this.options);
+
+      return { tokenSearchers: tokenSearchers, fullSearcher: fullSearcher };
+    }
+  }, {
+    key: '_search',
+    value: function _search() {
+      var tokenSearchers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var fullSearcher = arguments[1];
+
+      var list = this.list;
+      var resultMap = {};
+      var results = [];
+
+      // Check the first item in the list, if it's a string, then we assume
+      // that every item in the list is also a string, and thus it's a flattened array.
+      if (typeof list[0] === 'string') {
+        // Iterate over every item
+        for (var i = 0, len = list.length; i < len; i += 1) {
+          this._analyze({
+            key: '',
+            value: list[i],
+            record: i,
+            index: i
+          }, {
+            resultMap: resultMap,
+            results: results,
+            tokenSearchers: tokenSearchers,
+            fullSearcher: fullSearcher
+          });
+        }
+
+        return { weights: null, results: results };
+      }
+
+      // Otherwise, the first item is an Object (hopefully), and thus the searching
+      // is done on the values of the keys of each item.
+      var weights = {};
+      for (var _i = 0, _len = list.length; _i < _len; _i += 1) {
+        var item = list[_i];
+        // Iterate over every key
+        for (var j = 0, keysLen = this.options.keys.length; j < keysLen; j += 1) {
+          var key = this.options.keys[j];
+          if (typeof key !== 'string') {
+            weights[key.name] = {
+              weight: 1 - key.weight || 1
+            };
+            if (key.weight <= 0 || key.weight > 1) {
+              throw new Error('Key weight has to be > 0 and <= 1');
+            }
+            key = key.name;
+          } else {
+            weights[key] = {
+              weight: 1
+            };
+          }
+
+          this._analyze({
+            key: key,
+            value: this.options.getFn(item, key),
+            record: item,
+            index: _i
+          }, {
+            resultMap: resultMap,
+            results: results,
+            tokenSearchers: tokenSearchers,
+            fullSearcher: fullSearcher
+          });
+        }
+      }
+
+      return { weights: weights, results: results };
+    }
+  }, {
+    key: '_analyze',
+    value: function _analyze(_ref2, _ref3) {
+      var key = _ref2.key,
+          _ref2$arrayIndex = _ref2.arrayIndex,
+          arrayIndex = _ref2$arrayIndex === undefined ? -1 : _ref2$arrayIndex,
+          value = _ref2.value,
+          record = _ref2.record,
+          index = _ref2.index;
+      var _ref3$tokenSearchers = _ref3.tokenSearchers,
+          tokenSearchers = _ref3$tokenSearchers === undefined ? [] : _ref3$tokenSearchers,
+          _ref3$fullSearcher = _ref3.fullSearcher,
+          fullSearcher = _ref3$fullSearcher === undefined ? [] : _ref3$fullSearcher,
+          _ref3$resultMap = _ref3.resultMap,
+          resultMap = _ref3$resultMap === undefined ? {} : _ref3$resultMap,
+          _ref3$results = _ref3.results,
+          results = _ref3$results === undefined ? [] : _ref3$results;
+
+      // Check if the texvaluet can be searched
+      if (value === undefined || value === null) {
+        return;
+      }
+
+      var exists = false;
+      var averageScore = -1;
+      var numTextMatches = 0;
+
+      if (typeof value === 'string') {
+        this._log('\nKey: ' + (key === '' ? '-' : key));
+
+        var mainSearchResult = fullSearcher.search(value);
+        this._log('Full text: "' + value + '", score: ' + mainSearchResult.score);
+
+        if (this.options.tokenize) {
+          var words = value.split(this.options.tokenSeparator);
+          var scores = [];
+
+          for (var i = 0; i < tokenSearchers.length; i += 1) {
+            var tokenSearcher = tokenSearchers[i];
+
+            this._log('\nPattern: "' + tokenSearcher.pattern + '"');
+
+            // let tokenScores = []
+            var hasMatchInText = false;
+
+            for (var j = 0; j < words.length; j += 1) {
+              var word = words[j];
+              var tokenSearchResult = tokenSearcher.search(word);
+              var obj = {};
+              if (tokenSearchResult.isMatch) {
+                obj[word] = tokenSearchResult.score;
+                exists = true;
+                hasMatchInText = true;
+                scores.push(tokenSearchResult.score);
+              } else {
+                obj[word] = 1;
+                if (!this.options.matchAllTokens) {
+                  scores.push(1);
+                }
+              }
+              this._log('Token: "' + word + '", score: ' + obj[word]);
+              // tokenScores.push(obj)
+            }
+
+            if (hasMatchInText) {
+              numTextMatches += 1;
+            }
+          }
+
+          averageScore = scores[0];
+          var scoresLen = scores.length;
+          for (var _i2 = 1; _i2 < scoresLen; _i2 += 1) {
+            averageScore += scores[_i2];
+          }
+          averageScore = averageScore / scoresLen;
+
+          this._log('Token score average:', averageScore);
+        }
+
+        var finalScore = mainSearchResult.score;
+        if (averageScore > -1) {
+          finalScore = (finalScore + averageScore) / 2;
+        }
+
+        this._log('Score average:', finalScore);
+
+        var checkTextMatches = this.options.tokenize && this.options.matchAllTokens ? numTextMatches >= tokenSearchers.length : true;
+
+        this._log('\nCheck Matches: ' + checkTextMatches);
+
+        // If a match is found, add the item to <rawResults>, including its score
+        if ((exists || mainSearchResult.isMatch) && checkTextMatches) {
+          // Check if the item already exists in our results
+          var existingResult = resultMap[index];
+          if (existingResult) {
+            // Use the lowest score
+            // existingResult.score, bitapResult.score
+            existingResult.output.push({
+              key: key,
+              arrayIndex: arrayIndex,
+              value: value,
+              score: finalScore,
+              matchedIndices: mainSearchResult.matchedIndices
+            });
+          } else {
+            // Add it to the raw result list
+            resultMap[index] = {
+              item: record,
+              output: [{
+                key: key,
+                arrayIndex: arrayIndex,
+                value: value,
+                score: finalScore,
+                matchedIndices: mainSearchResult.matchedIndices
+              }]
+            };
+
+            results.push(resultMap[index]);
+          }
+        }
+      } else if (isArray(value)) {
+        for (var _i3 = 0, len = value.length; _i3 < len; _i3 += 1) {
+          this._analyze({
+            key: key,
+            arrayIndex: _i3,
+            value: value[_i3],
+            record: record,
+            index: index
+          }, {
+            resultMap: resultMap,
+            results: results,
+            tokenSearchers: tokenSearchers,
+            fullSearcher: fullSearcher
+          });
+        }
+      }
+    }
+  }, {
+    key: '_computeScore',
+    value: function _computeScore(weights, results) {
+      this._log('\n\nComputing score:\n');
+
+      for (var i = 0, len = results.length; i < len; i += 1) {
+        var output = results[i].output;
+        var scoreLen = output.length;
+
+        var totalScore = 0;
+        var bestScore = 1;
+
+        for (var j = 0; j < scoreLen; j += 1) {
+          var weight = weights ? weights[output[j].key].weight : 1;
+          var score = weight === 1 ? output[j].score : output[j].score || 0.001;
+          var nScore = score * weight;
+
+          if (weight !== 1) {
+            bestScore = Math.min(bestScore, nScore);
+          } else {
+            output[j].nScore = nScore;
+            totalScore += nScore;
+          }
+        }
+
+        results[i].score = bestScore === 1 ? totalScore / scoreLen : bestScore;
+
+        this._log(results[i]);
+      }
+    }
+  }, {
+    key: '_sort',
+    value: function _sort(results) {
+      this._log('\n\nSorting....');
+      results.sort(this.options.sortFn);
+    }
+  }, {
+    key: '_format',
+    value: function _format(results) {
+      var finalOutput = [];
+
+      this._log('\n\nOutput:\n\n', JSON.stringify(results));
+
+      var transformers = [];
+
+      if (this.options.includeMatches) {
+        transformers.push(function (result, data) {
+          var output = result.output;
+          data.matches = [];
+
+          for (var i = 0, len = output.length; i < len; i += 1) {
+            var item = output[i];
+
+            if (item.matchedIndices.length === 0) {
+              continue;
+            }
+
+            var obj = {
+              indices: item.matchedIndices,
+              value: item.value
+            };
+            if (item.key) {
+              obj.key = item.key;
+            }
+            if (item.hasOwnProperty('arrayIndex') && item.arrayIndex > -1) {
+              obj.arrayIndex = item.arrayIndex;
+            }
+            data.matches.push(obj);
+          }
+        });
+      }
+
+      if (this.options.includeScore) {
+        transformers.push(function (result, data) {
+          data.score = result.score;
+        });
+      }
+
+      for (var i = 0, len = results.length; i < len; i += 1) {
+        var result = results[i];
+
+        if (this.options.id) {
+          result.item = this.options.getFn(result.item, this.options.id)[0];
+        }
+
+        if (!transformers.length) {
+          finalOutput.push(result.item);
+          continue;
+        }
+
+        var data = {
+          item: result.item
+        };
+
+        for (var j = 0, _len2 = transformers.length; j < _len2; j += 1) {
+          transformers[j](result, data);
+        }
+
+        finalOutput.push(data);
+      }
+
+      return finalOutput;
+    }
+  }, {
+    key: '_log',
+    value: function _log() {
+      if (this.options.verbose) {
+        var _console;
+
+        (_console = console).log.apply(_console, arguments);
+      }
+    }
+  }]);
+
+  return Fuse;
+}();
+
+module.exports = Fuse;
+
+/***/ })
+/******/ ]);
+});
+//# sourceMappingURL=fuse.js.map
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var hljs = __webpack_require__(9);
+
+hljs.registerLanguage('1c', __webpack_require__(10));
+hljs.registerLanguage('abnf', __webpack_require__(11));
+hljs.registerLanguage('accesslog', __webpack_require__(12));
+hljs.registerLanguage('actionscript', __webpack_require__(13));
+hljs.registerLanguage('ada', __webpack_require__(14));
+hljs.registerLanguage('apache', __webpack_require__(15));
+hljs.registerLanguage('applescript', __webpack_require__(16));
+hljs.registerLanguage('cpp', __webpack_require__(17));
+hljs.registerLanguage('arduino', __webpack_require__(18));
+hljs.registerLanguage('armasm', __webpack_require__(19));
+hljs.registerLanguage('xml', __webpack_require__(20));
+hljs.registerLanguage('asciidoc', __webpack_require__(21));
+hljs.registerLanguage('aspectj', __webpack_require__(22));
+hljs.registerLanguage('autohotkey', __webpack_require__(23));
+hljs.registerLanguage('autoit', __webpack_require__(24));
+hljs.registerLanguage('avrasm', __webpack_require__(25));
+hljs.registerLanguage('awk', __webpack_require__(26));
+hljs.registerLanguage('axapta', __webpack_require__(27));
+hljs.registerLanguage('bash', __webpack_require__(28));
+hljs.registerLanguage('basic', __webpack_require__(29));
+hljs.registerLanguage('bnf', __webpack_require__(30));
+hljs.registerLanguage('brainfuck', __webpack_require__(31));
+hljs.registerLanguage('cal', __webpack_require__(32));
+hljs.registerLanguage('capnproto', __webpack_require__(33));
+hljs.registerLanguage('ceylon', __webpack_require__(34));
+hljs.registerLanguage('clean', __webpack_require__(35));
+hljs.registerLanguage('clojure', __webpack_require__(36));
+hljs.registerLanguage('clojure-repl', __webpack_require__(37));
+hljs.registerLanguage('cmake', __webpack_require__(38));
+hljs.registerLanguage('coffeescript', __webpack_require__(39));
+hljs.registerLanguage('coq', __webpack_require__(40));
+hljs.registerLanguage('cos', __webpack_require__(41));
+hljs.registerLanguage('crmsh', __webpack_require__(42));
+hljs.registerLanguage('crystal', __webpack_require__(43));
+hljs.registerLanguage('cs', __webpack_require__(44));
+hljs.registerLanguage('csp', __webpack_require__(45));
+hljs.registerLanguage('css', __webpack_require__(46));
+hljs.registerLanguage('d', __webpack_require__(47));
+hljs.registerLanguage('markdown', __webpack_require__(48));
+hljs.registerLanguage('dart', __webpack_require__(49));
+hljs.registerLanguage('delphi', __webpack_require__(50));
+hljs.registerLanguage('diff', __webpack_require__(51));
+hljs.registerLanguage('django', __webpack_require__(52));
+hljs.registerLanguage('dns', __webpack_require__(53));
+hljs.registerLanguage('dockerfile', __webpack_require__(54));
+hljs.registerLanguage('dos', __webpack_require__(55));
+hljs.registerLanguage('dsconfig', __webpack_require__(56));
+hljs.registerLanguage('dts', __webpack_require__(57));
+hljs.registerLanguage('dust', __webpack_require__(58));
+hljs.registerLanguage('ebnf', __webpack_require__(59));
+hljs.registerLanguage('elixir', __webpack_require__(60));
+hljs.registerLanguage('elm', __webpack_require__(61));
+hljs.registerLanguage('ruby', __webpack_require__(62));
+hljs.registerLanguage('erb', __webpack_require__(63));
+hljs.registerLanguage('erlang-repl', __webpack_require__(64));
+hljs.registerLanguage('erlang', __webpack_require__(65));
+hljs.registerLanguage('excel', __webpack_require__(66));
+hljs.registerLanguage('fix', __webpack_require__(67));
+hljs.registerLanguage('flix', __webpack_require__(68));
+hljs.registerLanguage('fortran', __webpack_require__(69));
+hljs.registerLanguage('fsharp', __webpack_require__(70));
+hljs.registerLanguage('gams', __webpack_require__(71));
+hljs.registerLanguage('gauss', __webpack_require__(72));
+hljs.registerLanguage('gcode', __webpack_require__(73));
+hljs.registerLanguage('gherkin', __webpack_require__(74));
+hljs.registerLanguage('glsl', __webpack_require__(75));
+hljs.registerLanguage('go', __webpack_require__(76));
+hljs.registerLanguage('golo', __webpack_require__(77));
+hljs.registerLanguage('gradle', __webpack_require__(78));
+hljs.registerLanguage('groovy', __webpack_require__(79));
+hljs.registerLanguage('haml', __webpack_require__(80));
+hljs.registerLanguage('handlebars', __webpack_require__(81));
+hljs.registerLanguage('haskell', __webpack_require__(82));
+hljs.registerLanguage('haxe', __webpack_require__(83));
+hljs.registerLanguage('hsp', __webpack_require__(84));
+hljs.registerLanguage('htmlbars', __webpack_require__(85));
+hljs.registerLanguage('http', __webpack_require__(86));
+hljs.registerLanguage('hy', __webpack_require__(87));
+hljs.registerLanguage('inform7', __webpack_require__(88));
+hljs.registerLanguage('ini', __webpack_require__(89));
+hljs.registerLanguage('irpf90', __webpack_require__(90));
+hljs.registerLanguage('java', __webpack_require__(91));
+hljs.registerLanguage('javascript', __webpack_require__(92));
+hljs.registerLanguage('jboss-cli', __webpack_require__(93));
+hljs.registerLanguage('json', __webpack_require__(94));
+hljs.registerLanguage('julia', __webpack_require__(95));
+hljs.registerLanguage('julia-repl', __webpack_require__(96));
+hljs.registerLanguage('kotlin', __webpack_require__(97));
+hljs.registerLanguage('lasso', __webpack_require__(98));
+hljs.registerLanguage('ldif', __webpack_require__(99));
+hljs.registerLanguage('leaf', __webpack_require__(100));
+hljs.registerLanguage('less', __webpack_require__(101));
+hljs.registerLanguage('lisp', __webpack_require__(102));
+hljs.registerLanguage('livecodeserver', __webpack_require__(103));
+hljs.registerLanguage('livescript', __webpack_require__(104));
+hljs.registerLanguage('llvm', __webpack_require__(105));
+hljs.registerLanguage('lsl', __webpack_require__(106));
+hljs.registerLanguage('lua', __webpack_require__(107));
+hljs.registerLanguage('makefile', __webpack_require__(108));
+hljs.registerLanguage('mathematica', __webpack_require__(109));
+hljs.registerLanguage('matlab', __webpack_require__(110));
+hljs.registerLanguage('maxima', __webpack_require__(111));
+hljs.registerLanguage('mel', __webpack_require__(112));
+hljs.registerLanguage('mercury', __webpack_require__(113));
+hljs.registerLanguage('mipsasm', __webpack_require__(114));
+hljs.registerLanguage('mizar', __webpack_require__(115));
+hljs.registerLanguage('perl', __webpack_require__(116));
+hljs.registerLanguage('mojolicious', __webpack_require__(117));
+hljs.registerLanguage('monkey', __webpack_require__(118));
+hljs.registerLanguage('moonscript', __webpack_require__(119));
+hljs.registerLanguage('n1ql', __webpack_require__(120));
+hljs.registerLanguage('nginx', __webpack_require__(121));
+hljs.registerLanguage('nimrod', __webpack_require__(122));
+hljs.registerLanguage('nix', __webpack_require__(123));
+hljs.registerLanguage('nsis', __webpack_require__(124));
+hljs.registerLanguage('objectivec', __webpack_require__(125));
+hljs.registerLanguage('ocaml', __webpack_require__(126));
+hljs.registerLanguage('openscad', __webpack_require__(127));
+hljs.registerLanguage('oxygene', __webpack_require__(128));
+hljs.registerLanguage('parser3', __webpack_require__(129));
+hljs.registerLanguage('pf', __webpack_require__(130));
+hljs.registerLanguage('php', __webpack_require__(131));
+hljs.registerLanguage('pony', __webpack_require__(132));
+hljs.registerLanguage('powershell', __webpack_require__(133));
+hljs.registerLanguage('processing', __webpack_require__(134));
+hljs.registerLanguage('profile', __webpack_require__(135));
+hljs.registerLanguage('prolog', __webpack_require__(136));
+hljs.registerLanguage('protobuf', __webpack_require__(137));
+hljs.registerLanguage('puppet', __webpack_require__(138));
+hljs.registerLanguage('purebasic', __webpack_require__(139));
+hljs.registerLanguage('python', __webpack_require__(140));
+hljs.registerLanguage('q', __webpack_require__(141));
+hljs.registerLanguage('qml', __webpack_require__(142));
+hljs.registerLanguage('r', __webpack_require__(143));
+hljs.registerLanguage('rib', __webpack_require__(144));
+hljs.registerLanguage('roboconf', __webpack_require__(145));
+hljs.registerLanguage('routeros', __webpack_require__(146));
+hljs.registerLanguage('rsl', __webpack_require__(147));
+hljs.registerLanguage('ruleslanguage', __webpack_require__(148));
+hljs.registerLanguage('rust', __webpack_require__(149));
+hljs.registerLanguage('scala', __webpack_require__(150));
+hljs.registerLanguage('scheme', __webpack_require__(151));
+hljs.registerLanguage('scilab', __webpack_require__(152));
+hljs.registerLanguage('scss', __webpack_require__(153));
+hljs.registerLanguage('shell', __webpack_require__(154));
+hljs.registerLanguage('smali', __webpack_require__(155));
+hljs.registerLanguage('smalltalk', __webpack_require__(156));
+hljs.registerLanguage('sml', __webpack_require__(157));
+hljs.registerLanguage('sqf', __webpack_require__(158));
+hljs.registerLanguage('sql', __webpack_require__(159));
+hljs.registerLanguage('stan', __webpack_require__(160));
+hljs.registerLanguage('stata', __webpack_require__(161));
+hljs.registerLanguage('step21', __webpack_require__(162));
+hljs.registerLanguage('stylus', __webpack_require__(163));
+hljs.registerLanguage('subunit', __webpack_require__(164));
+hljs.registerLanguage('swift', __webpack_require__(165));
+hljs.registerLanguage('taggerscript', __webpack_require__(166));
+hljs.registerLanguage('yaml', __webpack_require__(167));
+hljs.registerLanguage('tap', __webpack_require__(168));
+hljs.registerLanguage('tcl', __webpack_require__(169));
+hljs.registerLanguage('tex', __webpack_require__(170));
+hljs.registerLanguage('thrift', __webpack_require__(171));
+hljs.registerLanguage('tp', __webpack_require__(172));
+hljs.registerLanguage('twig', __webpack_require__(173));
+hljs.registerLanguage('typescript', __webpack_require__(174));
+hljs.registerLanguage('vala', __webpack_require__(175));
+hljs.registerLanguage('vbnet', __webpack_require__(176));
+hljs.registerLanguage('vbscript', __webpack_require__(177));
+hljs.registerLanguage('vbscript-html', __webpack_require__(178));
+hljs.registerLanguage('verilog', __webpack_require__(179));
+hljs.registerLanguage('vhdl', __webpack_require__(180));
+hljs.registerLanguage('vim', __webpack_require__(181));
+hljs.registerLanguage('x86asm', __webpack_require__(182));
+hljs.registerLanguage('xl', __webpack_require__(183));
+hljs.registerLanguage('xquery', __webpack_require__(184));
+hljs.registerLanguage('zephir', __webpack_require__(185));
 
 module.exports = hljs;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -17849,14 +18874,14 @@ https://highlightjs.org/
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs){
 
   // общий паттерн для определения идентификаторов
   var UNDERSCORE_IDENT_RE = '[A-Za-zА-Яа-яёЁ_][A-Za-zА-Яа-яёЁ_0-9]+';
-
+  
   // v7 уникальные ключевые слова, отсутствующие в v8 ==> keyword
   var v7_keywords =
   'далее ';
@@ -17868,7 +18893,7 @@ module.exports = function(hljs){
 
   // keyword : ключевые слова
   var KEYWORD = v7_keywords + v8_keywords;
-
+  
   // v7 уникальные директивы, отсутствующие в v8 ==> meta-keyword
   var v7_meta_keywords =
   'загрузитьизфайла ';
@@ -17885,7 +18910,7 @@ module.exports = function(hljs){
   // v7 системные константы ==> built_in
   var v7_system_constants =
   'разделительстраниц разделительстрок символтабуляции ';
-
+  
   // v7 уникальные методы глобального контекста, отсутствующие в v8 ==> built_in
   var v7_global_context_methods =
   'ansitooem oemtoansi ввестивидсубконто ввестиперечисление ввестипериод ввестиплансчетов выбранныйплансчетов ' +
@@ -17899,7 +18924,7 @@ module.exports = function(hljs){
   'префиксавтонумерации пропись пустоезначение разм разобратьпозициюдокумента рассчитатьрегистрына ' +
   'рассчитатьрегистрыпо симв создатьобъект статусвозврата стрколичествострок сформироватьпозициюдокумента ' +
   'счетпокоду текущеевремя типзначения типзначениястр установитьтана установитьтапо фиксшаблон шаблон ';
-
+  
   // v8 методы глобального контекста ==> built_in
   var v8_global_context_methods =
   'acos asin atan base64значение base64строка cos exp log log10 pow sin sqrt tan xmlзначение xmlстрока ' +
@@ -17994,7 +19019,7 @@ module.exports = function(hljs){
   v7_system_constants +
   v7_global_context_methods + v8_global_context_methods +
   v8_global_context_property;
-
+  
   // v8 системные наборы значений ==> class
   var v8_system_sets_of_values =
   'webцвета windowsцвета windowsшрифты библиотекакартинок рамкистиля символы цветастиля шрифтыстиля ';
@@ -18146,7 +19171,7 @@ module.exports = function(hljs){
   'кодировкаименфайловвzipфайле методсжатияzip методшифрованияzip режимвосстановленияпутейфайловzip режимобработкиподкаталоговzip ' +
   'режимсохраненияпутейzip уровеньсжатияzip ';
 
-  // v8 системные перечисления -
+  // v8 системные перечисления - 
   // Блокировка данных, Фоновые задания, Автоматизированное тестирование,
   // Доставляемые уведомления, Встроенные покупки, Интернет, Работа с двоичными данными ==> class
   var v8_system_enums_other =
@@ -18265,7 +19290,7 @@ module.exports = function(hljs){
 
   // literal : примитивные типы
   var LITERAL = 'null истина ложь неопределено';
-
+  
   // number : числа
   var NUMBERS = hljs.inherit(hljs.NUMBER_MODE);
 
@@ -18286,10 +19311,10 @@ module.exports = function(hljs){
       }
     ]
   };
-
+  
   // comment : комментарии
   var COMMENTS = hljs.inherit(hljs.C_LINE_COMMENT_MODE);
-
+  
   // meta : инструкции препроцессора, директивы компиляции
   var META = {
     className: 'meta',
@@ -18300,13 +19325,13 @@ module.exports = function(hljs){
       COMMENTS
     ]
   };
-
+  
   // symbol : метка goto
   var SYMBOL = {
     className: 'symbol',
     begin: '~', end: ';|:', excludeEnd: true
-  };
-
+  };  
+  
   // function : объявление процедур и функций
   var FUNCTION = {
     className: 'function',
@@ -18358,12 +19383,12 @@ module.exports = function(hljs){
       NUMBERS,
       STRINGS,
       DATE
-    ]
+    ]  
   }
 };
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -18438,7 +19463,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -18480,7 +19505,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -18558,7 +19583,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = // We try to support full Ada2012
@@ -18735,7 +19760,7 @@ function(hljs) {
 };
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -18785,7 +19810,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -18875,7 +19900,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19054,7 +20079,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19158,7 +20183,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19254,7 +20279,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19361,7 +20386,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19553,7 +20578,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = function (hljs) {
@@ -19702,7 +20727,7 @@ module.exports = function (hljs) {
 };
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19743,7 +20768,7 @@ module.exports = function(hljs) {
         //I don't really know if this is totally relevant
       },
       {
-        className: 'meta',
+        className: 'meta', 
         begin: '^\\s*#\w+', end:'$',
         relevance: 0
       },
@@ -19765,7 +20790,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19905,7 +20930,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -19971,7 +20996,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20028,7 +21053,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20063,7 +21088,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20142,7 +21167,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20197,7 +21222,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs){
@@ -20230,7 +21255,7 @@ module.exports = function(hljs){
 };
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs){
@@ -20271,7 +21296,7 @@ module.exports = function(hljs){
 };
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20355,7 +21380,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20408,7 +21433,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20479,7 +21504,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20508,7 +21533,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20608,7 +21633,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20627,7 +21652,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20669,7 +21694,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20819,7 +21844,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -20890,7 +21915,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports) {
 
 module.exports = function cos (hljs) {
@@ -21018,7 +22043,7 @@ module.exports = function cos (hljs) {
 };
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -21116,7 +22141,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -21314,7 +22339,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -21495,7 +22520,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -21505,7 +22530,7 @@ module.exports = function(hljs) {
     keywords: {
       keyword: 'base-uri child-src connect-src default-src font-src form-action' +
         ' frame-ancestors frame-src img-src media-src object-src plugin-types' +
-        ' report-uri sandbox script-src style-src',
+        ' report-uri sandbox script-src style-src', 
     },
     contains: [
     {
@@ -21521,7 +22546,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -21630,7 +22655,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports) {
 
 module.exports = /**
@@ -21892,7 +22917,7 @@ function(hljs) {
 };
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22004,7 +23029,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports) {
 
 module.exports = function (hljs) {
@@ -22109,7 +23134,7 @@ module.exports = function (hljs) {
 };
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22182,7 +23207,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22226,7 +23251,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22294,7 +23319,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22327,7 +23352,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22353,7 +23378,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22409,7 +23434,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22460,7 +23485,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22588,7 +23613,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22624,7 +23649,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22661,7 +23686,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22762,7 +23787,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -22850,7 +23875,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23031,7 +24056,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23050,7 +24075,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23100,7 +24125,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23250,7 +24275,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23264,7 +24289,7 @@ module.exports = function(hljs) {
     },
     contains: [
       {
-        /* matches a beginning equal sign found in Excel formula examples */
+        /* matches a beginning equal sign found in Excel formula examples */ 
         begin: /^=/,
         end: /[^=]/, returnEnd: true, illegal: /=/, /* only allow single equal sign at front of line */
         relevance: 10
@@ -23302,7 +24327,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23335,7 +24360,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports) {
 
 module.exports = function (hljs) {
@@ -23384,7 +24409,7 @@ module.exports = function (hljs) {
 };
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23459,7 +24484,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23522,7 +24547,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports) {
 
 module.exports = function (hljs) {
@@ -23680,7 +24705,7 @@ module.exports = function (hljs) {
 };
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23908,7 +24933,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -23979,7 +25004,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports) {
 
 module.exports = function (hljs) {
@@ -24020,7 +25045,7 @@ module.exports = function (hljs) {
 };
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24141,7 +25166,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24199,7 +25224,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24226,7 +25251,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24265,7 +25290,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24363,7 +25388,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports) {
 
 module.exports = // TODO support filter tags like :javascript, support inline HTML
@@ -24474,7 +25499,7 @@ function(hljs) {
 };
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24512,7 +25537,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24638,7 +25663,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24754,7 +25779,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24804,7 +25829,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24879,7 +25904,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -24924,7 +25949,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25030,7 +26055,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25091,7 +26116,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25161,7 +26186,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25241,7 +26266,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25353,7 +26378,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25528,7 +26553,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports) {
 
 module.exports = function (hljs) {
@@ -25579,7 +26604,7 @@ module.exports = function (hljs) {
 };
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25620,7 +26645,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25786,7 +26811,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25814,7 +26839,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -25992,7 +27017,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26159,7 +27184,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26186,7 +27211,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
 module.exports = function (hljs) {
@@ -26230,7 +27255,7 @@ module.exports = function (hljs) {
 };
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26374,7 +27399,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26481,7 +27506,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26642,7 +27667,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26795,7 +27820,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26888,7 +27913,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -26975,7 +28000,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -27045,7 +28070,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -27130,7 +28155,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -27192,7 +28217,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -27284,7 +28309,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -27694,7 +28719,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -27923,7 +28948,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28009,7 +29034,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28099,7 +29124,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28122,7 +29147,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28283,7 +29308,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28312,7 +29337,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28391,7 +29416,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28507,7 +29532,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28580,7 +29605,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28677,7 +29702,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28736,7 +29761,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28789,7 +29814,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28899,7 +29924,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -28994,7 +30019,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29069,7 +30094,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29130,7 +30155,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29204,7 +30229,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29256,7 +30281,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29312,7 +30337,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29443,7 +30468,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29538,7 +30563,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29582,7 +30607,7 @@ module.exports = function(hljs) {
   var PS_HELPTAGS = {
     className: 'doctag',
     variants: [
-      /* no paramater help tags */
+      /* no paramater help tags */ 
       { begin: /\.(synopsis|description|example|inputs|outputs|notes|link|component|role|functionality)/ },
       /* one parameter help tags */
       { begin: /\.(parameter|forwardhelptargetname|forwardhelpcategory|remotehelprunspace|externalhelp)\s+\S+/ }
@@ -29623,7 +30648,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29675,7 +30700,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29709,7 +30734,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29801,7 +30826,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29841,7 +30866,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -29960,7 +30985,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports) {
 
 module.exports = // Base deafult colors in PB IDE: background: #FFFFDF; foreground: #000000;
@@ -30022,7 +31047,7 @@ function(hljs) {
 };
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30142,7 +31167,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30169,7 +31194,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30342,7 +31367,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30416,7 +31441,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30447,7 +31472,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30518,7 +31543,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports) {
 
 module.exports = // Colors from RouterOS terminal:
@@ -30546,7 +31571,7 @@ function(hljs) {
   // ToDo: var PARAMETERS_PRINT = 'append as-value brief detail count-only file follow follow-only from interval terse value-list without-paging where info';
   // ToDo: var OPERATORS = '&& and ! not || or in ~ ^ & << >> + - * /';
   // ToDo: var TYPES = 'num number bool boolean str string ip ip6-prefix id time array';
-  // ToDo: The following tokens serve as delimiters in the grammar: ()  []  {}  :   ;   $   /
+  // ToDo: The following tokens serve as delimiters in the grammar: ()  []  {}  :   ;   $   / 
 
   var VAR_PREFIX = 'global local set for foreach';
 
@@ -30557,7 +31582,7 @@ function(hljs) {
       {begin: /\$\{(.*?)}/}
     ]
   };
-
+  
   var QUOTE_STRING = {
     className: 'string',
     begin: /"/, end: /"/,
@@ -30571,12 +31596,12 @@ function(hljs) {
       }
     ]
   };
-
+  
   var APOS_STRING = {
     className: 'string',
     begin: /'/, end: /'/
   };
-
+  
   var IPADDR = '((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\b';
   var IPADDR_wBITMASK =  IPADDR+'/(3[0-2]|[1-2][0-9]|\\d)';
   //////////////////////////////////////////////////////////////////////
@@ -30600,7 +31625,7 @@ function(hljs) {
           { begin: /^\[\</, end: /\>\]$/, },        // F# class declaration?
           { begin: /<\//, end: />/, },              // HTML tags
           { begin: /^facet /, end: /\}/, },         // roboconf - лютый костыль )))
-          { begin: '^1\\.\\.(\\d+)$', end: /$/, },  // tap
+          { begin: '^1\\.\\.(\\d+)$', end: /$/, },  // tap  
         ],
         illegal: /./,
       },
@@ -30609,7 +31634,7 @@ function(hljs) {
       APOS_STRING,
       VAR,
       { // attribute=value
-        begin: /[\w-]+\=([^\s\{\}\[\]\(\)]+)/,
+        begin: /[\w-]+\=([^\s\{\}\[\]\(\)]+)/, 
         relevance: 0,
         returnBegin: true,
         contains: [
@@ -30618,7 +31643,7 @@ function(hljs) {
             begin: /[^=]+/
           },
           {
-            begin: /=/,
+            begin: /=/, 
             endsWithParent:  true,
             relevance: 0,
             contains: [
@@ -30645,7 +31670,7 @@ function(hljs) {
               }, //*/
               {
                 // Не форматировать не классифицированные значения. Необходимо для исключения подсветки значений как built_in.
-                // className: 'number',
+                // className: 'number',  
                 begin: /("[^"]*"|[^\s\{\}\[\]]+)/,
               }, //*/
             ]
@@ -30658,7 +31683,7 @@ function(hljs) {
         begin: /\*[0-9a-fA-F]+/,
       }, //*/
 
-      {
+      { 
         begin: '\\b(' + COMMON_COMMANDS.split(' ').join('|') + ')([\\s\[\(]|\])',
         returnBegin: true,
         contains: [
@@ -30666,10 +31691,10 @@ function(hljs) {
             className: 'builtin-name', //'function',
             begin: /\w+/,
           },
-        ],
+        ],  
       },
-
-      {
+      
+      { 
         className: 'built_in',
         variants: [
           {begin: '(\\.\\./|/|\\s)((' + OBJECTS.split(' ').join('|') + ');?\\s)+',relevance: 10,},
@@ -30681,7 +31706,7 @@ function(hljs) {
 };
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30721,7 +31746,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30786,7 +31811,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -30898,7 +31923,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31017,7 +32042,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31165,7 +32190,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31223,7 +32248,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31325,7 +32350,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31344,7 +32369,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31404,7 +32429,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31458,7 +32483,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31528,7 +32553,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -31903,7 +32928,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32067,7 +33092,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32154,7 +33179,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32196,7 +33221,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32247,7 +33272,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32705,7 +33730,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32743,7 +33768,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32864,7 +33889,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -32912,7 +33937,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33004,7 +34029,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33044,7 +34069,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33109,7 +34134,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33175,7 +34200,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33214,7 +34239,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33302,7 +34327,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33372,7 +34397,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33532,7 +34557,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33586,7 +34611,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33646,7 +34671,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33689,7 +34714,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33705,7 +34730,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33808,7 +34833,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33873,7 +34898,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -33983,7 +35008,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -34123,7 +35148,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -34200,7 +35225,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -34275,7 +35300,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports) {
 
 module.exports = function(hljs) {
@@ -34386,7 +35411,7 @@ module.exports = function(hljs) {
 };
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function (factory) {
@@ -34396,20 +35421,41 @@ module.exports = function(hljs) {
     factory(jQuery, window, document);
   }
 }(function($, window, document, undefined) {
+  // Assign index numbers to each instance of the plugin
+  var index = 0;
+
   // Create the defaults once
   var pluginName = "selectDropdown",
     defaults = {
-      //propertyName: "value"
+      // Behaviour
+      maxListLength: 4, // Maximum number of <option> text() values to display within the button.
+      hideSelect: true, // Hide the select element.
+      multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
+      search: true, // Wrap the dropdown button in an input group with search form controls.
+      observeDomMutations: false, // Respect dynamic changes to the select options.
+      maxHeight: '300px', // Make the dropdown scrollable if beyond this height. Set as false to disable.
+
+      // Text.
+      textNoneSelected: "None selected",
+      textMultipleSelected: "Multiple selected",
+      textNoResults: "No results",
+
+      // HTML.
+      htmlClear: "Clear search",
+
+      // Classes
+      classDropdown: "dropdown",
+      classBtnClear: "btn btn-outline-secondary",
+      classBtnSearch: "btn btn-primary",
+      classMenu: "dropdown-menu",
+      classItem: "dropdown-item",
+
     };
 
   // The actual plugin constructor
-  function Plugin ( element, options ) {
+  function Plugin ( element, options, index ) {
+    this.index = index;
     this.element = element;
-
-    // jQuery has an extend method which merges the contents of two or
-    // more objects, storing the result in the first object. The first object
-    // is generally empty as we don't want to alter the default options for
-    // future instances of the plugin
     this.settings = $.extend( {}, defaults, options );
     this._defaults = defaults;
     this._name = pluginName;
@@ -34418,30 +35464,598 @@ module.exports = function(hljs) {
 
   // Avoid Plugin.prototype conflicts
   $.extend( Plugin.prototype, {
-    init: function() {
+    init() {
+      var _ = this; // Deep reference to this.
+      var $el = $( _.element );
+      _.prefix = 'bsd' + _.index + '-'; // Prefix for unique labelling.
 
-      // Place initialization logic here
-      // You already have access to the DOM element and
-      // the options via the instance, e.g. this.element
-      // and this.settings
-      // you can add more functions like the one below and
-      // call them like the example below
-      this.yourOtherFunction( "jQuery Boilerplate" );
+      // Properties: Data.
+      _.data = {};
+      _.data.multiselect = false;
+      _.data.preventHideDropdown = false;
+      var attrMultiple = $el.attr('multiple');
+      if ( typeof attrMultiple !== typeof undefined && attrMultiple !== false ) {
+        _.data.multiselect = true;
+      }
+      _.data.status = 'initial';
+      _.data.indexes = [];
+
+      // Properties: IDs.
+      _.ids = {};
+      _.ids.dropdownContainerId = _.prefix + 'container';
+      _.ids.dropdownButtonId = _.prefix + 'button';
+      _.ids.searchControlId = _.prefix + 'search';
+      _.ids.dropdownItemDeselect = _.prefix + 'deselect';
+      _.ids.dropdownItemShowSelected = _.prefix + 'selected';
+
+      // Properties: Selectors.
+      _.selectors = {};
+      _.selectors.dropdownItemDeselect = 'a#' + _.ids.dropdownItemDeselect;
+      _.selectors.dropdownItemShowSelected = 'a#' + _.ids.dropdownItemShowSelected;
+
+      // Properties: Elements.
+      _.els = {};
+      _.els.button = _.buildButton();
+      _.els.buttonClear = _.buildButtonClear();
+      _.els.searchControl = _.buildSearchControl();
+      _.els.controlDeselect = _.buildDeselectAll();
+      _.els.controlSelected = _.buildShowSelected();
+      _.els.dropdown = _.buildDropdownMenu();
+      _.els.dropdownItemsContainer = _.buildDropdownItemsContainer();
+      _.els.dropdownItemNoResults = _.buildDropdownItemNoResults();
+      _.els.dropdownItems = _.buildDropdownItems();
+      _.els.dropdownOptions = _.els.dropdownItems.filter( function() {
+        var attr = $( this ).data('option');
+        if (typeof attr !== typeof undefined && attr !== false) {
+          return true;
+        }
+        return false;
+      });
+
+      // Initialise Search.
+      if ( _.settings.search ) {
+        var haystack = [];
+        var options = {
+          keys: ['text'],
+          id: 'index'
+        };
+        _.els.dropdownOptions.each( function( index ) {
+          haystack[ index ] = {
+            index : $( this ).data('index'),
+            text : $( this ).text()
+          };
+        });
+        _.els.searchControl.on('keyup', function() {
+          var s = $(this).val();
+          var results = null;
+          if ( $.trim( s ) == '' ) {
+            _.refresh();
+            return;
+          } else {
+            var fuse = new Fuse( haystack, options );
+            results = fuse.search( $(this).val() );
+          }
+          if ( results ) {
+            // Continue.
+          } else {
+            _.refresh();
+            return;
+          }
+          //_.sort();
+          _.hide( results );
+          _.reorder( results );
+          _.resetScroll();
+        });
+      }
+
+      // Handle cut and paste.
+      _.els.searchControl.bind({
+          paste (){
+            $(this).trigger('keyup');
+          },
+          cut (){
+            $(this).trigger('keyup');
+          }
+      });
+
+      // Build.
+      _.setButtonText();
+      var $dropdown = _.buildDropdown();
+      $dropdown
+        .append( _.els.dropdown );
+      _.els.dropdownItemsContainer
+        .append( _.els.dropdownItems );
+      if ( _.data.multiselect ) {
+        _.els.dropdown
+          .append( _.els.controlDeselect )
+          .append( _.els.controlSelected );
+      }
+      _.els.dropdown
+        .append( _.els.dropdownItemsContainer );
+      $el.after( $dropdown );
+      if ( _.settings.hideSelect ) {
+        $el.hide();
+      }
+
+      // Assign click handler: Select item.
+      _.els.dropdownOptions.on('click', function( event ){
+        event.preventDefault();
+        _.toggle( $(this) );
+      });
+
+      // Assign click handler: Deselect all.
+      _.els.controlDeselect.on('click', function( event ){
+        event.preventDefault();
+        $dropdown.one('hide.bs.dropdown', function ( event ) {
+          event.preventDefault();
+        });
+        if ( !$(this).hasClass('disabled') ) {
+          _.deselectAll();
+        }
+      });
+
+      // Assign click handler: Show selected.
+      _.els.controlSelected.on('click', function( event ){
+        event.preventDefault();
+        $dropdown.one('hide.bs.dropdown', function ( event ) {
+          event.preventDefault();
+        });
+        if ( !$(this).hasClass('disabled') ) {
+          _.sortSelected();
+        }
+      });
+
+      // Assign click handler: Clear search.
+      _.els.buttonClear.on('click', function() {
+        _.els.searchControl.val('');
+        if ( _.dropdownActive() ) {
+          $dropdown.one('hide.bs.dropdown', function ( event ) {
+            event.preventDefault();
+          });
+        }
+        _.refresh();
+      });
+
+      // Assign click handler: No results.
+      _.els.dropdownItemNoResults.on('click', function( event ) {
+        event.preventDefault();
+        $dropdown.one('hide.bs.dropdown', function ( event ) {
+          event.preventDefault();
+        });
+      });
+
+      // Assign 'Enter' key listener for search.
+      // Assign 'Up' and 'Down' behaviour to the dropdown menu.
+      var up = $.Event("keydown");
+      up.which = 38; // Up cursor key..
+      var down = $.Event("keydown");
+      down.which = 40; // Down cursor key.
+      _.els.searchControl.keydown(function(e) {
+        if( e.which == 13 ) { // Enter.
+          _.toggle( _.els.dropdown.find('.hover').first() );
+        }
+        else if ( e.which == 38 ) { // Up.
+          var current = _.els.dropdown.find('.hover').first();
+          var previous = current.prev('a:visible');
+          //console.log(next);
+
+        }
+        else if ( e.which == 40 ) { // Down.
+          var current = _.els.dropdown.find('.hover').first();
+          var next = current.next('a:visible');
+          console.log(next);
+        }
+      });
+
+      // Prevent dropdown hide on interaction for multiselect.
+      if ( _.data.multiselect && _.settings.multiselectStayOpen ) {
+        $dropdown.on('hide.bs.dropdown', function ( event ) {
+          if ( _.data.preventHideDropdown ) {
+            event.preventDefault();
+            _.data.preventHideDropdown = false;
+          }
+        });
+      }
+
+      // On search focus: Toggle dropdown.
+      // - Can reliance on setTimeout be removed?
+      // - Should we depend on an aria attribute for plugin logic?
+      if ( _.settings.search ) {
+        _.els.searchControl.on('focusin', function(){
+          if ( _.els.button.attr('aria-expanded') == 'false' ) {
+            _.els.button.dropdown('toggle');
+            setTimeout(function(){
+              _.els.searchControl.focus();
+            }, 1);
+          }
+        });
+      }
+
+      _.refreshInitialControls();
+
+      // DOM mutation observer
+      if ( _.settings.observeDomMutations ) {
+        var config = { childList: true, subtree: true };
+        var callback = function( mutationsList ) {
+          for( var mutation of mutationsList ) {
+            if ( mutation.type == 'childList') {
+              _.refresh();
+            }
+          }
+        };
+        var observer = new MutationObserver( callback );
+        observer.observe( $el[0], config );
+      }
     },
-    yourOtherFunction: function( text ) {
+    buildDropdown() {
+      var _ = this;
 
-      // some logic
-      $( this.element ).text( text );
+      var $dropdown = $('<div>', {
+        id : _.ids.dropdownContainerId,
+        class : _.settings.classDropdown
+      });
+
+      if ( _.settings.search ) {
+
+        // Build dropdown.
+        $dropdown.append(
+          $('<div>', {
+            class: 'input-group'
+          })
+          .append( _.els.searchControl )
+          .append(
+            $('<div>', {
+              class: 'input-group-append'
+            })
+            .append( _.els.buttonClear )
+          )
+          .append(
+            $('<div>', {
+              class: 'input-group-append'
+            })
+            .append( _.els.button )
+          )
+        );
+
+        // Move dropdown menu to the right.
+        _.els.dropdown.addClass('dropdown-menu-right');
+      } else {
+
+        // Build dropdown.
+        $dropdown
+          .append( _.els.button );
+      }
+
+      return $dropdown;
+    },
+    buildButton() {
+      var _ = this;
+      return $('<button>', {
+        class: _.settings.classBtnSearch + ' dropdown-toggle',
+        type: 'button',
+        id: _.ids.dropdownButtonId,
+        'data-toggle': 'dropdown',
+        'data-target': '#' + _.ids.dropdownContainerId,
+        'aria-haspopup': 'true',
+        'aria-expanded': 'false'
+      });
+    },
+    buildButtonClear(){
+      var _ = this;
+      return $('<button>', {
+        type: 'button',
+        class: _.settings.classBtnClear
+      })
+      .html( _.settings.htmlClear );
+    },
+    buildSearchControl() {
+      var _ = this;
+      return $('<input>', {
+        type: 'text',
+        class: 'form-control',
+        placeholder: 'Search',
+        'aria-label': 'Search',
+        'aria-describedby': _.ids.searchControlId
+      });
+    },
+    buildDropdownMenu() {
+      var _ = this;
+      var $dropdownMenu = $('<div>', {
+        class: _.settings.classMenu,
+        'aria-labelledby': _.ids.dropdownButtonId
+      });
+      if ( _.settings.maxHeight ) {
+        $dropdownMenu
+          .css({
+            'height': 'auto',
+            'max-height': _.settings.maxHeight,
+            'overflow-x': 'hidden'
+          });
+      }
+      return $dropdownMenu;
+    },
+    buildDropdownItemsContainer() {
+      return $('<div>');
+    },
+    buildDropdownItems() {
+      var _ = this;
+      var $el = $( _.element );
+      var s = 0; // Sort index
+      var o = 0; // Option index
+      var $items = $();
+      var $optgroups = $el.find('optgroup');
+      if ( $optgroups.length ) {
+        $optgroups.each( function(){
+          $items = $items.add( _.buildDropdownHeader( $( this ).attr('label') ).data('index', s ) );
+          s = _.incrementIndex( s );
+          $( this ).find('option').each( function() {
+            $items = $items.add( _.buildDropdownItem( $( this ) ).data('index', s ).data('option', o) );
+            s = _.incrementIndex( s );
+            o++;
+          });
+        });
+      } else {
+        $el.find('option').each( function( index, value ) {
+          $items = $items.add( _.buildDropdownItem( $( this ) ).data('index', s ).data('option', o) );
+          s = _.incrementIndex( s );
+          o++;
+        });
+      }
+      if ( _.settings.search ) {
+        $items = $items.add( _.els.dropdownItemNoResults );
+      }
+      return $items;
+    },
+    incrementIndex( index ) {
+      var _ = this;
+      _.data.indexes.push( index.toString() );
+      index++;
+      return index;
+    },
+    buildDropdownHeader( text ) {
+      return $( '<h6>', {
+        class: 'dropdown-header',
+        text: text
+      });
+    },
+    buildDropdownItem( $option ) {
+      var _ = this;
+      var $dropdownItem = $( '<a>', {
+        href: '#',
+        class: _.settings.classItem,
+        text: $option.text()
+      });
+      if ( $option.is(':selected') ) {
+        $dropdownItem.addClass('active');
+      }
+      return $dropdownItem;
+    },
+    buildDropdownItemNoResults() {
+      var _ = this;
+      return $( '<span>', {
+        class: _.settings.classItem + ' ' + 'text-muted no-results',
+        text: _.settings.textNoResults
+      }).hide();
+    },
+    buildDeselectAll() {
+      var _ = this;
+      var $deselectItem = $('<a>', {
+        href: '#',
+        id: _.ids.dropdownItemDeselect,
+        class:  _.settings.classItem,
+        text: 'Deselect all'
+      });
+      return $deselectItem;
+    },
+    buildShowSelected() {
+      var _ = this;
+      var $showSelectedItem = $('<a>', {
+        href: '#',
+        id: _.ids.dropdownItemShowSelected,
+        class:  _.settings.classItem,
+        text: 'Show selected'
+      });
+      return $showSelectedItem;
+    },
+    dropdownActive() {
+      var _ = this;
+      if ( _.els.dropdown.hasClass('show') ) {
+        return true;
+      }
+      return false;
+    },
+    toggle( $dropdownItem ) {
+      var _ = this;
+      var $el =  $( _.element );
+      if ( _.data.multiselect ) {
+        _.data.preventHideDropdown = true;
+      }
+      var itemIndex = $dropdownItem.data('option');
+      var $option = $el.find('option').eq( itemIndex );
+      if ( $option.is(':selected') ) {
+        $option.prop('selected', false);
+        $dropdownItem.removeClass('active');
+      }
+      else {
+        if ( !_.data.multiselect ) {
+          _.els.dropdownOptions.removeClass('active');
+        }
+        $option.prop('selected', true);
+        $dropdownItem.addClass('active');
+      }
+      _.setButtonText();
+      _.refreshInitialControls();
+    },
+    deselectAll() {
+      var _ = this;
+      var $el =  $( _.element );
+      _.els.dropdownOptions.each( function(){
+        _.deselect( $( this ) );
+      });
+      if ( _.data.status == 'sort-selected' ) {
+        _.refresh();
+      }
+    },
+    deselect( $dropdownItem ){
+      var _ = this;
+      var $el =  $( _.element );
+      var itemIndex = $dropdownItem.data('option');
+      var $option = $el.find('option').eq( itemIndex );
+      if ( $option.is(':selected') ) {
+        _.toggle( $dropdownItem );
+      }
+    },
+    setButtonText() {
+      var _ = this;
+      var $el = $( _.element );
+      var $btn = _.els.button;
+      var selected = $el.val();
+      if ( selected.length < 1 ) {
+        $btn.text( _.settings.textNoneSelected );
+      }
+      else if ( selected.length <= _.settings.maxListLength ) {
+        var textValues = $el
+          .find('option:selected')
+          .map(function (i, element) {
+            return $(element).text();
+          })
+          .get();
+        $btn.text( textValues.join(", ") );
+      }
+      else {
+        $btn.text( _.settings.textMultipleSelected );
+      }
+    },
+    refresh() {
+      var _ = this;
+      _.data.status = 'initial';
+      _.els.dropdownItems.removeClass('hover').show();
+      _.els.dropdownItemNoResults.hide();
+      _.sortReset();
+      _.showInitialControls();
+    },
+    hide( results ) {
+      var _ = this;
+      var notResults = $(_.data.indexes).not(results).get();
+      _.els.dropdownOptions.show().removeClass('hover');
+      _.dropdownItemByIndex( results[0] ).addClass('hover');
+      $.each( notResults, function( index, value ) {
+        _.dropdownItemByIndex( value ).hide();
+      });
+      _.els.button.dropdown('update');
+    },
+    dropdownItemByIndex( index ) {
+      var _ = this;
+      return _.els.dropdownItems.filter( function(){
+        return $(this).data('index') == index;
+      });
+    },
+    hideInitialControls() {
+      var _ = this;
+      _.els.controlDeselect.hide();
+      _.els.controlSelected.hide();
+    },
+    showInitialControls( prepend ) {
+      prepend = (typeof prepend !== 'undefined') ?  prepend : false;
+      var _ = this;
+      if ( prepend ) {
+        _.els.controlSelected.prependTo( _.els.dropdown );
+        _.els.controlDeselect.prependTo( _.els.dropdown );
+      }
+      _.els.controlSelected.show();
+      _.els.controlDeselect.show();
+    },
+    refreshInitialControls() {
+      var _ = this;
+      var $el = $( _.element );
+      if ( !$el.val() || $el.val().length == 0 ) {
+        _.els.controlDeselect.addClass('disabled');
+        _.els.controlSelected.addClass('disabled');
+      } else {
+        _.els.controlDeselect.removeClass('disabled');
+        _.els.controlSelected.removeClass('disabled');
+      }
+    },
+    /**
+     * Sort: Reset sort order.
+     * @return void
+     */
+    sortReset() {
+      var _ = this;
+      for ( i = _.els.dropdownItems.length; i >= 0; i--) {
+        _.dropdownItemByIndex( i ).prependTo( _.els.dropdownItemsContainer );
+      }
+    },
+    /**
+     * Sort: Order by array values.
+     *
+     * Reorder according to an array of index values.
+     * @param  {array} indexes Array of index values (strings).
+     * @return void
+     */
+    reorder( indexes ) {
+      var _ = this;
+      _.els.dropdownItemNoResults.hide();
+      if ( indexes === undefined || indexes.length == 0) {
+        _.els.dropdownItemNoResults.show();
+        return;
+      }
+      indexes = indexes.reverse();
+      $.each( indexes, function( index, value ) {
+        _.dropdownItemByIndex( value ).prependTo( _.els.dropdownItemsContainer );
+      });
+      _.hideInitialControls();
+    },
+    /**
+     * Sort: Move selected items to the top.
+     * @return void
+     */
+    sortSelected() {
+      var _ = this;
+      var $el = $( _.element );
+      _.els.dropdownOptions.removeClass('hover');
+      $( _.els.dropdown.find('.active').get().reverse() ).each( function(){
+        $( this ).prependTo( _.els.dropdownItemsContainer );
+      });
+      _.showInitialControls( true );
+      _.data.status = 'sort-selected';
+      _.resetScroll();
+    },
+    /**
+     * Helper: Reset scroll.
+     *
+     * Scroll the dropdown menu to the top.
+     * @return {[type]} [description]
+     */
+    resetScroll() {
+      var _ = this;
+      _.els.dropdown.animate({
+          scrollTop: 0
+      }, 50);
+    },
+    /**
+     * Helper: Class to selector.
+     *
+     * Convert a space separated class list to a selector.
+     * @param  {string} classList Space separated list of classes.
+     * @return {string}           Selector.
+     */
+    classListToSelector( classList ) {
+      var selector = classList;
+      if ( classList.length ) {
+        var classes = classList.split(/\s+/);
+        selector = '.' + classes.join('.');
+      }
+      return selector;
     }
   } );
 
-  // A really lightweight plugin wrapper around the constructor,
-  // preventing against multiple instantiations
   $.fn[ pluginName ] = function( options ) {
     return this.each( function() {
       if ( !$.data( this, "plugin_" + pluginName ) ) {
+        index++;
         $.data( this, "plugin_" +
-          pluginName, new Plugin( this, options ) );
+          pluginName, new Plugin( this, options, index ) );
       }
     } );
   };

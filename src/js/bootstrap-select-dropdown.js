@@ -63,6 +63,8 @@
       }
       _.data.status = 'initial';
       _.data.indexes = [];
+      _.data.lastSearch = null;
+      _.data.resultsChanged = false;
 
       // Properties: IDs.
       _.ids = {};
@@ -96,10 +98,6 @@
         return false;
       });
 
-      // Observe the occurences of the following.
-      // _.els.dropdown.find( _.selectors.dropdownItems );
-      // Why do we need to find tham again? Dows jQuery not store the reference when we append?
-
       // Initialise Search.
       if ( _.settings.search ) {
         var haystack = [];
@@ -118,21 +116,33 @@
           var results = null;
           if ( $.trim( s ) == '' ) {
             _.refresh();
+            if ( _.data.lastSearch !== null ) {
+              _.data.resultsChanged = true;
+              _.data.lastSearch = null;
+            }
             return;
           } else {
             var fuse = new Fuse( haystack, options );
             results = fuse.search( $(this).val() );
           }
+          _.data.resultsChanged = true;
           if ( results ) {
-            // Continue.
+            if (
+              typeof _.data.lastSearch !== undefined &&
+              _.arraysEqual( results, _.data.lastSearch )
+            ) {
+              _.data.resultsChanged = false;
+            }
+            _.data.lastSearch = results;
           } else {
             _.refresh();
             return;
           }
-          //_.sort();
-          _.hide( results );
-          _.reorder( results );
-          _.resetScroll();
+          if ( _.data.resultsChanged ) {
+            _.hide( results );
+            _.reorder( results );
+            _.resetScroll();
+          }
         });
       }
 
@@ -213,9 +223,36 @@
       });
 
       // Assign 'Enter' key listener for search.
-      _.els.searchControl.keypress(function(e) {
-        if(e.which == 13) {
+      // Assign 'Up' and 'Down' behaviour to the dropdown menu.
+      var up = $.Event("keydown");
+      up.which = 38; // Up cursor key..
+      var down = $.Event("keydown");
+      down.which = 40; // Down cursor key.
+      _.els.searchControl.keydown(function(e) {
+        if( e.which == 13 ) { // Enter.
           _.toggle( _.els.dropdown.find('.hover').first() );
+        }
+        else if ( e.which == 38 ) { // Up.
+          console.log(38);
+          var current = _.els.dropdown.find('.hover').first();
+          if ( current.length ) {
+            var prev = current.prev('a:visible');
+          }
+          if ( typeof prev !== undefined && prev.length ) {
+            current.removeClass('hover');
+            prev.addClass('hover');
+          }
+        }
+        else if ( e.which == 40 ) { // Down.
+          console.log(40);
+          var current = _.els.dropdown.find('.hover').first();
+          if ( current.length ) {
+            var next = current.next('a:visible');
+          }
+          if ( typeof next !== undefined && next.length ) {
+            current.removeClass('hover');
+            next.addClass('hover');
+          }
         }
       });
 
@@ -619,6 +656,20 @@
         selector = '.' + classes.join('.');
       }
       return selector;
+    },
+    /**
+     * Helper: Compare two arrays.
+     *
+     * @see https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
+     */
+    arraysEqual( a, b ) {
+      if (a === b) return true;
+      if (a == null || b == null) return false;
+      if (a.length != b.length) return false;
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
     }
   } );
 
