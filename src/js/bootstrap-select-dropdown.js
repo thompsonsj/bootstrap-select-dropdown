@@ -111,7 +111,22 @@
             text : $( this ).text()
           };
         });
-        _.els.searchControl.on('keyup', function() {
+        _.els.searchControl.on('keyup', function( e ) {
+
+          // Detect cursor up and down.
+          if ( e.which == 13 ) { // Enter.
+            _.toggle( _.els.dropdown.find('.hover').first() );
+            return;
+          }
+          else if ( e.which == 38 ) { // Up.
+            _.hoverUp();
+            return;
+          }
+          else if ( e.which == 40 ) { // Down.
+            _.hoverDown();
+            return;
+          }
+
           var s = $(this).val();
           var results = null;
           if ( $.trim( s ) == '' ) {
@@ -223,47 +238,6 @@
         $dropdown.one('hide.bs.dropdown', function ( event ) {
           event.preventDefault();
         });
-      });
-
-      // Assign 'Enter' key listener for search.
-      // Assign 'Up' and 'Down' behaviour to the dropdown menu.
-      var up = $.Event("keydown");
-      up.which = 38; // Up cursor key..
-      var down = $.Event("keydown");
-      down.which = 40; // Down cursor key.
-      _.els.searchControl.on('keydown', function(e) {
-        if( e.which == 13 ) { // Enter.
-          _.toggle( _.els.dropdown.find('.hover').first() );
-        }
-        else if ( e.which == 38 ) { // Up.
-          var current = _.els.dropdown.find('.hover').first();
-          if (
-            typeof current !== undefined &&
-            current.length
-          ) {
-            //var prev = _.getPrev( current );
-            var prev = current.prevAll('a:visible').first();
-          }
-          if ( typeof prev !== undefined && prev.length ) {
-            current.removeClass('hover');
-            prev.addClass('hover');
-            console.log('Sought to move the hover class to the previous item.');
-          }
-        }
-        else if ( e.which == 40 ) { // Down.
-          var current = _.els.dropdown.find('.hover').first();
-          if (
-            typeof current !== undefined &&
-            current.length
-          ) {
-            var next = current.nextAll('a:visible').first();
-          }
-          if ( typeof next !== undefined && next.length ) {
-            current.removeClass('hover');
-            next.addClass('hover');
-            console.log('Sought to move the hover class to the next item.');
-          }
-        }
       });
 
       // Prevent dropdown hide on interaction for multiselect.
@@ -483,6 +457,7 @@
       }
       return false;
     },
+
     /**
      * Set hover class position.
      *
@@ -495,9 +470,33 @@
       _.els.dropdownOptions.removeClass('hover');
       _.dropdownItemByIndex( index ).addClass('hover');
     },
-    getPrev( $current ) {
+    hoverUp() {
       var _ = this;
-      var prev = current.prevAll('a:visible:first').first();
+      var current = _.els.dropdown.find('.hover').first();
+      if (
+        typeof current !== undefined &&
+        current.length
+      ) {
+        var prev = current.prevAll('a:visible').first();
+      }
+      if ( typeof prev !== undefined && prev.length ) {
+        current.removeClass('hover');
+        prev.addClass('hover');
+      }
+    },
+    hoverDown() {
+      var _ = this;
+      var current = _.els.dropdown.find('.hover').first();
+      if (
+        typeof current !== undefined &&
+        current.length
+      ) {
+        var next = current.nextAll('a:visible').first();
+      }
+      if ( typeof next !== undefined && next.length ) {
+        current.removeClass('hover');
+        next.addClass('hover');
+      }
     },
     toggle( $dropdownItem ) {
       var _ = this;
