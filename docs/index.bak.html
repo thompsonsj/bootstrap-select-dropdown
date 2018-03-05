@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="bundle.css">
+
+    <title>Bootstrap Select Dropdown</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Bootstrap Select Dropdown</a>
+        <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>-->
+      </div><!-- /.container -->
+    </nav>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-3">
+
+          <ul class="nav nav-pills flex-column nav-secondary">
+            <li class="nav-item">
+              <a class="nav-link" href="#getting-started">Getting started</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#nav-usage">Usage</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#options">Options</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#features">Features</a>
+            </li>
+          </ul>
+
+        </div>
+        <div class="col-md-9">
+
+          <div class="page-header">
+            <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
+          </div>
+          <p class="lead">Convert <code>&lt;select&gt;</code> elements to Bootstrap 4 dropdowns for increased flexibility.</p>
+
+          <div class="page-header">
+            <h2>Getting started</h2>
+          </div>
+
+          <h3>Quick start</h3>
+
+          <p class="highlight">Get started quickly by using CDNs/hosted files. Check <a href="https://getbootstrap.com/docs/4.0/getting-started/introduction/" target="_blank">Introduction | Bootstrap</a> for the latest versions.</p>
+
+          <pre><code>&lt;link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"&gt;
+&lt;link rel="stylesheet" href="css/bootstrap-select-dropdown.css"&gt;
+
+&lt;script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"&gt;&lt;/script&gt;
+&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"&gt;&lt;/script&gt;
+&lt;script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"&gt;&lt;/script&gt;
+&lt;script src="js/bootstrap-select-dropdown.js"&gt;&lt;/script&gt;</code></pre>
+
+          <div class="page-header">
+            <h2 id="nav-usage">Usage</h2>
+          </div>
+
+          <h3>Select</h3>
+
+          <div class="form-group">
+            <select id="demo_select" class="form-control">
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+              <option value="4">Option 4</option>
+              <option value="5">Option 5</option>
+              <option value="6">Option 6</option>
+              <option value="7">Option 7</option>
+              <option value="8">Option 8</option>
+              <option value="9">Option 9</option>
+              <option value="10">Option 10</option>
+              <option value="11">Option 11</option>
+              <option value="12">Option 12</option>
+              <option value="13">Option 13</option>
+              <option value="14">Option 14</option>
+              <option value="15">Option 15</option>
+              <option value="16">Option 16</option>
+              <option value="17">Option 17</option>
+              <option value="18">Option 18</option>
+            </select>
+          </div>
+
+          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
+  &#x3C;select id=&#x22;demo_select&#x22; class=&#x22;form-control&#x22;&#x3E;
+    &#x3C;!-- options --&#x3E;
+  &#x3C;/select&#x3E;
+&#x3C;/div&#x3E;
+
+&#x3C;script&#x3E;
+  $(document).ready(function(){
+    $(&#x27;#demo_select&#x27;).selectDropdown();
+  });
+&#x3C;/script&#x3E;</code></pre>
+
+          <h3>Select with option groups</h3>
+
+          <div class="form-group">
+            <select id="demo_select_optgroups" class="form-control">
+              <optgroup label="Group 1">
+                <option value="1-1">Group 1 Option 1</option>
+                <option value="1-2">Group 1 Option 2</option>
+                <option value="1-3">Group 1 Option 3</option>
+              </optgroup>
+              <optgroup label="Group 2">
+                <option value="2-1">Group 2 Option 1</option>
+                <option value="2-2">Group 2 Option 2</option>
+                <option value="2-3">Group 2 Option 3</option>
+                <option value="2-4">Group 2 Option 4</option>
+                <option value="2-5">Group 2 Option 5</option>
+                <option value="2-6">Group 2 Option 6</option>
+                <option value="2-7">Group 2 Option 7</option>
+                <option value="2-8">Group 2 Option 8</option>
+                <option value="2-9">Group 2 Option 9</option>
+              </optgroup>
+              <optgroup label="Group 3">
+                <option value="3-1">Group 3 Option 1</option>
+                <option value="3-2">Group 3 Option 2</option>
+                <option value="3-3">Group 3 Option 3</option>
+                <option value="3-4">Group 3 Option 4</option>
+                <option value="3-5">Group 3 Option 5</option>
+                <option value="3-6">Group 3 Option 6</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
+  &#x3C;select id=&#x22;demo_select_optgroups&#x22; class=&#x22;form-control&#x22; multiple&#x3E;
+    &#x3C;optgroup label=&#x22;Group 1&#x22;&#x3E;
+      &#x3C;!-- options --&#x3E;
+    &#x3C;/optgroup&#x3E;
+  &#x3C;/select&#x3E;
+&#x3C;/div&#x3E;
+
+&#x3C;script&#x3E;
+  $(document).ready(function(){
+    $(&#x27;#demo_select_optgroups&#x27;).selectDropdown();
+  });
+&#x3C;/script&#x3E;</code></pre>
+
+          <h3>Multiselect</h3>
+
+          <div class="form-group">
+            <select id="demo_multiselect" class="form-control" multiple>
+              <option value="AF">Afghanistan</option>
+              <option value="AX">&Aring;land Islands</option>
+              <option value="AL">Albania</option>
+              <option value="DZ">Algeria</option>
+              <option value="AS">American Samoa</option>
+              <option value="AD">Andorra</option>
+              <option value="AO">Angola</option>
+              <option value="AI">Anguilla</option>
+              <option value="AQ">Antarctica</option>
+              <option value="AG">Antigua &amp; Barbuda</option>
+              <option value="AR">Argentina</option>
+              <option value="AM">Armenia</option>
+              <option value="AW">Aruba</option>
+              <option value="AC">Ascension Island</option>
+              <option value="AU">Australia</option>
+              <option value="AT">Austria</option>
+              <option value="AZ">Azerbaijan</option>
+              <option value="BS">Bahamas</option>
+              <option value="BH">Bahrain</option>
+              <option value="BD">Bangladesh</option>
+              <option value="BB">Barbados</option>
+              <option value="BY">Belarus</option>
+              <option value="BE">Belgium</option>
+              <option value="BZ">Belize</option>
+              <option value="BJ">Benin</option>
+              <option value="BM">Bermuda</option>
+              <option value="BT">Bhutan</option>
+              <option value="BO">Bolivia</option>
+              <option value="BA">Bosnia &amp; Herzegovina</option>
+              <option value="BW">Botswana</option>
+              <option value="BR">Brazil</option>
+              <option value="IO">British Indian Ocean Territory</option>
+              <option value="VG">British Virgin Islands</option>
+              <option value="BN">Brunei</option>
+              <option value="BG">Bulgaria</option>
+              <option value="BF">Burkina Faso</option>
+              <option value="BI">Burundi</option>
+              <option value="KH">Cambodia</option>
+              <option value="CM">Cameroon</option>
+              <option value="CA">Canada</option>
+              <option value="IC">Canary Islands</option>
+              <option value="CV">Cape Verde</option>
+              <option value="BQ">Caribbean Netherlands</option>
+              <option value="KY">Cayman Islands</option>
+              <option value="CF">Central African Republic</option>
+              <option value="EA">Ceuta &amp; Melilla</option>
+              <option value="TD">Chad</option>
+              <option value="CL">Chile</option>
+              <option value="CN">China</option>
+              <option value="CX">Christmas Island</option>
+              <option value="CC">Cocos (Keeling) Islands</option>
+              <option value="CO">Colombia</option>
+              <option value="KM">Comoros</option>
+              <option value="CG">Congo - Brazzaville</option>
+              <option value="CD">Congo - Kinshasa</option>
+              <option value="CK">Cook Islands</option>
+              <option value="CR">Costa Rica</option>
+              <option value="CI">C&ocirc;te d&rsquo;Ivoire</option>
+              <option value="HR">Croatia</option>
+              <option value="CU">Cuba</option>
+              <option value="CW">Cura&ccedil;ao</option>
+              <option value="CY">Cyprus</option>
+              <option value="CZ">Czechia</option>
+              <option value="DK">Denmark</option>
+              <option value="DG">Diego Garcia</option>
+              <option value="DJ">Djibouti</option>
+              <option value="DM">Dominica</option>
+              <option value="DO">Dominican Republic</option>
+              <option value="EC">Ecuador</option>
+              <option value="EG">Egypt</option>
+              <option value="SV">El Salvador</option>
+              <option value="GQ">Equatorial Guinea</option>
+              <option value="ER">Eritrea</option>
+              <option value="EE">Estonia</option>
+              <option value="ET">Ethiopia</option>
+              <option value="EZ">Eurozone</option>
+              <option value="FK">Falkland Islands</option>
+              <option value="FO">Faroe Islands</option>
+              <option value="FJ">Fiji</option>
+              <option value="FI">Finland</option>
+              <option value="FR">France</option>
+              <option value="GF">French Guiana</option>
+              <option value="PF">French Polynesia</option>
+              <option value="TF">French Southern Territories</option>
+              <option value="GA">Gabon</option>
+              <option value="GM">Gambia</option>
+              <option value="GE">Georgia</option>
+              <option value="DE">Germany</option>
+              <option value="GH">Ghana</option>
+              <option value="GI">Gibraltar</option>
+              <option value="GR">Greece</option>
+              <option value="GL">Greenland</option>
+              <option value="GD">Grenada</option>
+              <option value="GP">Guadeloupe</option>
+              <option value="GU">Guam</option>
+              <option value="GT">Guatemala</option>
+              <option value="GG">Guernsey</option>
+              <option value="GN">Guinea</option>
+              <option value="GW">Guinea-Bissau</option>
+              <option value="GY">Guyana</option>
+              <option value="HT">Haiti</option>
+              <option value="HN">Honduras</option>
+              <option value="HK">Hong Kong SAR China</option>
+              <option value="HU">Hungary</option>
+              <option value="IS">Iceland</option>
+              <option value="IN">India</option>
+              <option value="ID">Indonesia</option>
+              <option value="IR">Iran</option>
+              <option value="IQ">Iraq</option>
+              <option value="IE">Ireland</option>
+              <option value="IM">Isle of Man</option>
+              <option value="IL">Israel</option>
+              <option value="IT">Italy</option>
+              <option value="JM">Jamaica</option>
+              <option value="JP">Japan</option>
+              <option value="JE">Jersey</option>
+              <option value="JO">Jordan</option>
+              <option value="KZ">Kazakhstan</option>
+              <option value="KE">Kenya</option>
+              <option value="KI">Kiribati</option>
+              <option value="XK">Kosovo</option>
+              <option value="KW">Kuwait</option>
+              <option value="KG">Kyrgyzstan</option>
+              <option value="LA">Laos</option>
+              <option value="LV">Latvia</option>
+              <option value="LB">Lebanon</option>
+              <option value="LS">Lesotho</option>
+              <option value="LR">Liberia</option>
+              <option value="LY">Libya</option>
+              <option value="LI">Liechtenstein</option>
+              <option value="LT">Lithuania</option>
+              <option value="LU">Luxembourg</option>
+              <option value="MO">Macau SAR China</option>
+              <option value="MK">Macedonia</option>
+              <option value="MG">Madagascar</option>
+              <option value="MW">Malawi</option>
+              <option value="MY">Malaysia</option>
+              <option value="MV">Maldives</option>
+              <option value="ML">Mali</option>
+              <option value="MT">Malta</option>
+              <option value="MH">Marshall Islands</option>
+              <option value="MQ">Martinique</option>
+              <option value="MR">Mauritania</option>
+              <option value="MU">Mauritius</option>
+              <option value="YT">Mayotte</option>
+              <option value="MX">Mexico</option>
+              <option value="FM">Micronesia</option>
+              <option value="MD">Moldova</option>
+              <option value="MC">Monaco</option>
+              <option value="MN">Mongolia</option>
+              <option value="ME">Montenegro</option>
+              <option value="MS">Montserrat</option>
+              <option value="MA">Morocco</option>
+              <option value="MZ">Mozambique</option>
+              <option value="MM">Myanmar (Burma)</option>
+              <option value="NA">Namibia</option>
+              <option value="NR">Nauru</option>
+              <option value="NP">Nepal</option>
+              <option value="NL">Netherlands</option>
+              <option value="NC">New Caledonia</option>
+              <option value="NZ">New Zealand</option>
+              <option value="NI">Nicaragua</option>
+              <option value="NE">Niger</option>
+              <option value="NG">Nigeria</option>
+              <option value="NU">Niue</option>
+              <option value="NF">Norfolk Island</option>
+              <option value="KP">North Korea</option>
+              <option value="MP">Northern Mariana Islands</option>
+              <option value="NO">Norway</option>
+              <option value="OM">Oman</option>
+              <option value="PK">Pakistan</option>
+              <option value="PW">Palau</option>
+              <option value="PS">Palestinian Territories</option>
+              <option value="PA">Panama</option>
+              <option value="PG">Papua New Guinea</option>
+              <option value="PY">Paraguay</option>
+              <option value="PE">Peru</option>
+              <option value="PH">Philippines</option>
+              <option value="PN">Pitcairn Islands</option>
+              <option value="PL">Poland</option>
+              <option value="PT">Portugal</option>
+              <option value="PR">Puerto Rico</option>
+              <option value="QA">Qatar</option>
+              <option value="RE">R&eacute;union</option>
+              <option value="RO">Romania</option>
+              <option value="RU">Russia</option>
+              <option value="RW">Rwanda</option>
+              <option value="WS">Samoa</option>
+              <option value="SM">San Marino</option>
+              <option value="ST">S&atilde;o Tom&eacute; &amp; Pr&iacute;ncipe</option>
+              <option value="SA">Saudi Arabia</option>
+              <option value="SN">Senegal</option>
+              <option value="RS">Serbia</option>
+              <option value="SC">Seychelles</option>
+              <option value="SL">Sierra Leone</option>
+              <option value="SG">Singapore</option>
+              <option value="SX">Sint Maarten</option>
+              <option value="SK">Slovakia</option>
+              <option value="SI">Slovenia</option>
+              <option value="SB">Solomon Islands</option>
+              <option value="SO">Somalia</option>
+              <option value="ZA">South Africa</option>
+              <option value="GS">South Georgia &amp; South Sandwich Islands</option>
+              <option value="KR">South Korea</option>
+              <option value="SS">South Sudan</option>
+              <option value="ES">Spain</option>
+              <option value="LK">Sri Lanka</option>
+              <option value="BL">St. Barth&eacute;lemy</option>
+              <option value="SH">St. Helena</option>
+              <option value="KN">St. Kitts &amp; Nevis</option>
+              <option value="LC">St. Lucia</option>
+              <option value="MF">St. Martin</option>
+              <option value="PM">St. Pierre &amp; Miquelon</option>
+              <option value="VC">St. Vincent &amp; Grenadines</option>
+              <option value="SD">Sudan</option>
+              <option value="SR">Suriname</option>
+              <option value="SJ">Svalbard &amp; Jan Mayen</option>
+              <option value="SZ">Swaziland</option>
+              <option value="SE">Sweden</option>
+              <option value="CH">Switzerland</option>
+              <option value="SY">Syria</option>
+              <option value="TW">Taiwan</option>
+              <option value="TJ">Tajikistan</option>
+              <option value="TZ">Tanzania</option>
+              <option value="TH">Thailand</option>
+              <option value="TL">Timor-Leste</option>
+              <option value="TG">Togo</option>
+              <option value="TK">Tokelau</option>
+              <option value="TO">Tonga</option>
+              <option value="TT">Trinidad &amp; Tobago</option>
+              <option value="TA">Tristan da Cunha</option>
+              <option value="TN">Tunisia</option>
+              <option value="TR">Turkey</option>
+              <option value="TM">Turkmenistan</option>
+              <option value="TC">Turks &amp; Caicos Islands</option>
+              <option value="TV">Tuvalu</option>
+              <option value="UM">U.S. Outlying Islands</option>
+              <option value="VI">U.S. Virgin Islands</option>
+              <option value="UG">Uganda</option>
+              <option value="UA">Ukraine</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="GB">United Kingdom</option>
+              <option value="UN">United Nations</option>
+              <option value="US">United States</option>
+              <option value="UY">Uruguay</option>
+              <option value="UZ">Uzbekistan</option>
+              <option value="VU">Vanuatu</option>
+              <option value="VA">Vatican City</option>
+              <option value="VE">Venezuela</option>
+              <option value="VN">Vietnam</option>
+              <option value="WF">Wallis &amp; Futuna</option>
+              <option value="EH">Western Sahara</option>
+              <option value="YE">Yemen</option>
+              <option value="ZM">Zambia</option>
+              <option value="ZW">Zimbabwe</option>
+            </select>
+          </div>
+
+          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
+  &#x3C;select id=&#x22;demo_multiselect&#x22; class=&#x22;form-control&#x22; multiple&#x3E;
+    &lt;!-- options --&gt;
+  &#x3C;/select&#x3E;
+&#x3C;/div&#x3E;
+
+&#x3C;script&#x3E;
+  $(document).ready(function(){
+    $(&#x27;#demo_multiselect&#x27;).selectDropdown();
+  });
+&#x3C;/script&#x3E;</code></pre>
+
+          <h3>Multiselect with option groups</h3>
+
+          <div class="form-group">
+            <select id="demo_multiselect_optgroups" class="form-control" multiple>
+              <optgroup label="Group 1">
+                <option value="1-1">Group 1 Option 1</option>
+                <option value="1-2">Group 1 Option 2</option>
+                <option value="1-3">Group 1 Option 3</option>
+              </optgroup>
+              <optgroup label="Group 2">
+                <option value="2-1">Group 2 Option 1</option>
+                <option value="2-2">Group 2 Option 2</option>
+                <option value="2-3">Group 2 Option 3</option>
+                <option value="2-4">Group 2 Option 4</option>
+                <option value="2-5">Group 2 Option 5</option>
+                <option value="2-6">Group 2 Option 6</option>
+                <option value="2-7">Group 2 Option 7</option>
+                <option value="2-8">Group 2 Option 8</option>
+                <option value="2-9">Group 2 Option 9</option>
+              </optgroup>
+              <optgroup label="Group 3">
+                <option value="3-1">Group 3 Option 1</option>
+                <option value="3-2">Group 3 Option 2</option>
+                <option value="3-3">Group 3 Option 3</option>
+                <option value="3-4">Group 3 Option 4</option>
+                <option value="3-5">Group 3 Option 5</option>
+                <option value="3-6">Group 3 Option 6</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
+  &#x3C;select id=&#x22;demo_multiselect_optgroups&#x22; class=&#x22;form-control&#x22; multiple&#x3E;
+    &#x3C;optgroup label=&#x22;Group 1&#x22;&#x3E;
+      &#x3C;!-- options --&#x3E;
+    &#x3C;/optgroup&#x3E;
+  &#x3C;/select&#x3E;
+&#x3C;/div&#x3E;
+
+&#x3C;script&#x3E;
+  $(document).ready(function(){
+    $(&#x27;#demo_multiselect_optgroups&#x27;).selectDropdown();
+  });
+&#x3C;/script&#x3E;</code></pre>
+
+          <div class="page-header">
+            <h2 id="options">Options</h2>
+          </div>
+
+          <p>Plugin defaults:</p>
+
+          <pre><code>$(document).ready(function(){
+&#x9;$(&#x27;#multiselect&#x27;).selectDropdown({
+&#x9;&#x9;// Behaviour
+&#x9;&#x9;maxListLength: 4, // Maximum number of &#x3C;option&#x3E; text() values to display within the button.
+&#x9;&#x9;hideSelect: true, // Hide the select element.
+&#x9;&#x9;multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
+&#x9;&#x9;search: true, // Wrap the dropdown button in an input group with search form controls.
+&#x9;&#x9;observeDomMutations: false, // Respect dynamic changes to the select options.
+&#x9;&#x9;maxHeight: &#x27;300px&#x27;, // Make the dropdown scrollable if beyond this height. Set as false to disable.
+
+&#x9;&#x9;// Text.
+&#x9;&#x9;textNoneSelected: &#x22;None selected&#x22;,
+&#x9;&#x9;textMultipleSelected: &#x22;Multiple selected&#x22;,
+&#x9;&#x9;textNoResults: &#x22;No results&#x22;,
+
+&#x9;&#x9;// HTML.
+&#x9;&#x9;htmlClear: &#x22;Clear search&#x22;,
+
+&#x9;&#x9;// Classes
+&#x9;&#x9;classDropdown: &#x22;dropdown&#x22;,
+&#x9;&#x9;classBtnClear: &#x22;btn btn-outline-secondary&#x22;,
+&#x9;&#x9;classBtnSearch: &#x22;btn btn-primary&#x22;,
+&#x9;&#x9;classMenu: &#x22;dropdown-menu&#x22;,
+&#x9;&#x9;classItem: &#x22;dropdown-item&#x22;
+&#x9;})
+});</code></pre>
+
+          <h3>maxListLength</h3>
+
+          <p>
+            <em>Default: 4.</em>
+          </p>
+
+          <p>
+            For <code>multiselect</code> elements, limit the number of options to list as comma separated values within the dropdown button elements. If the number of selected options exceeds this limit, the value of <code>textMultipleSelected</code> will be displayed.
+          </p>
+
+          <h3>hideSelect</h3>
+
+          <p>
+            <em>Default: true.</em>
+          </p>
+
+          <p>Hide the <code>select</code> element. This is expected. However, you may wish to unhide the <code>select</code> element for testing.</p>
+
+          <h3>multiselectStayOpen</h3>
+
+          <p>
+            <em>Default: true.</em>
+          </p>
+
+          <p>
+            For <code>multiselect</code> elements, keep the dropdown menu open on interaction. Normally, a dropdown menu closes when you select an item. However, for <code>multiselect</code>, we may wish for the menu to stay open to enable the user to conveniently select other options.
+          </p>
+
+          <h3>search</h3>
+
+          <p>
+            <em>Default: true.</em>
+          </p>
+
+          <p>
+            Convert the dropdown button to an <code>input-group</code>, with a search form control and a <strong>clear search</strong> button.
+          </p>
+
+          <h3>observeDomMutations</h3>
+
+          <p>
+            <em>Default: false.</em>
+          </p>
+
+          <p>
+            Monitor changes to the option list of the <code>select</code> element, and adjust <code>selectDropdown</code> behaviour accordingly. This option is disabled by default due to the performance impact.
+          </p>
+
+          <h3>maxHeight</h3>
+
+          <p>
+            Default: 300px.
+          </p>
+
+          <p>
+            Set a max height on the dropdown, enabling it to be scrollable. This can be disabled by setting the option to <code>false</code>.
+          </p>
+
+          <h3>textNoneSelected</h3>
+
+          <p>
+            <em>Default: None selected.</em>
+          </p>
+
+          <p>
+            This text is set on the dropdown button when the following conditions are met:
+          </p>
+
+          <ul>
+            <li>
+              The <code>select</code> element is a <code>multiselect</code>.
+            </li>
+            <li>
+              No selections have been made.
+            </li>
+          </ul>
+
+          <h3>textMultipleSelected</h3>
+
+          <p>
+            This text is set on the dropdown button when the following conditions are met:
+          </p>
+
+          <ul>
+            <li>
+              The <code>select</code> element is a <code>multiselect</code>.
+            </li>
+            <li>
+              More than <code>maxListLength</code> selections have been made.
+            </li>
+          </ul>
+
+          <h3>textNoResults</h3>
+
+          <p>
+            <em>Default: No results.</em>
+          </p>
+
+          <p>
+            This text appears when a search yields no results.
+          </p>
+
+          <h3>htmlClear</h3>
+
+          <p>
+            Include your own text/HTML value for the <strong>clear search</strong> button (which appears when <code>search</code> is <code>true</code>).
+          </p>
+
+          <p>
+            The example below uses an SVG sprite icon from <a href="https://rastasheep.github.io/ionicons-sprite/">Ionicons sprite</a> by <a href="https://rastasheep.github.io/">rastasheep</a> who created sprites from <a href="http://ionicons.com/">ionicons</a>, the premium icon font for <a href="http://ionicframework.com/">Ionic Framework</a>.
+          </p>
+
+          <div class="form-group">
+            <select id="demo_select_htmlclear" class="form-control">
+              <option value="1">Option 1</option>
+              <option value="2">Option 2</option>
+              <option value="3">Option 3</option>
+              <option value="4">Option 4</option>
+              <option value="5">Option 5</option>
+              <option value="6">Option 6</option>
+              <option value="7">Option 7</option>
+              <option value="8">Option 8</option>
+              <option value="9">Option 9</option>
+              <option value="10">Option 10</option>
+              <option value="11">Option 11</option>
+              <option value="12">Option 12</option>
+              <option value="13">Option 13</option>
+              <option value="14">Option 14</option>
+              <option value="15">Option 15</option>
+              <option value="16">Option 16</option>
+              <option value="17">Option 17</option>
+              <option value="18">Option 18</option>
+            </select>
+          </div>
+
+          <pre><code>$(document).ready(function(){
+&#x9;$(&#x22;select#demo_select_htmlclear&#x22;).selectDropdown({
+&#x9;&#x9;&#x27;htmlClear&#x27;: &#x27;&#x3C;svg class=&#x22;ion&#x22;&#x3E;&#x3C;use xlink:href=&#x22;#ion-close-circled&#x22;&#x3E;&#x3C;/use&#x3E;&#x3C;/svg&#x3E;&#x27;
+&#x9;});
+});</code></pre>
+
+          <h3>classDropdown</h3>
+
+          <p>
+            <em>Default: dropdown.</em>
+          </p>
+
+          <p>
+            The class applied to the dropdown element. The default is Bootstrap 4 markup.
+          </p>
+
+          <h3>classBtnClear</h3>
+
+          <p>
+            <em>Default: btn btn-outline-secondary.</em>
+          </p>
+
+          <p>
+            The class applied to the dropdown element. The default is a Bootstrap 4 outline button with secondary colors.
+          </p>
+
+          <h3>classBtnSearch</h3>
+
+          <p>
+            <em>Default: btn btn-primary.</em>
+          </p>
+
+          <p>
+            The class applied to the dropdown element. The default is a Bootstrap 4 button with primary colors.
+          </p>
+
+          <h3>classMenu</h3>
+
+          <p>
+            <em>Default: dropdown-menu.</em>
+          </p>
+
+          <p>
+            The class applied to the dropdown menu element. The default is Bootstrap 4 markup.
+          </p>
+
+          <h3>classItem</h3>
+
+          <p>
+            <em>Default: dropdown-item.</em>
+          </p>
+
+          <p>
+            The class applied to each dropdown item element. The default is Bootstrap 4 markup.
+          </p>
+
+          <div class="page-header">
+            <h2 id="features">Features</h2>
+          </div>
+
+          <h3>Accessibility</h3>
+
+          <p>This plugin replaces <code>select</code> elements with Bootstrap dropdowns. As a result, <a href="https://getbootstrap.com/docs/4.0/components/dropdowns/#accessibility">Bootstrap dropdown accessibility considerations</a> apply.</p>
+
+          <p>In addition, the <code>aria-labelledby</code> attribute is automatically applied. For each instance of the plugin, a unique <code>aria-labelledby</code> attribute on the dropdown menu is matched with a corresponding <code>id</code> on the dropdown button.</p>
+
+          <h3>DOM mutations</h3>
+
+          <p>Click handlers are applied such that the removal and addition of <code>option</code> elements are respected.</p>
+
+          <div class="form-group">
+            <select id="dom_mutation_demo" class="form-control" multiple>
+              <optgroup label="Group 1">
+                <option value="1-1">Group 1 Option 1</option>
+                <option value="1-2">Group 1 Option 2</option>
+                <option value="1-3">Group 1 Option 3</option>
+              </optgroup>
+              <optgroup label="Group 2">
+                <option value="2-1">Group 2 Option 1</option>
+                <option value="2-2">Group 2 Option 2</option>
+                <option value="2-3">Group 2 Option 3</option>
+                <option value="2-4">Group 2 Option 4</option>
+                <option value="2-5">Group 2 Option 5</option>
+                <option value="2-6">Group 2 Option 6</option>
+                <option value="2-7">Group 2 Option 7</option>
+                <option value="2-8">Group 2 Option 8</option>
+                <option value="2-9">Group 2 Option 9</option>
+              </optgroup>
+              <optgroup label="Group 3">
+                <option value="3-1">Group 3 Option 1</option>
+                <option value="3-2">Group 3 Option 2</option>
+                <option value="3-3">Group 3 Option 3</option>
+                <option value="3-4">Group 3 Option 4</option>
+                <option value="3-5">Group 3 Option 5</option>
+                <option value="3-6">Group 3 Option 6</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <button id="insert_value" class="btn btn-warning">
+              Insert random option
+            </button>
+            <button id="remove_value" class="btn btn-danger">
+              Remove random option
+            </button>
+          </div>
+
+          <div class="form-group">
+            <input type="text" id="random_field" class="form-control" value='' />
+          </div>
+
+        </div><!-- /.col-md-9 -->
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <symbol viewBox="0 0 512 512" id="ion-close-circled">
+          <path d="M256 33C132.3 33 32 133.3 32 257s100.3 224 224 224 224-100.3 224-224S379.7 33 256 33zm108.3 299.5c1.5 1.5 2.3 3.5 2.3 5.6 0 2.1-.8 4.2-2.3 5.6l-21.6 21.7c-1.6 1.6-3.6 2.3-5.6 2.3-2 0-4.1-.8-5.6-2.3L256 289.8l-75.4 75.7c-1.5 1.6-3.6 2.3-5.6 2.3-2 0-4.1-.8-5.6-2.3l-21.6-21.7c-1.5-1.5-2.3-3.5-2.3-5.6 0-2.1.8-4.2 2.3-5.6l75.7-76-75.9-75c-3.1-3.1-3.1-8.2 0-11.3l21.6-21.7c1.5-1.5 3.5-2.3 5.6-2.3 2.1 0 4.1.8 5.6 2.3l75.7 74.7 75.7-74.7c1.5-1.5 3.5-2.3 5.6-2.3 2.1 0 4.1.8 5.6 2.3l21.6 21.7c3.1 3.1 3.1 8.2 0 11.3l-75.9 75 75.6 75.9z"></path>
+        </symbol>
+      </defs>
+    </svg>
+
+    <script src="bundle.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('#dom_mutation_demo').selectDropdown({
+          hideSelect: false
+        });
+        $('#insert_value').click(function(){
+          var count = $('#dom_mutation_demo').find('option').length;
+          var randSelect = Math.floor(Math.random() * count) + 1 ;
+          var $randSelect = $('#dom_mutation_demo').find('option').eq( randSelect );
+          $randSelect.after( $randSelect.clone() );
+        });
+        $('#remove_value').click(function(){
+          var count = $('#dom_mutation_demo').find('option').length;
+          var randSelect = Math.floor(Math.random() * count) + 1 ;
+          var $randSelect = $('#dom_mutation_demo').find('option').eq( randSelect );
+          $randSelect.remove();
+        });
+      });
+    </script>
+  </body>
+</html>
