@@ -1,0 +1,23 @@
+// Add visibile effect to `.dropdown-item` eleemnts with the `.disabled` class.
+// This should not be necessary? Check Bootstrap docs/version.
+// @see https://getbootstrap.com/docs/4.0/components/dropdowns/#disabled-menu-items
+.dropdown-item {
+  &.disabled {
+    @extend .text-muted;
+  }
+  &.hover {
+    //color: $dropdown-link-hover-color;
+    color: color-yiq( darken( $dropdown-link-hover-bg, 10%) );
+    text-decoration: none;
+    background-color: darken( $dropdown-link-hover-bg, 10%);
+    &.active {
+      /* Ensure `.active` overrides `.hover`. */
+      @extend .active;
+    }
+  }
+  &.no-results {
+    &.hover {
+      background-color: transparent;
+    }
+  }
+}

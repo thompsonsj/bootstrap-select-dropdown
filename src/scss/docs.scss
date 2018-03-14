@@ -7,7 +7,7 @@ $container-max-widths: (
 
 @import "~bootstrap/scss/bootstrap";
 @import "~highlight.js/styles/default.css";
-@import "./bootstrap-select-dropdown";
+@import "./common";
 
 /**
  * Styles for docs only (not for dist).
