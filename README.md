@@ -2,6 +2,10 @@
 
 A jQuery plugin for Bootstrap 4 that converts <select> and <select multiselect> elements to dropdowns. Uses fuse.js for fuzzy search and Bootstrap's dropdown plugin.
 
+## Demo and documentation
+
+[https://thompsonsj.com/bootstrap-select-dropdown/](https://thompsonsj.com/bootstrap-select-dropdown/)
+
 ## Usage
 
 ### NPM
