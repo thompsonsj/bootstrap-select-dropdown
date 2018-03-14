@@ -207,6 +207,11 @@
       // Assign click handler: Select item.
       _.els.dropdownOptions.on('click', function( event ){
         event.preventDefault();
+        if ( _.data.multiselect && _.settings.multiselectStayOpen ) {
+          $dropdown.one('hide.bs.dropdown', function ( event ) {
+            event.preventDefault();
+          });
+        }
         _.toggle( $(this) );
       });
 
@@ -250,16 +255,6 @@
           event.preventDefault();
         });
       });
-
-      // Prevent dropdown hide on interaction for multiselect.
-      if ( _.data.multiselect && _.settings.multiselectStayOpen ) {
-        $dropdown.on('hide.bs.dropdown', function ( event ) {
-          if ( _.data.preventHideDropdown ) {
-            event.preventDefault();
-            _.data.preventHideDropdown = false;
-          }
-        });
-      }
 
       // On search focus: Toggle dropdown.
       // - Can reliance on setTimeout be removed?
