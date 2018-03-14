@@ -74,7 +74,7 @@
       _.ids = {};
       _.ids.dropdownContainerId = _.prefix + 'container';
       _.ids.dropdownButtonId = _.prefix + 'button';
-      _.ids.searchControlId = _.prefix + 'search';
+      _.ids.controlSearchId = _.prefix + 'search';
       _.ids.dropdownItemDeselect = _.prefix + 'deselect';
       _.ids.dropdownItemShowSelected = _.prefix + 'selected';
 
@@ -87,7 +87,7 @@
       _.els = {};
       _.els.button = _.buildButton();
       _.els.buttonClear = _.buildButtonClear();
-      _.els.searchControl = _.buildSearchControl();
+      _.els.controlSearch = _.buildcontrolSearch();
       _.els.controlDeselect = _.buildDeselectAll();
       _.els.controlSelected = _.buildShowSelected();
       _.els.dropdown = _.buildDropdownMenu();
@@ -111,7 +111,7 @@
             text : $( this ).text()
           };
         });
-        _.els.searchControl.on('keyup', function( e ) {
+        _.els.controlSearch.on('keyup', function( e ) {
 
           // Detect cursor up and down.
           if ( e.which == 13 ) { // Enter.
@@ -124,7 +124,7 @@
           else if ( e.which == 38 ) { // Up.
             if ( !_.dropdownActive() ) {
               _.els.button.dropdown('toggle');
-              _.els.searchControl.focus();
+              _.els.controlSearch.focus();
             }
             _.hoverUp();
             return;
@@ -132,7 +132,7 @@
           else if ( e.which == 40 ) { // Down.
             if ( !_.dropdownActive() ) {
               _.els.button.dropdown('toggle');
-              _.els.searchControl.focus();
+              _.els.controlSearch.focus();
             }
             _.hoverDown();
             return;
@@ -165,7 +165,7 @@
             return;
           }
           if ( _.data.resultsChanged ) {
-            _.setHover( results[0] );
+            _.hoverSet( results[0] );
             _.hide( results );
             _.reorder( results );
             _.resetScroll();
@@ -175,7 +175,7 @@
       }
 
       // Handle cut and paste.
-      _.els.searchControl.bind({
+      _.els.controlSearch.bind({
           paste (){
             $(this).trigger('keydown');
           },
@@ -202,7 +202,14 @@
       if ( _.settings.hideSelect ) {
         $el.hide();
       }
-      _.setHover();
+
+      // Set/Remove hover
+      _.els.controlSearch.on('focus', function(){
+        _.hoverSet();
+      });
+      _.els.controlSearch.on('blur', function(){
+        _.hoverRemove();
+      });
 
       // Assign click handler: Select item.
       _.els.dropdownOptions.on('click', function( event ){
@@ -239,7 +246,7 @@
 
       // Assign click handler: Clear search.
       _.els.buttonClear.on('click', function() {
-        _.els.searchControl.val('');
+        _.els.controlSearch.val('');
         if ( _.dropdownActive() ) {
           $dropdown.one('hide.bs.dropdown', function ( event ) {
             event.preventDefault();
@@ -260,11 +267,11 @@
       // - Can reliance on setTimeout be removed?
       // - Should we depend on an aria attribute for plugin logic?
       if ( _.settings.search ) {
-        _.els.searchControl.on('focusin', function(){
+        _.els.controlSearch.on('focusin', function(){
           if ( _.els.button.attr('aria-expanded') == 'false' ) {
             _.els.button.dropdown('toggle');
             setTimeout(function(){
-              _.els.searchControl.focus();
+              _.els.controlSearch.focus();
             }, 1);
           }
         });
@@ -301,7 +308,7 @@
           $('<div>', {
             class: 'input-group'
           })
-          .append( _.els.searchControl )
+          .append( _.els.controlSearch )
           .append(
             $('<div>', {
               class: 'input-group-append'
@@ -347,14 +354,14 @@
       })
       .html( _.settings.htmlClear );
     },
-    buildSearchControl() {
+    buildcontrolSearch() {
       var _ = this;
       return $('<input>', {
         type: 'text',
         class: 'form-control',
         placeholder: 'Search',
         'aria-label': 'Search',
-        'aria-describedby': _.ids.searchControlId
+        'aria-describedby': _.ids.controlSearchId
       });
     },
     buildDropdownMenu() {
@@ -482,7 +489,7 @@
      * to a non-option, the next option will be modified.
      * @param {integer} index Dropdown menu item index.
      */
-    setHover( index ) {
+    hoverSet( index ) {
       var _ = this;
       _.els.dropdownOptions.removeClass('hover');
       if ( typeof index === typeof undefined ) {
@@ -522,6 +529,14 @@
         next.addClass('hover');
         _.data.hoverItem = next;
       }
+    },
+    /**
+     * Remove hover class from all dropdown options.
+     * @return void
+     */
+    hoverRemove() {
+      var _ = this;
+      _.els.dropdownItems.removeClass('hover').show();
     },
     toggle( $dropdownItem ) {
       var _ = this;
@@ -585,7 +600,7 @@
     refresh() {
       var _ = this;
       _.data.status = 'initial';
-      _.els.dropdownItems.removeClass('hover').show();
+      _.hoverRemove();
       _.els.dropdownItemNoResults.hide();
       _.sortReset();
       _.showInitialControls();

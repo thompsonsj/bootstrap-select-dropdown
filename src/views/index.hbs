@@ -11,7 +11,7 @@
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="#">{{ message }}</a>
+        <a class="navbar-brand" href="#">Bootstrap Select Dropdown</a>
         <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -73,7 +73,7 @@
           <div class="page-header">
             <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
           </div>
-          <p class="lead">Convert <code>&lt;select&gt;</code> elements to Bootstrap 4 dropdowns for increased flexibility.</p>
+          <p class="lead">Convert <code>&lt;select&gt;</code> and multiselect elements to Bootstrap 4 dropdowns with fuzzy search (<code>fuse.js</code>).</p>
 
           <div class="page-header">
             <h2>Getting started</h2>
@@ -83,18 +83,20 @@
 
           <p class="highlight">Get started quickly by using CDNs/hosted files. Check <a href="https://getbootstrap.com/docs/4.0/getting-started/introduction/" target="_blank">Introduction | Bootstrap</a> for the latest versions.</p>
 
-          <pre><code>&lt;link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"&gt;
-&lt;link rel="stylesheet" href="css/bootstrap-select-dropdown.css"&gt;
+<pre><code>{{{
+htmlentities
+'<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="css/bootstrap-select-dropdown.css">
 
-&lt;script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"&gt;&lt;/script&gt;
-&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"&gt;&lt;/script&gt;
-&lt;script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"&gt;&lt;/script&gt;
-&lt;script src="js/bootstrap-select-dropdown.js"&gt;&lt;/script&gt;</code></pre>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="js/bootstrap-select-dropdown.js"></script>'
+}}}</code></pre>
 
           <div class="page-header">
             <h2 id="nav-usage">Usage</h2>
           </div>
-
           <h3>Select</h3>
 
           <div class="form-group">
@@ -120,17 +122,19 @@
             </select>
           </div>
 
-          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
-  &#x3C;select id=&#x22;demo_select&#x22; class=&#x22;form-control&#x22;&#x3E;
-    &#x3C;!-- options --&#x3E;
-  &#x3C;/select&#x3E;
-&#x3C;/div&#x3E;
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <select id="demo_select" class="form-control">
+    <!-- options -->
+  </select>
+</div>
 
-&#x3C;script&#x3E;
+<script>
   $(document).ready(function(){
-    $(&#x27;#demo_select&#x27;).selectDropdown();
+    $("#demo_select").selectDropdown();
   });
-&#x3C;/script&#x3E;</code></pre>
+</script>'
+}}}</code></pre>
 
           <h3>Select with option groups</h3>
 
@@ -163,19 +167,21 @@
             </select>
           </div>
 
-          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
-  &#x3C;select id=&#x22;demo_select_optgroups&#x22; class=&#x22;form-control&#x22; multiple&#x3E;
-    &#x3C;optgroup label=&#x22;Group 1&#x22;&#x3E;
-      &#x3C;!-- options --&#x3E;
-    &#x3C;/optgroup&#x3E;
-  &#x3C;/select&#x3E;
-&#x3C;/div&#x3E;
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <select id="demo_select_optgroups" class="form-control" multiple>
+    <optgroup label="Group 1">
+      <!-- options -->
+    </optgroup>
+  </select>
+</div>
 
-&#x3C;script&#x3E;
+<script>
   $(document).ready(function(){
-    $(&#x27;#demo_select_optgroups&#x27;).selectDropdown();
+    $("#demo_select_optgroups").selectDropdown();
   });
-&#x3C;/script&#x3E;</code></pre>
+</script>'
+}}}</code></pre>
 
           <h3>Multiselect</h3>
 
@@ -439,17 +445,19 @@
             </select>
           </div>
 
-          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
-  &#x3C;select id=&#x22;demo_multiselect&#x22; class=&#x22;form-control&#x22; multiple&#x3E;
-    &lt;!-- options --&gt;
-  &#x3C;/select&#x3E;
-&#x3C;/div&#x3E;
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <select id="demo_multiselect" class="form-control" multiple>
+    <!-- options -->
+  </select>
+</div>
 
-&#x3C;script&#x3E;
+<script>
   $(document).ready(function(){
-    $(&#x27;#demo_multiselect&#x27;).selectDropdown();
+    $("#demo_multiselect").selectDropdown();
   });
-&#x3C;/script&#x3E;</code></pre>
+</script>'
+}}}</code></pre>
 
           <h3>Multiselect with option groups</h3>
 
@@ -482,19 +490,21 @@
             </select>
           </div>
 
-          <pre><code>&#x3C;div class=&#x22;form-group&#x22;&#x3E;
-  &#x3C;select id=&#x22;demo_multiselect_optgroups&#x22; class=&#x22;form-control&#x22; multiple&#x3E;
-    &#x3C;optgroup label=&#x22;Group 1&#x22;&#x3E;
-      &#x3C;!-- options --&#x3E;
-    &#x3C;/optgroup&#x3E;
-  &#x3C;/select&#x3E;
-&#x3C;/div&#x3E;
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <select id="demo_multiselect_optgroups" class="form-control" multiple>
+    <optgroup label="Group 1">
+      <!-- options -->
+    </optgroup>
+  </select>
+</div>
 
-&#x3C;script&#x3E;
+<script>
   $(document).ready(function(){
-    $(&#x27;#demo_multiselect_optgroups&#x27;).selectDropdown();
+    $("#demo_multiselect_optgroups").selectDropdown();
   });
-&#x3C;/script&#x3E;</code></pre>
+</script>'
+}}}</code></pre>
 
           <div class="page-header">
             <h2 id="options">Options</h2>
@@ -502,32 +512,34 @@
 
           <p>Plugin defaults:</p>
 
-          <pre><code>$(document).ready(function(){
-&#x9;$(&#x27;#multiselect&#x27;).selectDropdown({
-&#x9;&#x9;// Behaviour
-&#x9;&#x9;maxListLength: 4, // Maximum number of &#x3C;option&#x3E; text() values to display within the button.
-&#x9;&#x9;hideSelect: true, // Hide the select element.
-&#x9;&#x9;multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
-&#x9;&#x9;search: true, // Wrap the dropdown button in an input group with search form controls.
-&#x9;&#x9;observeDomMutations: false, // Respect dynamic changes to the select options.
-&#x9;&#x9;maxHeight: &#x27;300px&#x27;, // Make the dropdown scrollable if beyond this height. Set as false to disable.
+<pre><code>{{{ htmlentities
+'$(document).ready(function(){
+	$("#multiselect").selectDropdown({
+		// Behaviour
+		maxListLength: 4, // Maximum number of <option> text() values to display within the button.
+		hideSelect: true, // Hide the select element.
+		multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
+		search: true, // Wrap the dropdown button in an input group with search form controls.
+		observeDomMutations: false, // Respect dynamic changes to the select options.
+		maxHeight: "300px", // Make the dropdown scrollable if beyond this height. Set as false to disable.
 
-&#x9;&#x9;// Text.
-&#x9;&#x9;textNoneSelected: &#x22;None selected&#x22;,
-&#x9;&#x9;textMultipleSelected: &#x22;Multiple selected&#x22;,
-&#x9;&#x9;textNoResults: &#x22;No results&#x22;,
+		// Text.
+		textNoneSelected: "None selected",
+		textMultipleSelected: "Multiple selected",
+		textNoResults: "No results",
 
-&#x9;&#x9;// HTML.
-&#x9;&#x9;htmlClear: &#x22;Clear search&#x22;,
+		// HTML.
+		htmlClear: "Clear search",
 
-&#x9;&#x9;// Classes
-&#x9;&#x9;classDropdown: &#x22;dropdown&#x22;,
-&#x9;&#x9;classBtnClear: &#x22;btn btn-outline-secondary&#x22;,
-&#x9;&#x9;classBtnSearch: &#x22;btn btn-primary&#x22;,
-&#x9;&#x9;classMenu: &#x22;dropdown-menu&#x22;,
-&#x9;&#x9;classItem: &#x22;dropdown-item&#x22;
-&#x9;})
-});</code></pre>
+		// Classes
+		classDropdown: "dropdown",
+		classBtnClear: "btn btn-outline-secondary",
+		classBtnSearch: "btn btn-primary",
+		classMenu: "dropdown-menu",
+		classItem: "dropdown-item"
+	})
+});'
+}}}</code></pre>
 
           <h3>maxListLength</h3>
 
@@ -664,11 +676,13 @@
             </select>
           </div>
 
-          <pre><code>$(document).ready(function(){
-&#x9;$(&#x22;select#demo_select_htmlclear&#x22;).selectDropdown({
-&#x9;&#x9;&#x27;htmlClear&#x27;: &#x27;&#x3C;svg class=&#x22;ion&#x22;&#x3E;&#x3C;use xlink:href=&#x22;#ion-close-circled&#x22;&#x3E;&#x3C;/use&#x3E;&#x3C;/svg&#x3E;&#x27;
-&#x9;});
-});</code></pre>
+<pre><code>{{{ htmlentities
+'$(document).ready(function(){
+	$("select#demo_select_htmlclear").selectDropdown({
+		"htmlClear": \'<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>\'
+	});
+});'
+}}}</code></pre>
 
           <h3>classDropdown</h3>
 

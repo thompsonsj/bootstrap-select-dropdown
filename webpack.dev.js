@@ -1,6 +1,8 @@
 const path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HandlebarsPlugin = require("handlebars-webpack-plugin");
+const Entities = require('html-entities').AllHtmlEntities;
+const entities = new Entities();
 
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
@@ -21,21 +23,12 @@ module.exports = merge(common, {
     new HandlebarsPlugin({
       entry: path.join(process.cwd(), "src", "views", "*.hbs"),
       output: path.join(process.cwd(), "docs", "[name].html"),
-      //data: path.join(__dirname, "src", "views", "data.json"),
       data: require("./src/views/data.json"),
-      partials: [
-          path.join(process.cwd(), "src", "views", "components", "*", "*.hbs")
-      ],
       helpers: {
-          nameOfHbsHelper: Function.prototype,
-          projectHelpers: path.join(process.cwd(), "app", "helpers", "*.helper.js")
-      },
-      onBeforeSetup: function (Handlebars) {},
-      onBeforeAddPartials: function (Handlebars, partialsMap) {},
-      onBeforeCompile: function (Handlebars, templateContent) {},
-      onBeforeRender: function (Handlebars, data) {},
-      onBeforeSave: function (Handlebars, resultHtml, filename) {},
-      onDone: function (Handlebars, filename) {}
-  })
+        htmlentities: function(context, options) {
+          return entities.encode( context );
+        }
+      }
+    })
   ]
 });
