@@ -13,6 +13,11 @@
     "name": "Steven Thompson",
     "url": "https://github.com/thompsonsj"
   },
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/thompsonsj/bootstrap-select-dropdown"
+  },
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^7.2.6",
