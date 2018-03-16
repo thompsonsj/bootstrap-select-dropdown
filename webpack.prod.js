@@ -23,6 +23,16 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        exclude: [path.resolve('node_modules')],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env']
+          }
+        }
+      },
+      {
         test: /\.scss$/,
         exclude: [path.resolve('node_modules')],
         use: ExtractTextPlugin.extract({
