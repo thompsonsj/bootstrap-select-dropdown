@@ -1,6 +1,6 @@
 {
   "name": "bootstrap-select-dropdown",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "A jQuery plugin for Bootstrap 4 that converts <select> and <select multiselect> elements to dropdowns. Uses fuse.js for fuzzy search and Bootstrap's dropdown plugin.",
   "main": "./src/js/bootstrap-select-dropdown.js",
   "scripts": {
@@ -13,10 +13,9 @@
     "name": "Steven Thompson",
     "url": "https://github.com/thompsonsj"
   },
-  "repository" :
-  {
-    "type" : "git",
-    "url" : "https://github.com/thompsonsj/bootstrap-select-dropdown"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thompsonsj/bootstrap-select-dropdown"
   },
   "license": "ISC",
   "devDependencies": {
