@@ -36,7 +36,10 @@ import Fuse from 'fuse.js'
      textMultipleSelected: "Multiple selected",
      textNoResults: "No results",
      // HTML
-     htmlClear: "Clear search"
+     htmlClear: "Clear search",
+     // Classes
+     classBtnClear : "btn btn-outline-secondary",
+     classBtnSearch : "btn btn-primary"
    }
 
    const DefaultType = {
@@ -49,7 +52,9 @@ import Fuse from 'fuse.js'
      textNoneSelected     : 'string',
      textMultipleSelected : 'string',
      textNoResults        : 'string',
-     htmlClear            : 'string'
+     htmlClear            : 'string',
+     classBtnClear        : 'string',
+     classBtnSearch       : 'string'
    }
 
    const Event = {
@@ -68,8 +73,6 @@ import Fuse from 'fuse.js'
 
    const ClassName = {
      DROPDOWN           : 'dropdown',
-     BTN_CLEAR          : 'btn btn-outline-secondary',
-     BTN_SEARCH         : 'btn btn-primary',
      MENU               : 'dropdown-menu',
      ITEM               : 'dropdown-item'
    }
@@ -535,7 +538,7 @@ import Fuse from 'fuse.js'
     buildButton() {
       var _ = this;
       return $('<button>', {
-        class: ClassName.BTN_SEARCH + ' dropdown-toggle',
+        class: _._config.classBtnSearch + ' dropdown-toggle',
         type: 'button',
         id: _.ids.dropdownButtonId,
         'data-toggle': 'dropdown',
@@ -549,7 +552,7 @@ import Fuse from 'fuse.js'
       var _ = this;
       return $('<button>', {
         type: 'button',
-        class: ClassName.BTN_CLEAR
+        class: _._config.classBtnClear
       })
       .html( _._config.htmlClear );
     }
