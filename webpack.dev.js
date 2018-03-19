@@ -4,14 +4,42 @@ const HandlebarsPlugin = require("handlebars-webpack-plugin");
 const Entities = require('html-entities').AllHtmlEntities;
 const entities = new Entities();
 
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
-
-module.exports = merge(common, {
+module.exports = {
   entry: './src/docs.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'docs')
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: [path.resolve('node_modules')],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['env']
+          }
+        }
+      },
+      {
+        test: /\.scss$/,
+        exclude: [path.resolve('node_modules')],
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ["css-loader", "postcss-loader", "sass-loader"]
+        })
+      },
+      {
+      test: require.resolve('jquery'),
+      use: [
+        {
+          loader: 'expose-loader',
+          options: '$'
+          }
+        ]
+      }
+    ]
   },
   devServer: {
     contentBase: path.join(__dirname, "docs"),
@@ -34,4 +62,4 @@ module.exports = merge(common, {
       }
     })
   ]
-});
+};

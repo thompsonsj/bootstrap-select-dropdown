@@ -5,8 +5,6 @@ const extractCss = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
 const extractCssMin = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
 
 module.exports = {
   entry: {

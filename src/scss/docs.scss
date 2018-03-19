@@ -25,7 +25,8 @@ $container-max-widths: (
     @extend .text-muted;
   }
 }
-.btn {
+.btn,
+.nav-link {
   .ion {
     display: inline-block;
     width: $font-size-base;
@@ -39,6 +40,18 @@ $container-max-widths: (
     .ion {
       stroke: $white;
       fill: $white;
+    }
+  }
+}
+.nav-link {
+  .ion {
+    width: $font-size-base * 1.4;
+    height: $font-size-base * 1.4;
+    fill: $white;
+  }
+  &:hover {
+    .ion {
+      fill: $gray-200;
     }
   }
 }
