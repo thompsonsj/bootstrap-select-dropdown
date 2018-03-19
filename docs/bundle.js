@@ -105,7 +105,7 @@ module.exports = g;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(global) {/**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.12.9
+ * @version 1.13.0
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -35476,15 +35476,21 @@ module.exports = function(hljs) {
       var attrMultiple = $el.attr('multiple');
       if ( typeof attrMultiple !== typeof undefined && attrMultiple !== false ) {
         _.data.multiselect = true;
+        if ( _.settings.multiselectStayOpen ) {
+          _.data.preventHideDropdown = true;
+        }
       }
       _.data.status = 'initial';
       _.data.indexes = [];
+      _.data.lastSearch = null;
+      _.data.resultsChanged = false;
+      _.data.hoverItem = $();
 
       // Properties: IDs.
       _.ids = {};
       _.ids.dropdownContainerId = _.prefix + 'container';
       _.ids.dropdownButtonId = _.prefix + 'button';
-      _.ids.searchControlId = _.prefix + 'search';
+      _.ids.controlSearchId = _.prefix + 'search';
       _.ids.dropdownItemDeselect = _.prefix + 'deselect';
       _.ids.dropdownItemShowSelected = _.prefix + 'selected';
 
@@ -35497,7 +35503,7 @@ module.exports = function(hljs) {
       _.els = {};
       _.els.button = _.buildButton();
       _.els.buttonClear = _.buildButtonClear();
-      _.els.searchControl = _.buildSearchControl();
+      _.els.controlSearch = _.buildcontrolSearch();
       _.els.controlDeselect = _.buildDeselectAll();
       _.els.controlSelected = _.buildShowSelected();
       _.els.dropdown = _.buildDropdownMenu();
@@ -35505,11 +35511,7 @@ module.exports = function(hljs) {
       _.els.dropdownItemNoResults = _.buildDropdownItemNoResults();
       _.els.dropdownItems = _.buildDropdownItems();
       _.els.dropdownOptions = _.els.dropdownItems.filter( function() {
-        var attr = $( this ).data('option');
-        if (typeof attr !== typeof undefined && attr !== false) {
-          return true;
-        }
-        return false;
+        return _.isOption( $( this ) );
       });
 
       // Initialise Search.
@@ -35525,36 +35527,76 @@ module.exports = function(hljs) {
             text : $( this ).text()
           };
         });
-        _.els.searchControl.on('keyup', function() {
+        _.els.controlSearch.on('keyup', function( e ) {
+
+          // Detect cursor up and down.
+          if ( e.which == 13 ) { // Enter.
+            _.toggle( _.els.dropdown.find('.hover').first() );
+            if ( !_.data.preventHideDropdown ) {
+              _.els.button.dropdown('toggle');
+            }
+            return;
+          }
+          else if ( e.which == 38 ) { // Up.
+            if ( !_.dropdownActive() ) {
+              _.els.button.dropdown('toggle');
+              _.els.controlSearch.focus();
+            }
+            _.hoverUp();
+            return;
+          }
+          else if ( e.which == 40 ) { // Down.
+            if ( !_.dropdownActive() ) {
+              _.els.button.dropdown('toggle');
+              _.els.controlSearch.focus();
+            }
+            _.hoverDown();
+            return;
+          }
+
           var s = $(this).val();
           var results = null;
           if ( $.trim( s ) == '' ) {
             _.refresh();
+            if ( _.data.lastSearch !== null ) {
+              _.data.resultsChanged = true;
+              _.data.lastSearch = null;
+            }
             return;
           } else {
             var fuse = new Fuse( haystack, options );
             results = fuse.search( $(this).val() );
           }
+          _.data.resultsChanged = true;
           if ( results ) {
-            // Continue.
+            if (
+              typeof _.data.lastSearch !== null &&
+              _.arraysEqual( results, _.data.lastSearch )
+            ) {
+              _.data.resultsChanged = false;
+            }
+
           } else {
             _.refresh();
             return;
           }
-          //_.sort();
-          _.hide( results );
-          _.reorder( results );
-          _.resetScroll();
+          if ( _.data.resultsChanged ) {
+            _.hoverSet( results[0] );
+            _.hide( results );
+            _.reorder( results );
+            _.resetScroll();
+          }
+          _.data.lastSearch = results;
         });
       }
 
       // Handle cut and paste.
-      _.els.searchControl.bind({
+      _.els.controlSearch.bind({
           paste (){
-            $(this).trigger('keyup');
+            $(this).trigger('keydown');
           },
           cut (){
-            $(this).trigger('keyup');
+            $(this).trigger('keydown');
           }
       });
 
@@ -35577,9 +35619,22 @@ module.exports = function(hljs) {
         $el.hide();
       }
 
+      // Set/Remove hover
+      _.els.controlSearch.on('focus', function(){
+        _.hoverSet();
+      });
+      _.els.controlSearch.on('blur', function(){
+        _.hoverRemove();
+      });
+
       // Assign click handler: Select item.
       _.els.dropdownOptions.on('click', function( event ){
         event.preventDefault();
+        if ( _.data.multiselect && _.settings.multiselectStayOpen ) {
+          $dropdown.one('hide.bs.dropdown', function ( event ) {
+            event.preventDefault();
+          });
+        }
         _.toggle( $(this) );
       });
 
@@ -35607,7 +35662,7 @@ module.exports = function(hljs) {
 
       // Assign click handler: Clear search.
       _.els.buttonClear.on('click', function() {
-        _.els.searchControl.val('');
+        _.els.controlSearch.val('');
         if ( _.dropdownActive() ) {
           $dropdown.one('hide.bs.dropdown', function ( event ) {
             event.preventDefault();
@@ -35624,48 +35679,15 @@ module.exports = function(hljs) {
         });
       });
 
-      // Assign 'Enter' key listener for search.
-      // Assign 'Up' and 'Down' behaviour to the dropdown menu.
-      var up = $.Event("keydown");
-      up.which = 38; // Up cursor key..
-      var down = $.Event("keydown");
-      down.which = 40; // Down cursor key.
-      _.els.searchControl.keydown(function(e) {
-        if( e.which == 13 ) { // Enter.
-          _.toggle( _.els.dropdown.find('.hover').first() );
-        }
-        else if ( e.which == 38 ) { // Up.
-          var current = _.els.dropdown.find('.hover').first();
-          var previous = current.prev('a:visible');
-          //console.log(next);
-
-        }
-        else if ( e.which == 40 ) { // Down.
-          var current = _.els.dropdown.find('.hover').first();
-          var next = current.next('a:visible');
-          console.log(next);
-        }
-      });
-
-      // Prevent dropdown hide on interaction for multiselect.
-      if ( _.data.multiselect && _.settings.multiselectStayOpen ) {
-        $dropdown.on('hide.bs.dropdown', function ( event ) {
-          if ( _.data.preventHideDropdown ) {
-            event.preventDefault();
-            _.data.preventHideDropdown = false;
-          }
-        });
-      }
-
       // On search focus: Toggle dropdown.
       // - Can reliance on setTimeout be removed?
       // - Should we depend on an aria attribute for plugin logic?
       if ( _.settings.search ) {
-        _.els.searchControl.on('focusin', function(){
+        _.els.controlSearch.on('focusin', function(){
           if ( _.els.button.attr('aria-expanded') == 'false' ) {
             _.els.button.dropdown('toggle');
             setTimeout(function(){
-              _.els.searchControl.focus();
+              _.els.controlSearch.focus();
             }, 1);
           }
         });
@@ -35702,7 +35724,7 @@ module.exports = function(hljs) {
           $('<div>', {
             class: 'input-group'
           })
-          .append( _.els.searchControl )
+          .append( _.els.controlSearch )
           .append(
             $('<div>', {
               class: 'input-group-append'
@@ -35748,14 +35770,14 @@ module.exports = function(hljs) {
       })
       .html( _.settings.htmlClear );
     },
-    buildSearchControl() {
+    buildcontrolSearch() {
       var _ = this;
       return $('<input>', {
         type: 'text',
         class: 'form-control',
         placeholder: 'Search',
         'aria-label': 'Search',
-        'aria-describedby': _.ids.searchControlId
+        'aria-describedby': _.ids.controlSearchId
       });
     },
     buildDropdownMenu() {
@@ -35864,12 +35886,77 @@ module.exports = function(hljs) {
       }
       return false;
     },
+    /**
+     * Check if a dropdown item refers to a select option.
+     * @param  {object}  $item jQuery object.
+     * @return {Boolean}
+     */
+    isOption( $item ) {
+      var attr = $item.data('option');
+      if (typeof attr !== typeof undefined && attr !== false) {
+        return true;
+      }
+      return false;
+    },
+    /**
+     * Set hover class position.
+     *
+     * Move the hover class to a designated dropdown option. If the index points
+     * to a non-option, the next option will be modified.
+     * @param {integer} index Dropdown menu item index.
+     */
+    hoverSet( index ) {
+      var _ = this;
+      _.els.dropdownOptions.removeClass('hover');
+      if ( typeof index === typeof undefined ) {
+        var $item = _.els.dropdownOptions.first();
+      } else {
+        var $item = _.dropdownItemByIndex( index );
+      }
+      _.data.hoverItem = $item;
+      $item.addClass('hover');
+    },
+    hoverUp() {
+      var _ = this;
+      var current = _.data.hoverItem;
+      if (
+        typeof current !== typeof undefined &&
+        current.length
+      ) {
+        var prev = current.prevAll('a:visible').first();
+      }
+      if ( typeof prev !== typeof undefined && prev.length ) {
+        current.removeClass('hover');
+        prev.addClass('hover');
+        _.data.hoverItem = prev;
+      }
+    },
+    hoverDown() {
+      var _ = this;
+      var current = _.data.hoverItem;
+      if (
+        typeof current !== typeof undefined &&
+        current.length
+      ) {
+        var next = current.nextAll('a:visible').first();
+      }
+      if ( typeof next !== typeof undefined && next.length ) {
+        current.removeClass('hover');
+        next.addClass('hover');
+        _.data.hoverItem = next;
+      }
+    },
+    /**
+     * Remove hover class from all dropdown options.
+     * @return void
+     */
+    hoverRemove() {
+      var _ = this;
+      _.els.dropdownItems.removeClass('hover').show();
+    },
     toggle( $dropdownItem ) {
       var _ = this;
       var $el =  $( _.element );
-      if ( _.data.multiselect ) {
-        _.data.preventHideDropdown = true;
-      }
       var itemIndex = $dropdownItem.data('option');
       var $option = $el.find('option').eq( itemIndex );
       if ( $option.is(':selected') ) {
@@ -35929,7 +36016,7 @@ module.exports = function(hljs) {
     refresh() {
       var _ = this;
       _.data.status = 'initial';
-      _.els.dropdownItems.removeClass('hover').show();
+      _.hoverRemove();
       _.els.dropdownItemNoResults.hide();
       _.sortReset();
       _.showInitialControls();
@@ -35937,8 +36024,6 @@ module.exports = function(hljs) {
     hide( results ) {
       var _ = this;
       var notResults = $(_.data.indexes).not(results).get();
-      _.els.dropdownOptions.show().removeClass('hover');
-      _.dropdownItemByIndex( results[0] ).addClass('hover');
       $.each( notResults, function( index, value ) {
         _.dropdownItemByIndex( value ).hide();
       });
@@ -35956,7 +36041,7 @@ module.exports = function(hljs) {
       _.els.controlSelected.hide();
     },
     showInitialControls( prepend ) {
-      prepend = (typeof prepend !== 'undefined') ?  prepend : false;
+      prepend = (typeof prepend !== typeof undefined ) ?  prepend : false;
       var _ = this;
       if ( prepend ) {
         _.els.controlSelected.prependTo( _.els.dropdown );
@@ -35989,19 +36074,21 @@ module.exports = function(hljs) {
     /**
      * Sort: Order by array values.
      *
-     * Reorder according to an array of index values.
+     * Reorder according to an array of index values. The order of the index
+     * array is preserved, to make change detection easier elsewhere.
      * @param  {array} indexes Array of index values (strings).
      * @return void
      */
     reorder( indexes ) {
       var _ = this;
       _.els.dropdownItemNoResults.hide();
-      if ( indexes === undefined || indexes.length == 0) {
+      if ( typeof indexes === typeof undefined || indexes.length == 0) {
         _.els.dropdownItemNoResults.show();
         return;
       }
-      indexes = indexes.reverse();
-      $.each( indexes, function( index, value ) {
+      var indexesReversed = indexes.slice(0); // Clone
+      indexesReversed = indexesReversed.reverse();
+      $.each( indexesReversed, function( index, value ) {
         _.dropdownItemByIndex( value ).prependTo( _.els.dropdownItemsContainer );
       });
       _.hideInitialControls();
@@ -36047,6 +36134,20 @@ module.exports = function(hljs) {
         selector = '.' + classes.join('.');
       }
       return selector;
+    },
+    /**
+     * Helper: Compare two arrays.
+     *
+     * @see https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
+     */
+    arraysEqual( a, b ) {
+      if (a === b) return true;
+      if (a == null || b == null) return false;
+      if (a.length != b.length) return false;
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
     }
   } );
 

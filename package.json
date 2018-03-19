@@ -5,6 +5,7 @@
   "main": "./dist/bootstrap-select-dropdown.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
+    "dev": "webpack --config webpack.dev.js",
     "serve": "webpack-dev-server --config webpack.dev.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch --config webpack.dev.js"

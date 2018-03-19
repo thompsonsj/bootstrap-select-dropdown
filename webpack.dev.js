@@ -24,6 +24,9 @@ module.exports = merge(common, {
       entry: path.join(process.cwd(), "src", "views", "*.hbs"),
       output: path.join(process.cwd(), "docs", "[name].html"),
       data: require("./src/views/data.json"),
+      partials: [
+        path.join(process.cwd(), "src", "views", "partials", "*", "*.hbs")
+      ],
       helpers: {
         htmlentities: function(context, options) {
           return entities.encode( context );
