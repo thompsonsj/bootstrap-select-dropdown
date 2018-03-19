@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="bundle.css">
+
+    <title>Bootstrap Select Dropdown</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container justify-content-between">
+        <a class="navbar-brand" href="#">Bootstrap Select Dropdown</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <span class="navbar-text ml-auto">
+
+          </span>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/">v0.6.8</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/thompsonsj/bootstrap-select-dropdown">
+                <svg class="ion ion-social-github">
+                  <use xlink:href="#ion-social-github"></use>
+                </svg>
+              </a>
+            </li>
+          </ul>
+          <form class="form-inline ml-2">
+            <a href="https://github.com/thompsonsj/bootstrap-select-dropdown/archive/master.zip" class="btn btn-outline-light my-2 my-sm-0">Download</a>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+
+<div class="row">
+  <div class="col-md-3">
+
+    <ul class="nav nav-pills flex-column nav-secondary">
+    	<li class="nav-item">
+    		<a class="nav-link " href="/">Overview</a>
+    	</li>
+    	<li class="nav-item">
+    		<a class="nav-link " href="getting-started.html">Getting started</a>
+    	</li>
+    	<li class="nav-item">
+    		<a class="nav-link " href="usage.html">Usage</a>
+    	</li>
+    	<li class="nav-item">
+    		<a class="nav-link active" href="options.html">Options</a>
+    	</li>
+    	<li class="nav-item">
+    		<a class="nav-link " href="features.html">Features</a>
+    	</li>
+    </ul>
+
+  </div>
+  <div class="col-md-9">
+
+    <div class="page-header">
+      <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
+    </div>
+    <p class="lead">A jQuery plugin for Bootstrap 4 that converts <code>&lt;select&gt;</code> and <code>&lt;select multiselect&gt;</code> elements to dropdowns. Uses fuse.js for fuzzy search and Bootstrap's dropdown plugin.</p>
+
+    <div class="page-header">
+      <h2 id="options">Options</h2>
+    </div>
+
+    <p>Plugin defaults:</p>
+
+<pre><code>$(document).ready(function(){
+$(&quot;#multiselect&quot;).selectDropdown({
+// Behaviour
+maxListLength: 4, // Maximum number of &lt;option&gt; text() values to display within the button.
+hideSelect: true, // Hide the select element.
+multiselectStayOpen: true, // Keep dropdown open on interaction for multiselects.
+search: true, // Wrap the dropdown button in an input group with search form controls.
+observeDomMutations: false, // Respect dynamic changes to the select options.
+maxHeight: &quot;300px&quot;, // Make the dropdown scrollable if beyond this height. Set as false to disable.
+
+// Text.
+textNoneSelected: &quot;None selected&quot;,
+textMultipleSelected: &quot;Multiple selected&quot;,
+textNoResults: &quot;No results&quot;,
+
+// HTML.
+htmlClear: &quot;Clear search&quot;,
+
+// Classes
+classDropdown: &quot;dropdown&quot;,
+classBtnClear: &quot;btn btn-outline-secondary&quot;,
+classBtnSearch: &quot;btn btn-primary&quot;,
+classMenu: &quot;dropdown-menu&quot;,
+classItem: &quot;dropdown-item&quot;
+})
+});</code></pre>
+
+    <h3>maxListLength</h3>
+
+    <p>
+      <em>Default: 4.</em>
+    </p>
+
+    <p>
+      For <code>multiselect</code> elements, limit the number of options to list as comma separated values within the dropdown button elements. If the number of selected options exceeds this limit, the value of <code>textMultipleSelected</code> will be displayed.
+    </p>
+
+    <h3>hideSelect</h3>
+
+    <p>
+      <em>Default: true.</em>
+    </p>
+
+    <p>Hide the <code>select</code> element. This is expected. However, you may wish to unhide the <code>select</code> element for testing.</p>
+
+    <h3>multiselectStayOpen</h3>
+
+    <p>
+      <em>Default: true.</em>
+    </p>
+
+    <p>
+      For <code>multiselect</code> elements, keep the dropdown menu open on interaction. Normally, a dropdown menu closes when you select an item. However, for <code>multiselect</code>, we may wish for the menu to stay open to enable the user to conveniently select other options.
+    </p>
+
+    <h3>search</h3>
+
+    <p>
+      <em>Default: true.</em>
+    </p>
+
+    <p>
+      Convert the dropdown button to an <code>input-group</code>, with a search form control and a <strong>clear search</strong> button.
+    </p>
+
+    <h3>observeDomMutations</h3>
+
+    <p>
+      <em>Default: false.</em>
+    </p>
+
+    <p>
+      Monitor changes to the option list of the <code>select</code> element, and adjust <code>selectDropdown</code> behaviour accordingly. This option is disabled by default due to the performance impact.
+    </p>
+
+    <h3>maxHeight</h3>
+
+    <p>
+      Default: 300px.
+    </p>
+
+    <p>
+      Set a max height on the dropdown, enabling it to be scrollable. This can be disabled by setting the option to <code>false</code>.
+    </p>
+
+    <h3>textNoneSelected</h3>
+
+    <p>
+      <em>Default: None selected.</em>
+    </p>
+
+    <p>
+      This text is set on the dropdown button when the following conditions are met:
+    </p>
+
+    <ul>
+      <li>
+        The <code>select</code> element is a <code>multiselect</code>.
+      </li>
+      <li>
+        No selections have been made.
+      </li>
+    </ul>
+
+    <h3>textMultipleSelected</h3>
+
+    <p>
+      This text is set on the dropdown button when the following conditions are met:
+    </p>
+
+    <ul>
+      <li>
+        The <code>select</code> element is a <code>multiselect</code>.
+      </li>
+      <li>
+        More than <code>maxListLength</code> selections have been made.
+      </li>
+    </ul>
+
+    <h3>textNoResults</h3>
+
+    <p>
+      <em>Default: No results.</em>
+    </p>
+
+    <p>
+      This text appears when a search yields no results.
+    </p>
+
+    <h3>htmlClear</h3>
+
+    <p>
+      Include your own text/HTML value for the <strong>clear search</strong> button (which appears when <code>search</code> is <code>true</code>).
+    </p>
+
+    <p>
+      The example below uses an SVG sprite icon from <a href="https://rastasheep.github.io/ionicons-sprite/">Ionicons sprite</a> by <a href="https://rastasheep.github.io/">rastasheep</a> who created sprites from <a href="http://ionicons.com/">ionicons</a>, the premium icon font for <a href="http://ionicframework.com/">Ionic Framework</a>.
+    </p>
+
+    <div class="form-group">
+      <select id="demo_select_htmlclear" class="form-control">
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+        <option value="4">Option 4</option>
+        <option value="5">Option 5</option>
+        <option value="6">Option 6</option>
+        <option value="7">Option 7</option>
+        <option value="8">Option 8</option>
+        <option value="9">Option 9</option>
+        <option value="10">Option 10</option>
+        <option value="11">Option 11</option>
+        <option value="12">Option 12</option>
+        <option value="13">Option 13</option>
+        <option value="14">Option 14</option>
+        <option value="15">Option 15</option>
+        <option value="16">Option 16</option>
+        <option value="17">Option 17</option>
+        <option value="18">Option 18</option>
+      </select>
+    </div>
+
+<pre><code>$(document).ready(function(){
+$(&quot;select#demo_select_htmlclear&quot;).selectDropdown({
+&quot;htmlClear&quot;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close-circled&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;
+});
+});</code></pre>
+
+    <h3>classDropdown</h3>
+
+    <p>
+      <em>Default: dropdown.</em>
+    </p>
+
+    <p>
+      The class applied to the dropdown element. The default is Bootstrap 4 markup.
+    </p>
+
+    <h3>classBtnClear</h3>
+
+    <p>
+      <em>Default: btn btn-outline-secondary.</em>
+    </p>
+
+    <p>
+      The class applied to the dropdown element. The default is a Bootstrap 4 outline button with secondary colors.
+    </p>
+
+    <h3>classBtnSearch</h3>
+
+    <p>
+      <em>Default: btn btn-primary.</em>
+    </p>
+
+    <p>
+      The class applied to the dropdown element. The default is a Bootstrap 4 button with primary colors.
+    </p>
+
+    <h3>classMenu</h3>
+
+    <p>
+      <em>Default: dropdown-menu.</em>
+    </p>
+
+    <p>
+      The class applied to the dropdown menu element. The default is Bootstrap 4 markup.
+    </p>
+
+    <h3>classItem</h3>
+
+    <p>
+      <em>Default: dropdown-item.</em>
+    </p>
+
+    <p>
+      The class applied to each dropdown item element. The default is Bootstrap 4 markup.
+    </p>
+
+  </div><!-- /.col-md-9 -->
+</div><!-- /.row -->
+
+</div><!-- /.container -->
+
+<svg width="0" height="0" style="position:absolute">
+	<defs>
+		<symbol viewBox="0 0 512 512" id="ion-close">
+			<path d="M443.6 387.1L312.4 255.4l131.5-130c5.4-5.4 5.4-14.2 0-19.6l-37.4-37.6c-2.6-2.6-6.1-4-9.8-4-3.7 0-7.2 1.5-9.8 4L256 197.8 124.9 68.3c-2.6-2.6-6.1-4-9.8-4-3.7 0-7.2 1.5-9.8 4L68 105.9c-5.4 5.4-5.4 14.2 0 19.6l131.5 130L68.4 387.1c-2.6 2.6-4.1 6.1-4.1 9.8 0 3.7 1.4 7.2 4.1 9.8l37.4 37.6c2.7 2.7 6.2 4.1 9.8 4.1 3.5 0 7.1-1.3 9.8-4.1L256 313.1l130.7 131.1c2.7 2.7 6.2 4.1 9.8 4.1 3.5 0 7.1-1.3 9.8-4.1l37.4-37.6c2.6-2.6 4.1-6.1 4.1-9.8-.1-3.6-1.6-7.1-4.2-9.7z"></path>
+		</symbol>
+		<symbol viewBox="0 0 512 512" id="ion-social-github">
+			<path d="M256 32C132.3 32 32 134.9 32 261.7c0 101.5 64.2 187.5 153.2 217.9 1.4.3 2.6.4 3.8.4 8.3 0 11.5-6.1 11.5-11.4 0-5.5-.2-19.9-.3-39.1-8.4 1.9-15.9 2.7-22.6 2.7-43.1 0-52.9-33.5-52.9-33.5-10.2-26.5-24.9-33.6-24.9-33.6-19.5-13.7-.1-14.1 1.4-14.1h.1c22.5 2 34.3 23.8 34.3 23.8 11.2 19.6 26.2 25.1 39.6 25.1 10.5 0 20-3.4 25.6-6 2-14.8 7.8-24.9 14.2-30.7-49.7-5.8-102-25.5-102-113.5 0-25.1 8.7-45.6 23-61.6-2.3-5.8-10-29.2 2.2-60.8 0 0 1.6-.5 5-.5 8.1 0 26.4 3.1 56.6 24.1 17.9-5.1 37-7.6 56.1-7.7 19 .1 38.2 2.6 56.1 7.7 30.2-21 48.5-24.1 56.6-24.1 3.4 0 5 .5 5 .5 12.2 31.6 4.5 55 2.2 60.8 14.3 16.1 23 36.6 23 61.6 0 88.2-52.4 107.6-102.3 113.3 8 7.1 15.2 21.1 15.2 42.5 0 30.7-.3 55.5-.3 63 0 5.4 3.1 11.5 11.4 11.5 1.2 0 2.6-.1 4-.4C415.9 449.2 480 363.1 480 261.7 480 134.9 379.7 32 256 32z"></path>
+		</symbol>
+	</defs>
+</svg>
+
+<script src="bundle.js"></script>
+<script>
+	$(document).ready(function(){
+		$('#dom_mutation_demo').selectDropdown({
+			hideSelect: false
+		});
+		$('#insert_value').click(function(){
+			var count = $('#dom_mutation_demo').find('option').length;
+			var randSelect = Math.floor(Math.random() * count) + 1 ;
+			var $randSelect = $('#dom_mutation_demo').find('option').eq( randSelect );
+			$randSelect.after( $randSelect.clone() );
+		});
+		$('#remove_value').click(function(){
+			var count = $('#dom_mutation_demo').find('option').length;
+			var randSelect = Math.floor(Math.random() * count) + 1 ;
+			var $randSelect = $('#dom_mutation_demo').find('option').eq( randSelect );
+			$randSelect.remove();
+		});
+	});
+</script>
+</body>
+</html>

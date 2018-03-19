@@ -1,10 +1,14 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const Entities = require('html-entities').AllHtmlEntities;
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const extractCss = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
 const extractCssMin = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
+const HandlebarsPlugin = require("handlebars-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+const entities = new Entities();
 
 module.exports = {
   entry: {
@@ -16,7 +20,7 @@ module.exports = {
     filename: "[name].js"
   },
   externals: {
-    jquery: 'jQuery'
+    jquery: '$'
   },
   module: {
     rules: [
@@ -53,6 +57,19 @@ module.exports = {
     }),
     new UglifyJsPlugin({
       include: /\.min\.js$/
+    }),
+    new HandlebarsPlugin({
+      entry: path.join(process.cwd(), "src", "views", "*.hbs"),
+      output: path.join(process.cwd(), "docs", "[name].html"),
+      data: require("./src/views/data.json"),
+      partials: [
+        path.join(process.cwd(), "src", "views", "partials", "*", "*.hbs")
+      ],
+      helpers: {
+        htmlentities: function(context, options) {
+          return entities.encode( context );
+        }
+      }
     })
   ]
 };

@@ -45,13 +45,13 @@
 
     <ul class="nav nav-pills flex-column nav-secondary">
     	<li class="nav-item">
-    		<a class="nav-link active" href="/">Overview</a>
+    		<a class="nav-link " href="/">Overview</a>
     	</li>
     	<li class="nav-item">
     		<a class="nav-link " href="getting-started.html">Getting started</a>
     	</li>
     	<li class="nav-item">
-    		<a class="nav-link " href="usage.html">Usage</a>
+    		<a class="nav-link active" href="usage.html">Usage</a>
     	</li>
     	<li class="nav-item">
     		<a class="nav-link " href="options.html">Options</a>
@@ -67,27 +67,99 @@
     <div class="page-header">
       <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
     </div>
-    <p class="lead">A jQuery plugin for Bootstrap 4 that converts <code>&lt;select&gt;</code> and <code>&lt;select multiselect&gt;</code> elements to dropdowns. Uses Bootstrap's dropdown plugin and fuse.js for fuzzy search.</p>
+    <p class="lead">A jQuery plugin for Bootstrap 4 that converts <code>&lt;select&gt;</code> and <code>&lt;select multiselect&gt;</code> elements to dropdowns. Uses fuse.js for fuzzy search and Bootstrap's dropdown plugin.</p>
 
     <div class="page-header">
-      <h2>Example</h2>
+      <h2 id="nav-usage">Usage</h2>
     </div>
-
-    <p>Use Bootstrap Select Dropdown to improve the user experience for long option lists. Compared to a regular multiselect, this plugin adds:</p>
-
-    <p>
-      <ul>
-        <li>a search box;</li>
-        <li>keyboard navigation for search; and</li>
-        <li>select/deselect all controls.</li>
-      </ul>
-    </p>
+    <h3>Select</h3>
 
     <div class="form-group">
-      <label for="demo_overview_example">Select multiple countries</label>
-      <select id="demo_overview_example" class="form-control" multiple>
+      <select id="demo_select" class="form-control">
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+        <option value="4">Option 4</option>
+        <option value="5">Option 5</option>
+        <option value="6">Option 6</option>
+        <option value="7">Option 7</option>
+        <option value="8">Option 8</option>
+        <option value="9">Option 9</option>
+        <option value="10">Option 10</option>
+        <option value="11">Option 11</option>
+        <option value="12">Option 12</option>
+        <option value="13">Option 13</option>
+        <option value="14">Option 14</option>
+        <option value="15">Option 15</option>
+        <option value="16">Option 16</option>
+        <option value="17">Option 17</option>
+        <option value="18">Option 18</option>
+      </select>
+    </div>
+
+<pre><code>&lt;div class=&quot;form-group&quot;&gt;
+&lt;select id=&quot;demo_select&quot; class=&quot;form-control&quot;&gt;
+&lt;!-- options --&gt;
+&lt;/select&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+$(document).ready(function(){
+$(&quot;#demo_select&quot;).selectDropdown();
+});
+&lt;/script&gt;</code></pre>
+
+    <h3>Select with option groups</h3>
+
+    <div class="form-group">
+      <select id="demo_select_optgroups" class="form-control">
+        <optgroup label="Group 1">
+          <option value="1-1">Group 1 Option 1</option>
+          <option value="1-2">Group 1 Option 2</option>
+          <option value="1-3">Group 1 Option 3</option>
+        </optgroup>
+        <optgroup label="Group 2">
+          <option value="2-1">Group 2 Option 1</option>
+          <option value="2-2">Group 2 Option 2</option>
+          <option value="2-3">Group 2 Option 3</option>
+          <option value="2-4">Group 2 Option 4</option>
+          <option value="2-5">Group 2 Option 5</option>
+          <option value="2-6">Group 2 Option 6</option>
+          <option value="2-7">Group 2 Option 7</option>
+          <option value="2-8">Group 2 Option 8</option>
+          <option value="2-9">Group 2 Option 9</option>
+        </optgroup>
+        <optgroup label="Group 3">
+          <option value="3-1">Group 3 Option 1</option>
+          <option value="3-2">Group 3 Option 2</option>
+          <option value="3-3">Group 3 Option 3</option>
+          <option value="3-4">Group 3 Option 4</option>
+          <option value="3-5">Group 3 Option 5</option>
+          <option value="3-6">Group 3 Option 6</option>
+        </optgroup>
+      </select>
+    </div>
+
+<pre><code>&lt;div class=&quot;form-group&quot;&gt;
+&lt;select id=&quot;demo_select_optgroups&quot; class=&quot;form-control&quot; multiple&gt;
+&lt;optgroup label=&quot;Group 1&quot;&gt;
+&lt;!-- options --&gt;
+&lt;/optgroup&gt;
+&lt;/select&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+$(document).ready(function(){
+$(&quot;#demo_select_optgroups&quot;).selectDropdown();
+});
+&lt;/script&gt;</code></pre>
+
+    <h3>Multiselect</h3>
+
+    <div class="form-group">
+      <select id="demo_multiselect" class="form-control" multiple>
         <option value="AF">Afghanistan</option>
-        <option value="AX">Åland Islands</option>
+        <option value="AX">&Aring;land Islands</option>
         <option value="AL">Albania</option>
         <option value="DZ">Algeria</option>
         <option value="AS">American Samoa</option>
@@ -143,10 +215,10 @@
         <option value="CD">Congo - Kinshasa</option>
         <option value="CK">Cook Islands</option>
         <option value="CR">Costa Rica</option>
-        <option value="CI">Côte d’Ivoire</option>
+        <option value="CI">C&ocirc;te d&rsquo;Ivoire</option>
         <option value="HR">Croatia</option>
         <option value="CU">Cuba</option>
-        <option value="CW">Curaçao</option>
+        <option value="CW">Cura&ccedil;ao</option>
         <option value="CY">Cyprus</option>
         <option value="CZ">Czechia</option>
         <option value="DK">Denmark</option>
@@ -269,13 +341,13 @@
         <option value="PT">Portugal</option>
         <option value="PR">Puerto Rico</option>
         <option value="QA">Qatar</option>
-        <option value="RE">Réunion</option>
+        <option value="RE">R&eacute;union</option>
         <option value="RO">Romania</option>
         <option value="RU">Russia</option>
         <option value="RW">Rwanda</option>
         <option value="WS">Samoa</option>
         <option value="SM">San Marino</option>
-        <option value="ST">São Tomé &amp; Príncipe</option>
+        <option value="ST">S&atilde;o Tom&eacute; &amp; Pr&iacute;ncipe</option>
         <option value="SA">Saudi Arabia</option>
         <option value="SN">Senegal</option>
         <option value="RS">Serbia</option>
@@ -293,7 +365,7 @@
         <option value="SS">South Sudan</option>
         <option value="ES">Spain</option>
         <option value="LK">Sri Lanka</option>
-        <option value="BL">St. Barthélemy</option>
+        <option value="BL">St. Barth&eacute;lemy</option>
         <option value="SH">St. Helena</option>
         <option value="KN">St. Kitts &amp; Nevis</option>
         <option value="LC">St. Lucia</option>
@@ -345,16 +417,59 @@
     </div>
 
 <pre><code>&lt;div class=&quot;form-group&quot;&gt;
-&lt;select id=&quot;demo_overview_example&quot; class=&quot;form-control&quot; multiple&gt;
+&lt;select id=&quot;demo_multiselect&quot; class=&quot;form-control&quot; multiple&gt;
 &lt;!-- options --&gt;
 &lt;/select&gt;
 &lt;/div&gt;
 
 &lt;script&gt;
 $(document).ready(function(){
-  $(&quot;#demo_multiselect&quot;).selectDropdown({
-    &apos;htmlClear&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;
-  });
+$(&quot;#demo_multiselect&quot;).selectDropdown();
+});
+&lt;/script&gt;</code></pre>
+
+    <h3>Multiselect with option groups</h3>
+
+    <div class="form-group">
+      <select id="demo_multiselect_optgroups" class="form-control" multiple>
+        <optgroup label="Group 1">
+          <option value="1-1">Group 1 Option 1</option>
+          <option value="1-2">Group 1 Option 2</option>
+          <option value="1-3">Group 1 Option 3</option>
+        </optgroup>
+        <optgroup label="Group 2">
+          <option value="2-1">Group 2 Option 1</option>
+          <option value="2-2">Group 2 Option 2</option>
+          <option value="2-3">Group 2 Option 3</option>
+          <option value="2-4">Group 2 Option 4</option>
+          <option value="2-5">Group 2 Option 5</option>
+          <option value="2-6">Group 2 Option 6</option>
+          <option value="2-7">Group 2 Option 7</option>
+          <option value="2-8">Group 2 Option 8</option>
+          <option value="2-9">Group 2 Option 9</option>
+        </optgroup>
+        <optgroup label="Group 3">
+          <option value="3-1">Group 3 Option 1</option>
+          <option value="3-2">Group 3 Option 2</option>
+          <option value="3-3">Group 3 Option 3</option>
+          <option value="3-4">Group 3 Option 4</option>
+          <option value="3-5">Group 3 Option 5</option>
+          <option value="3-6">Group 3 Option 6</option>
+        </optgroup>
+      </select>
+    </div>
+
+<pre><code>&lt;div class=&quot;form-group&quot;&gt;
+&lt;select id=&quot;demo_multiselect_optgroups&quot; class=&quot;form-control&quot; multiple&gt;
+&lt;optgroup label=&quot;Group 1&quot;&gt;
+&lt;!-- options --&gt;
+&lt;/optgroup&gt;
+&lt;/select&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+$(document).ready(function(){
+$(&quot;#demo_multiselect_optgroups&quot;).selectDropdown();
 });
 &lt;/script&gt;</code></pre>
 
