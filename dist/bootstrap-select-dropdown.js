@@ -150,7 +150,10 @@ var SelectDropdown = function ($) {
     textMultipleSelected: "Multiple selected",
     textNoResults: "No results",
     // HTML
-    htmlClear: "Clear search"
+    htmlClear: "Clear search",
+    // Classes
+    classBtnClear: "btn btn-outline-secondary",
+    classBtnSearch: "btn btn-primary"
   };
 
   var DefaultType = {
@@ -163,7 +166,9 @@ var SelectDropdown = function ($) {
     textNoneSelected: 'string',
     textMultipleSelected: 'string',
     textNoResults: 'string',
-    htmlClear: 'string'
+    htmlClear: 'string',
+    classBtnClear: 'string',
+    classBtnSearch: 'string'
   };
 
   var Event = {
@@ -182,8 +187,6 @@ var SelectDropdown = function ($) {
 
   var ClassName = {
     DROPDOWN: 'dropdown',
-    BTN_CLEAR: 'btn btn-outline-secondary',
-    BTN_SEARCH: 'btn btn-primary',
     MENU: 'dropdown-menu',
     ITEM: 'dropdown-item'
 
@@ -661,7 +664,7 @@ var SelectDropdown = function ($) {
       value: function buildButton() {
         var _ = this;
         return $('<button>', {
-          class: ClassName.BTN_SEARCH + ' dropdown-toggle',
+          class: _._config.classBtnSearch + ' dropdown-toggle',
           type: 'button',
           id: _.ids.dropdownButtonId,
           'data-toggle': 'dropdown',
@@ -676,7 +679,7 @@ var SelectDropdown = function ($) {
         var _ = this;
         return $('<button>', {
           type: 'button',
-          class: ClassName.BTN_CLEAR
+          class: _._config.classBtnClear
         }).html(_._config.htmlClear);
       }
     }, {
