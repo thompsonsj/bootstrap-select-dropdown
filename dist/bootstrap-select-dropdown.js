@@ -116,6 +116,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var SelectDropdownIndex = 1;
+
 /**
  * --------------------------------------------------------------------------
  * Bootstrap Select Dropdown
@@ -130,21 +132,24 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.6.8';
+  var VERSION = '0.7.0';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
   var JQUERY_NO_CONFLICT = $.fn[NAME];
-  var ESCAPE_KEYCODE = 27; // KeyboardEvent.which value for Escape (Esc) key
+  var ENTER_KEYCODE = 13;
+  var ESCAPE_KEYCODE = 27;
+  var ARROW_UP_KEYCODE = 38;
+  var ARROW_DOWN_KEYCODE = 40;
 
   var Default = {
     // Behaviour
     maxListLength: 4,
     hideSelect: true,
-    multiselectStayOpen: true,
     search: true,
     observeDomMutations: false,
     maxHeight: '300px',
+    keyboard: true,
     // Text
     textNoneSelected: "None selected",
     textMultipleSelected: "Multiple selected",
@@ -159,10 +164,10 @@ var SelectDropdown = function ($) {
   var DefaultType = {
     maxListLength: 'number',
     hideSelect: 'boolean',
-    multiselectStayOpen: 'boolean',
     search: 'boolean',
     observeDomMutations: 'boolean',
     maxHeight: 'string',
+    keyboard: 'boolean',
     textNoneSelected: 'string',
     textMultipleSelected: 'string',
     textNoResults: 'string',
@@ -172,6 +177,7 @@ var SelectDropdown = function ($) {
   };
 
   var Event = {
+    KEYUP: 'keyup' + EVENT_KEY,
     HIDE: 'hide' + EVENT_KEY,
     HIDDEN: 'hidden' + EVENT_KEY,
     SHOW: 'show' + EVENT_KEY,
@@ -188,16 +194,13 @@ var SelectDropdown = function ($) {
   var ClassName = {
     DROPDOWN: 'dropdown',
     MENU: 'dropdown-menu',
-    ITEM: 'dropdown-item'
+    ITEM: 'dropdown-item',
+    HOVER: 'hover',
+    ALIGNMENT_RIGHT: '.dropdown-menu-right'
+  };
 
-    /*const Selector = {
-      DIALOG             : '.modal-dialog',
-      DATA_TOGGLE        : '[data-toggle="modal"]',
-      DATA_DISMISS       : '[data-dismiss="modal"]',
-      FIXED_CONTENT      : '.fixed-top, .fixed-bottom, .is-fixed, .sticky-top',
-      STICKY_CONTENT     : '.sticky-top',
-      NAVBAR_TOGGLER     : '.navbar-toggler'
-    }*/
+  var Selector = {
+    DATA_TOGGLE: '[data-toggle="select-dropdown"]'
 
     /**
      * ------------------------------------------------------------------------
@@ -208,18 +211,58 @@ var SelectDropdown = function ($) {
   };
   var SelectDropdown = function () {
     function SelectDropdown(element, config) {
+      var _this = this;
+
       _classCallCheck(this, SelectDropdown);
 
       this._config = this._getConfig(config);
       this._element = element;
-      this.data = {};
-      this.data.multiselect = false;
-      this.data.preventHideDropdown = false;
-      this.data.status = 'initial';
-      this.data.indexes = [];
-      this.data.lastSearch = null;
-      this.data.resultsChanged = false;
-      this.data.hoverItem = $();
+      this._prefix = 'bsd' + this._config.SelectDropdownIndex + '-';
+
+      this._multiselect = this._isMultiselect(element);
+      this._indexes = [];
+      this._lastSearch = null;
+      this._resultsChanged = false;
+      this._hoverItem = $();
+
+      this.ids = {};
+      this.ids.dropdownContainerId = this._prefix + 'container';
+      this.ids.dropdownButtonId = this._prefix + 'button';
+      this.ids.controlSearchId = this._prefix + 'search';
+      this.ids.dropdownItemDeselect = this._prefix + 'deselect';
+      this.ids.dropdownItemShowSelected = this._prefix + 'selected';
+
+      // Properties: Elements.
+      this.els = {};
+      this.els.button = this.buildButton();
+      this.els.buttonClear = this.buildButtonClear();
+      this.els.controlSearch = this.buildcontrolSearch();
+      this.els.controlDeselect = this.buildDeselectAll();
+      this.els.controlSelected = this.buildShowSelected();
+      this.els.dropdown = this.buildDropdownMenu();
+      this.els.dropdownItemsContainer = this.buildDropdownItemsContainer();
+      this.els.dropdownItemNoResults = this.buildDropdownItemNoResults();
+      this.els.dropdownItems = this.buildDropdownItems();
+      this.els.dropdownOptions = this.els.dropdownItems.filter(function (index, element) {
+        return _this.isOption($(element));
+      });
+
+      if (this._config.search) {
+        this._haystack = [];
+        this._fuseOptions = {
+          keys: ['text'],
+          id: 'index'
+        };
+        this.els.dropdownOptions.each(function (index, element) {
+          _this._haystack[index] = {
+            index: $(element).data('index'),
+            text: $(element).text()
+          };
+        });
+      }
+
+      this._addEventListeners();
+
       this.init();
     }
 
@@ -240,14 +283,14 @@ var SelectDropdown = function ($) {
        */
       value: function hoverSet(index) {
         var _ = this;
-        _.els.dropdownOptions.removeClass('hover');
+        _.els.dropdownOptions.removeClass(ClassName.HOVER);
         if ((typeof index === 'undefined' ? 'undefined' : _typeof(index)) === ( true ? 'undefined' : _typeof(undefined))) {
           var $item = _.els.dropdownOptions.first();
         } else {
           var $item = _.dropdownItemByIndex(index);
         }
-        _.data.hoverItem = $item;
-        $item.addClass('hover');
+        _._hoverItem = $item;
+        $item.addClass(ClassName.HOVER);
       }
 
       /**
@@ -260,14 +303,14 @@ var SelectDropdown = function ($) {
       key: 'hoverUp',
       value: function hoverUp() {
         var _ = this;
-        var current = _.data.hoverItem;
+        var current = _._hoverItem;
         if ((typeof current === 'undefined' ? 'undefined' : _typeof(current)) !== ( true ? 'undefined' : _typeof(undefined)) && current.length) {
           var prev = current.prevAll('a:visible').first();
         }
         if ((typeof prev === 'undefined' ? 'undefined' : _typeof(prev)) !== ( true ? 'undefined' : _typeof(undefined)) && prev.length) {
-          current.removeClass('hover');
-          prev.addClass('hover');
-          _.data.hoverItem = prev;
+          current.removeClass(ClassName.HOVER);
+          prev.addClass(ClassName.HOVER);
+          _._hoverItem = prev;
         }
       }
 
@@ -281,14 +324,14 @@ var SelectDropdown = function ($) {
       key: 'hoverDown',
       value: function hoverDown() {
         var _ = this;
-        var current = _.data.hoverItem;
+        var current = _._hoverItem;
         if ((typeof current === 'undefined' ? 'undefined' : _typeof(current)) !== ( true ? 'undefined' : _typeof(undefined)) && current.length) {
           var next = current.nextAll('a:visible').first();
         }
         if ((typeof next === 'undefined' ? 'undefined' : _typeof(next)) !== ( true ? 'undefined' : _typeof(undefined)) && next.length) {
-          current.removeClass('hover');
-          next.addClass('hover');
-          _.data.hoverItem = next;
+          current.removeClass(ClassName.HOVER);
+          next.addClass(ClassName.HOVER);
+          _._hoverItem = next;
         }
       }
 
@@ -301,7 +344,7 @@ var SelectDropdown = function ($) {
       key: 'hoverRemove',
       value: function hoverRemove() {
         var _ = this;
-        _.els.dropdownItems.removeClass('hover').show();
+        _.els.dropdownItems.removeClass(ClassName.HOVER).show();
       }
 
       /**
@@ -321,7 +364,7 @@ var SelectDropdown = function ($) {
           $option.prop('selected', false);
           $dropdownItem.removeClass('active');
         } else {
-          if (!_.data.multiselect) {
+          if (!_._multiselect) {
             _.els.dropdownOptions.removeClass('active');
           }
           $option.prop('selected', true);
@@ -344,9 +387,7 @@ var SelectDropdown = function ($) {
         _.els.dropdownOptions.each(function () {
           _.deselect($(this));
         });
-        if (_.data.status == 'sort-selected') {
-          _.refresh();
-        }
+        _.refresh();
       }
 
       /**
@@ -377,121 +418,49 @@ var SelectDropdown = function ($) {
         return config;
       }
     }, {
+      key: '_addEventListeners',
+      value: function _addEventListeners() {
+        var _this2 = this;
+
+        if (this._config.search) {
+          this.els.controlSearch.on(Event.KEYUP, function (event) {
+            return _this2._keyup(event);
+          });
+        }
+      }
+    }, {
+      key: '_keyup',
+      value: function _keyup(event) {
+        if (this._config.keyboard) {
+          if (event.which == ENTER_KEYCODE) {
+            this.toggle(this.els.dropdown.find('.hover').first());
+            if (!this._multiselect) {
+              this.els.button.dropdown('toggle');
+            }
+            return;
+          } else if (event.which == ARROW_UP_KEYCODE) {
+            if (!this.dropdownActive()) {
+              this.els.button.dropdown('toggle');
+              this.els.controlSearch.focus();
+            }
+            this.hoverUp();
+            return;
+          } else if (event.which == ARROW_DOWN_KEYCODE) {
+            if (!this.dropdownActive()) {
+              this.els.button.dropdown('toggle');
+              this.els.controlSearch.focus();
+            }
+            this.hoverDown();
+            return;
+          }
+        }
+        this._search($(this.els.controlSearch).val());
+      }
+    }, {
       key: 'init',
       value: function init() {
         var _ = this; // Deep reference to this.
         var $el = $(_._element);
-        _.index = Math.random();
-        _.prefix = 'bsd' + _.index + '-'; // Prefix for unique labelling.
-
-        var attrMultiple = $el.attr('multiple');
-        if ((typeof attrMultiple === 'undefined' ? 'undefined' : _typeof(attrMultiple)) !== ( true ? 'undefined' : _typeof(undefined)) && attrMultiple !== false) {
-          _.data.multiselect = true;
-          if (_._config.multiselectStayOpen) {
-            _.data.preventHideDropdown = true;
-          }
-        }
-
-        // Properties: IDs.
-        _.ids = {};
-        _.ids.dropdownContainerId = _.prefix + 'container';
-        _.ids.dropdownButtonId = _.prefix + 'button';
-        _.ids.controlSearchId = _.prefix + 'search';
-        _.ids.dropdownItemDeselect = _.prefix + 'deselect';
-        _.ids.dropdownItemShowSelected = _.prefix + 'selected';
-
-        // Properties: Selectors.
-        _.selectors = {};
-        _.selectors.dropdownItemDeselect = 'a#' + _.ids.dropdownItemDeselect;
-        _.selectors.dropdownItemShowSelected = 'a#' + _.ids.dropdownItemShowSelected;
-
-        // Properties: Elements.
-        _.els = {};
-        _.els.button = _.buildButton();
-        _.els.buttonClear = _.buildButtonClear();
-        _.els.controlSearch = _.buildcontrolSearch();
-        _.els.controlDeselect = _.buildDeselectAll();
-        _.els.controlSelected = _.buildShowSelected();
-        _.els.dropdown = _.buildDropdownMenu();
-        _.els.dropdownItemsContainer = _.buildDropdownItemsContainer();
-        _.els.dropdownItemNoResults = _.buildDropdownItemNoResults();
-        _.els.dropdownItems = _.buildDropdownItems();
-        _.els.dropdownOptions = _.els.dropdownItems.filter(function () {
-          return _.isOption($(this));
-        });
-
-        // Initialise Search.
-        if (_._config.search) {
-          var haystack = [];
-          var options = {
-            keys: ['text'],
-            id: 'index'
-          };
-          _.els.dropdownOptions.each(function (index) {
-            haystack[index] = {
-              index: $(this).data('index'),
-              text: $(this).text()
-            };
-          });
-          _.els.controlSearch.on('keyup', function (e) {
-
-            // Detect cursor up and down.
-            if (e.which == 13) {
-              // Enter.
-              _.toggle(_.els.dropdown.find('.hover').first());
-              if (!_.data.preventHideDropdown) {
-                _.els.button.dropdown('toggle');
-              }
-              return;
-            } else if (e.which == 38) {
-              // Up.
-              if (!_.dropdownActive()) {
-                _.els.button.dropdown('toggle');
-                _.els.controlSearch.focus();
-              }
-              _.hoverUp();
-              return;
-            } else if (e.which == 40) {
-              // Down.
-              if (!_.dropdownActive()) {
-                _.els.button.dropdown('toggle');
-                _.els.controlSearch.focus();
-              }
-              _.hoverDown();
-              return;
-            }
-
-            var s = $(this).val();
-            var results = null;
-            if ($.trim(s) == '') {
-              _.refresh();
-              if (_.data.lastSearch !== null) {
-                _.data.resultsChanged = true;
-                _.data.lastSearch = null;
-              }
-              return;
-            } else {
-              var fuse = new _fuse2.default(haystack, options);
-              results = fuse.search($(this).val());
-            }
-            _.data.resultsChanged = true;
-            if (results) {
-              if (typeof _.data.lastSearch !== null && _.arraysEqual(results, _.data.lastSearch)) {
-                _.data.resultsChanged = false;
-              }
-            } else {
-              _.refresh();
-              return;
-            }
-            if (_.data.resultsChanged) {
-              _.hoverSet(results[0]);
-              _.hide(results);
-              _.reorder(results);
-              _.resetScroll();
-            }
-            _.data.lastSearch = results;
-          });
-        }
 
         // Handle cut and paste.
         _.els.controlSearch.bind({
@@ -508,7 +477,7 @@ var SelectDropdown = function ($) {
         var $dropdown = _.buildDropdown();
         $dropdown.append(_.els.dropdown);
         _.els.dropdownItemsContainer.append(_.els.dropdownItems);
-        if (_.data.multiselect) {
+        if (_._multiselect) {
           _.els.dropdown.append(_.els.controlDeselect).append(_.els.controlSelected);
         }
         _.els.dropdown.append(_.els.dropdownItemsContainer);
@@ -528,7 +497,7 @@ var SelectDropdown = function ($) {
         // Assign click handler: Select item.
         _.els.dropdownOptions.on('click', function (event) {
           event.preventDefault();
-          if (_.data.multiselect && _._config.multiselectStayOpen) {
+          if (_._multiselect) {
             $dropdown.one('hide.bs.dropdown', function (event) {
               event.preventDefault();
             });
@@ -627,6 +596,54 @@ var SelectDropdown = function ($) {
           var observer = new MutationObserver(callback);
           observer.observe($el[0], config);
         }
+      }
+
+      /**
+       * Check whether the supplied element has a `multiple` attribute,
+       * @param  {object}  element
+       * @return {Boolean}
+       */
+
+    }, {
+      key: '_isMultiselect',
+      value: function _isMultiselect(element) {
+        var attrMultiple = $(element).attr('multiple');
+        if ((typeof attrMultiple === 'undefined' ? 'undefined' : _typeof(attrMultiple)) !== ( true ? 'undefined' : _typeof(undefined)) && attrMultiple !== false) {
+          return true;
+        }
+        return false;
+      }
+    }, {
+      key: '_search',
+      value: function _search(s) {
+        var results = null;
+        if ($.trim(s) == '') {
+          this.refresh();
+          if (this._lastSearch !== null) {
+            this._resultsChanged = true;
+            this._lastSearch = null;
+          }
+          return;
+        } else {
+          var fuse = new _fuse2.default(this._haystack, this._fuseOptions);
+          results = fuse.search(s);
+        }
+        this._resultsChanged = true;
+        if (results) {
+          if (typeof this._lastSearch !== null && this.arraysEqual(results, this._lastSearch)) {
+            this._resultsChanged = false;
+          }
+        } else {
+          this.refresh();
+          return;
+        }
+        if (this._resultsChanged) {
+          this.hoverSet(results[0]);
+          this.hide(results);
+          this.reorder(results);
+          this.resetScroll();
+        }
+        this._lastSearch = results;
       }
     }, {
       key: 'buildDropdown',
@@ -751,7 +768,7 @@ var SelectDropdown = function ($) {
       key: 'incrementIndex',
       value: function incrementIndex(index) {
         var _ = this;
-        _.data.indexes.push(index.toString());
+        _._indexes.push(index.toString());
         index++;
         return index;
       }
@@ -857,7 +874,6 @@ var SelectDropdown = function ($) {
       key: 'refresh',
       value: function refresh() {
         var _ = this;
-        _.data.status = 'initial';
         _.hoverRemove();
         _.els.dropdownItemNoResults.hide();
         _.sortReset();
@@ -867,7 +883,7 @@ var SelectDropdown = function ($) {
       key: 'hide',
       value: function hide(results) {
         var _ = this;
-        var notResults = $(_.data.indexes).not(results).get();
+        var notResults = $(_._indexes).not(results).get();
         $.each(notResults, function (index, value) {
           _.dropdownItemByIndex(value).hide();
         });
@@ -965,12 +981,11 @@ var SelectDropdown = function ($) {
       value: function sortSelected() {
         var _ = this;
         var $el = $(_._element);
-        _.els.dropdownOptions.removeClass('hover');
+        _.els.dropdownOptions.removeClass(ClassName.HOVER);
         $(_.els.dropdown.find('.active').get().reverse()).each(function () {
           $(this).prependTo(_.els.dropdownItemsContainer);
         });
         _.showInitialControls(true);
-        _.data.status = 'sort-selected';
         _.resetScroll();
       }
 
@@ -1034,7 +1049,11 @@ var SelectDropdown = function ($) {
       value: function _jQueryInterface(config, relatedTarget) {
         return this.each(function () {
           var data = $(this).data(DATA_KEY);
-          var _config = Object.assign({}, SelectDropdown.Default, $(this).data(), (typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object' && config);
+          var _config = Object.assign({}, SelectDropdown.Default, $(this).data(), (typeof config === 'undefined' ? 'undefined' : _typeof(config)) === 'object' && config, {
+            SelectDropdownIndex: SelectDropdownIndex
+          });
+
+          SelectDropdownIndex++;
 
           if (!data) {
             data = new SelectDropdown(this, _config);
