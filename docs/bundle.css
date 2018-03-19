@@ -7069,7 +7069,8 @@ a.text-dark:hover, a.text-dark:focus {
   margin: 3rem 0 1rem;
   border-bottom: 1px solid #ced4da; }
 
-.btn .ion {
+.btn .ion,
+.nav-link .ion {
   display: inline-block;
   width: 1rem;
   height: 1rem;
@@ -7079,6 +7080,15 @@ a.text-dark:hover, a.text-dark:focus {
   -webkit-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out; }
 
-.btn:hover .ion {
+.btn:hover .ion,
+.nav-link:hover .ion {
   stroke: #fff;
   fill: #fff; }
+
+.nav-link .ion {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: #fff; }
+
+.nav-link:hover .ion {
+  fill: #e9ecef; }
