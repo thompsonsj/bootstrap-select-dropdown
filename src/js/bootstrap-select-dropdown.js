@@ -167,7 +167,7 @@ let SelectDropdownIndex = 1
      * to a non-option, the next option will be modified.
      * @param {integer} index Dropdown menu item index.
      */
-    hoverSet( index ) {
+    _hoverSet( index ) {
       var _ = this;
       _.els.dropdownOptions.removeClass( ClassName.HOVER );
       if ( typeof index === typeof undefined ) {
@@ -184,7 +184,7 @@ let SelectDropdownIndex = 1
      *
      * @return void
      */
-    hoverUp() {
+    _hoverUp() {
       var _ = this;
       var current = _._hoverItem;
       if (
@@ -205,7 +205,7 @@ let SelectDropdownIndex = 1
      *
      * @return void
      */
-    hoverDown() {
+    _hoverDown() {
       var _ = this;
       var current = _._hoverItem;
       if (
@@ -225,7 +225,7 @@ let SelectDropdownIndex = 1
      * Remove hover class from all dropdown options.
      * @return void
      */
-    hoverRemove() {
+    _hoverRemove() {
       var _ = this;
       _.els.dropdownItems.removeClass( ClassName.HOVER ).show();
     }
@@ -298,6 +298,10 @@ let SelectDropdownIndex = 1
       if (this._config.search) {
         this.els.controlSearch
           .on(Event.KEYUP, (event) => this._keyup(event))
+        this.els.controlSearch
+          .on(Event.FOCUS, (event) => this._hoverSet())
+        this.els.controlSearch
+          .on(Event.BLUR, (event) => this._hoverRemove())
       }
     }
 
@@ -315,7 +319,7 @@ let SelectDropdownIndex = 1
             this.els.button.dropdown('toggle');
             this.els.controlSearch.focus();
           }
-          this.hoverUp();
+          this._hoverUp();
           return;
         }
         else if ( event.which == ARROW_DOWN_KEYCODE ) {
@@ -323,7 +327,7 @@ let SelectDropdownIndex = 1
             this.els.button.dropdown('toggle');
             this.els.controlSearch.focus();
           }
-          this.hoverDown();
+          this._hoverDown();
           return;
         }
       }
@@ -362,14 +366,6 @@ let SelectDropdownIndex = 1
       if ( _._config.hideSelect ) {
         $el.hide();
       }
-
-      // Set/Remove hover
-      _.els.controlSearch.on('focus', function(){
-        _.hoverSet();
-      });
-      _.els.controlSearch.on('blur', function(){
-        _.hoverRemove();
-      });
 
       // Assign click handler: Select item.
       _.els.dropdownOptions.on('click', function( event ){
@@ -467,7 +463,7 @@ let SelectDropdownIndex = 1
       return false;
     }
 
-    _search( s ) {
+    _search(s) {
       var results = null;
       if ( $.trim( s ) == '' ) {
         this.refresh();
@@ -494,7 +490,7 @@ let SelectDropdownIndex = 1
         return;
       }
       if ( this._resultsChanged ) {
-        this.hoverSet( results[0] );
+        this._hoverSet( results[0] );
         this.hide( results );
         this.reorder( results );
         this.resetScroll();
@@ -730,7 +726,7 @@ let SelectDropdownIndex = 1
 
     refresh() {
       var _ = this;
-      _.hoverRemove();
+      _._hoverRemove();
       _.els.dropdownItemNoResults.hide();
       _.sortReset();
       _.showInitialControls();
