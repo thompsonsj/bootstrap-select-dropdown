@@ -82,7 +82,7 @@ let SelectDropdownIndex = 1
      MENU               : 'dropdown-menu',
      ITEM               : 'dropdown-item',
      HOVER              : 'hover',
-     ALIGNMENT_RIGHT    : '.dropdown-menu-right'
+     ALIGNMENT_RIGHT    : 'dropdown-menu-right'
    }
 
    const Selector = {
@@ -121,7 +121,8 @@ let SelectDropdownIndex = 1
       this.els.controlSearch = this.buildcontrolSearch()
       this.els.controlDeselect = this.buildDeselectAll()
       this.els.controlSelected = this.buildShowSelected()
-      this.els.dropdown = this.buildDropdownMenu()
+      this.els.dropdown = this.buildDropdown()
+      this.els.dropdownMenu = this.buildDropdownMenu() //This should be dropdown menu so we can build and refer to dropdown, the main container.
       this.els.dropdownItemsContainer = this.buildDropdownItemsContainer()
       this.els.dropdownItemNoResults = this.buildDropdownItemNoResults()
       this.els.dropdownItems = this.buildDropdownItems()
@@ -240,6 +241,7 @@ let SelectDropdownIndex = 1
       var $el =  $( _._element );
       var itemIndex = $dropdownItem.data('option');
       var $option = $el.find('option').eq( itemIndex );
+      console.log($dropdownItem);
       if ( $option.is(':selected') ) {
         $option.prop('selected', false);
         $dropdownItem.removeClass('active');
@@ -303,6 +305,16 @@ let SelectDropdownIndex = 1
         this.els.controlSearch
           .on(Event.BLUR, (event) => this._hoverRemove())
       }
+      // Handle cut and paste.
+      this.els.controlSearch.bind({
+          paste (){
+            $(this).trigger('keydown');
+          },
+          cut (){
+            $(this).trigger('keydown');
+          }
+      });
+      this._assignClickHandlers();
     }
 
     _keyup(event) {
@@ -334,90 +346,83 @@ let SelectDropdownIndex = 1
       this._search( $( this.els.controlSearch ).val() )
     }
 
+    _assignClickHandlers() {
+      // Select item.
+      this.els.dropdownOptions.on('click', (event) => {
+        event.preventDefault();
+        if (this._multiselect) {
+          this.els.dropdown.one('hide.bs.dropdown', function(event) {
+            event.preventDefault();
+          });
+        }
+        this.toggle($(event.currentTarget));
+      });
+
+      // Deselect all.
+      this.els.controlDeselect.on('click', (event) => {
+        event.preventDefault();
+        this.els.dropdown.one('hide.bs.dropdown', function (event) {
+          event.preventDefault();
+        });
+        if (!$(event.currentTarget).hasClass('disabled')) {
+          this.deselectAll();
+        }
+      });
+
+      // Show selected.
+      this.els.controlSelected.on('click', (event) => {
+        event.preventDefault();
+        this.els.dropdown.one('hide.bs.dropdown', function(event) {
+          event.preventDefault();
+        });
+        if ( !$(event.currentTarget).hasClass('disabled') ) {
+          this.sortSelected();
+        }
+      });
+
+      // Clear search.
+      this.els.buttonClear.on('click', () => {
+        this.els.controlSearch.val('');
+        if ( this.dropdownActive() ) {
+          this.els.dropdown.one('hide.bs.dropdown', function(event) {
+            event.preventDefault();
+          });
+        }
+        this.refresh();
+      });
+
+      // No results.
+      this.els.dropdownItemNoResults.on('click', (event) => {
+        event.preventDefault();
+        this.els.dropdown.one('hide.bs.dropdown', function(event) {
+          event.preventDefault();
+        });
+      });
+    }
+
     init() {
       var _ = this; // Deep reference to this.
       var $el = $( _._element );
 
-      // Handle cut and paste.
-      _.els.controlSearch.bind({
-          paste (){
-            $(this).trigger('keydown');
-          },
-          cut (){
-            $(this).trigger('keydown');
-          }
-      });
-
       // Build.
       _.setButtonText();
-      var $dropdown = _.buildDropdown();
-      $dropdown
-        .append( _.els.dropdown );
+      this.els.dropdown
+        .append( _.els.dropdownMenu );
       _.els.dropdownItemsContainer
         .append( _.els.dropdownItems );
       if ( _._multiselect ) {
-        _.els.dropdown
+        _.els.dropdownMenu
           .append( _.els.controlDeselect )
           .append( _.els.controlSelected );
       }
-      _.els.dropdown
+      _.els.dropdownMenu
         .append( _.els.dropdownItemsContainer );
-      $el.after( $dropdown );
+      $el.after( this.els.dropdown );
       if ( _._config.hideSelect ) {
         $el.hide();
       }
 
-      // Assign click handler: Select item.
-      _.els.dropdownOptions.on('click', function( event ){
-        event.preventDefault();
-        if ( _._multiselect ) {
-          $dropdown.one('hide.bs.dropdown', function ( event ) {
-            event.preventDefault();
-          });
-        }
-        _.toggle( $(this) );
-      });
 
-      // Assign click handler: Deselect all.
-      _.els.controlDeselect.on('click', function( event ){
-        event.preventDefault();
-        $dropdown.one('hide.bs.dropdown', function ( event ) {
-          event.preventDefault();
-        });
-        if ( !$(this).hasClass('disabled') ) {
-          _.deselectAll();
-        }
-      });
-
-      // Assign click handler: Show selected.
-      _.els.controlSelected.on('click', function( event ){
-        event.preventDefault();
-        $dropdown.one('hide.bs.dropdown', function ( event ) {
-          event.preventDefault();
-        });
-        if ( !$(this).hasClass('disabled') ) {
-          _.sortSelected();
-        }
-      });
-
-      // Assign click handler: Clear search.
-      _.els.buttonClear.on('click', function() {
-        _.els.controlSearch.val('');
-        if ( _.dropdownActive() ) {
-          $dropdown.one('hide.bs.dropdown', function ( event ) {
-            event.preventDefault();
-          });
-        }
-        _.refresh();
-      });
-
-      // Assign click handler: No results.
-      _.els.dropdownItemNoResults.on('click', function( event ) {
-        event.preventDefault();
-        $dropdown.one('hide.bs.dropdown', function ( event ) {
-          event.preventDefault();
-        });
-      });
 
       // On search focus: Toggle dropdown.
       // - Can reliance on setTimeout be removed?
@@ -528,8 +533,6 @@ let SelectDropdownIndex = 1
           )
         );
 
-        // Move dropdown menu to the right.
-        _.els.dropdown.addClass('dropdown-menu-right');
       } else {
 
         // Build dropdown.
@@ -576,7 +579,7 @@ let SelectDropdownIndex = 1
     buildDropdownMenu() {
       var _ = this;
       var $dropdownMenu = $('<div>', {
-        class: ClassName.MENU,
+        class: ClassName.MENU + ' ' + ClassName.ALIGNMENT_RIGHT,
         'aria-labelledby': _.ids.dropdownButtonId
       });
       if ( _._config.maxHeight ) {
@@ -683,7 +686,7 @@ let SelectDropdownIndex = 1
 
     dropdownActive() {
       var _ = this;
-      if ( _.els.dropdown.hasClass('show') ) {
+      if ( _.els.dropdownMenu.hasClass('show') ) {
         return true;
       }
       return false;
@@ -758,8 +761,8 @@ let SelectDropdownIndex = 1
       prepend = (typeof prepend !== typeof undefined ) ?  prepend : false;
       var _ = this;
       if ( prepend ) {
-        _.els.controlSelected.prependTo( _.els.dropdown );
-        _.els.controlDeselect.prependTo( _.els.dropdown );
+        _.els.controlSelected.prependTo( _.els.dropdownMenu );
+        _.els.controlDeselect.prependTo( _.els.dropdownMenu );
       }
       _.els.controlSelected.show();
       _.els.controlDeselect.show();
@@ -820,7 +823,7 @@ let SelectDropdownIndex = 1
       var _ = this;
       var $el = $( _._element );
       _.els.dropdownOptions.removeClass( ClassName.HOVER );
-      $( _.els.dropdown.find('.active').get().reverse() ).each( function(){
+      $( _.els.dropdownMenu.find('.active').get().reverse() ).each( function(){
         $( this ).prependTo( _.els.dropdownItemsContainer );
       });
       _.showInitialControls( true );
@@ -835,7 +838,7 @@ let SelectDropdownIndex = 1
      */
     resetScroll() {
       var _ = this;
-      _.els.dropdown.animate({
+      _.els.dropdownMenu.animate({
           scrollTop: 0
       }, 50);
     }
