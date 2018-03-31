@@ -82,16 +82,10 @@ let SelectDropdownIndex = 1
 
    const Event = {
      KEYUP             : `keyup${EVENT_KEY}`,
-     HIDE              : `hide${EVENT_KEY}`,
-     HIDDEN            : `hidden${EVENT_KEY}`,
-     SHOW              : `show${EVENT_KEY}`,
-     SHOWN             : `shown${EVENT_KEY}`,
+     FOCUS             : `focus${EVENT_KEY}`,
+     BLUR              : `blur${EVENT_KEY}`,
      FOCUSIN           : `focusin${EVENT_KEY}`,
-     RESIZE            : `resize${EVENT_KEY}`,
-     CLICK_DISMISS     : `click.dismiss${EVENT_KEY}`,
-     KEYDOWN_DISMISS   : `keydown.dismiss${EVENT_KEY}`,
-     MOUSEUP_DISMISS   : `mouseup.dismiss${EVENT_KEY}`,
-     MOUSEDOWN_DISMISS : `mousedown.dismiss${EVENT_KEY}`,
+
      CLICK_DATA_API    : `click${EVENT_KEY}${DATA_API_KEY}`
    }
 
@@ -293,9 +287,21 @@ let SelectDropdownIndex = 1
         this.els.controlSearch
           .on(Event.KEYUP, (event) => this._keyup(event))
         this.els.controlSearch
-          .on(Event.FOCUS, (event) => this._hoverSet())
+          .on(Event.FOCUS, (event) => {
+            this._hoverSet()
+            if ( this.els.btnSelect.attr('aria-expanded') == 'false' ) {
+              this._alignLeft()
+              this.els.btnSelect.dropdown('toggle');
+              setTimeout( () => {
+                this.els.controlSearch.focus();
+              }, 1);
+            }
+          })
         this.els.controlSearch
-          .on(Event.BLUR, (event) => this._hoverRemove())
+          .on(Event.BLUR, (event) => {
+            this._hoverRemove()
+            this._alignRight()
+          })
       }
       // Handle cut and paste.
       this.els.controlSearch.bind({
@@ -421,16 +427,17 @@ let SelectDropdownIndex = 1
       // On search focus: Toggle dropdown.
       // - Can reliance on setTimeout be removed?
       // - Should we depend on an aria attribute for plugin logic?
-      if ( _._config.search ) {
+      /*if ( _._config.search ) {
         _.els.controlSearch.on('focusin', function(){
           if ( _.els.btnSelect.attr('aria-expanded') == 'false' ) {
+            _._alignLeft()
             _.els.btnSelect.dropdown('toggle');
             setTimeout(function(){
               _.els.controlSearch.focus();
             }, 1);
           }
         });
-      }
+      }*/
 
       _._refreshInitialControls();
 
@@ -630,7 +637,8 @@ let SelectDropdownIndex = 1
             .append( this.els.btnSelect )
           )
 
-        $dropdown.append( $inputGroup );
+        $dropdown
+          .append( $inputGroup );
       }
       else if ( this._hasButtons ) {
         let $btnGroup = $('<div>', {
@@ -663,18 +671,20 @@ let SelectDropdownIndex = 1
     }
 
     _buildDropdownMenu() {
-      var _ = this;
       var $dropdownMenu = $('<div>', {
-        class: ClassName.MENU + ' ' + ClassName.ALIGNMENT_RIGHT,
-        'aria-labelledby': _.ids.dropdownButtonId
+        class: ClassName.MENU,
+        'aria-labelledby': this.ids.dropdownButtonId
       });
-      if ( _._config.maxHeight ) {
+      if ( this._config.maxHeight ) {
         $dropdownMenu
           .css({
             'height': 'auto',
-            'max-height': _._config.maxHeight,
+            'max-height': this._config.maxHeight,
             'overflow-x': 'hidden'
           });
+      }
+      if ( this._config.search ) {
+        $dropdownMenu.addClass( ClassName.ALIGNMENT_RIGHT )
       }
       return $dropdownMenu;
     }
@@ -809,12 +819,11 @@ let SelectDropdownIndex = 1
     }
 
     _hide( results ) {
-      var _ = this;
-      var notResults = $(_._indexes).not(results).get();
-      $.each( notResults, function( index, value ) {
-        _._dropdownItemByIndex( value ).hide();
+      var notResults = $(this._indexes).not(results).get();
+      $.each( notResults, ( index, value ) => {
+        this._dropdownItemByIndex( value ).hide();
       });
-      _.els.btnSelect.dropdown('update');
+      this.els.btnSelect.dropdown('update')
     }
 
     _dropdownItemByIndex( index ) {
@@ -983,10 +992,19 @@ let SelectDropdownIndex = 1
      * @return {[type]} [description]
      */
     _resetScroll() {
-      var _ = this;
-      _.els.dropdownMenu.animate({
+      this.els.dropdownMenu.animate({
           scrollTop: 0
       }, 50);
+    }
+
+    _alignLeft() {
+      this.els.dropdownMenu.removeClass( ClassName.ALIGNMENT_RIGHT );
+      this.els.btnSelect.dropdown('update');
+    }
+
+    _alignRight() {
+      this.els.dropdownMenu.addClass( ClassName.ALIGNMENT_RIGHT );
+      this.els.btnSelect.dropdown('update');
     }
 
     /**
