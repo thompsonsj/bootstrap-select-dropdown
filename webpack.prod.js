@@ -6,20 +6,20 @@ const extractCss = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
 const extractCssMin = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
 const HandlebarsPlugin = require("handlebars-webpack-plugin");
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UnminifiedWebpackPlugin = require('unminified-webpack-plugin');
 
 const entities = new Entities();
 
 module.exports = {
   entry: {
-    "bootstrap-select-dropdown" : "./src/dist.js",
-    "bootstrap-select-dropdown.min" : "./src/dist.js",
+    "bootstrap-select-dropdown" : "./src/dist.js"
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: "[name].js"
+    filename: "[name].min.js"
   },
   externals: {
+    "fuse.js": 'Fuse',
     jquery: '$'
   },
   module: {
@@ -51,12 +51,9 @@ module.exports = {
         to: path.resolve('dist/_bootstrap-select-dropdown.scss')
       }
     ]),
-    new ExtractTextPlugin('[name].css'),
+    new ExtractTextPlugin('[name].min.css'),
     new OptimizeCssAssetsPlugin({
       assetNameRegExp: /\.min\.css$/g
-    }),
-    new UglifyJsPlugin({
-      include: /\.min\.js$/
     }),
     new HandlebarsPlugin({
       entry: path.join(process.cwd(), "src", "views", "*.hbs"),
@@ -70,6 +67,9 @@ module.exports = {
           return entities.encode( context );
         }
       }
+    }),
+    new UnminifiedWebpackPlugin({
+      //include: /\.js$/i
     })
   ]
 };
