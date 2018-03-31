@@ -244,11 +244,12 @@ let SelectDropdownIndex = 1
      * @return void
      */
     deselectAll() {
-      var $el =  $(this._element);
-      this.els.dropdownOptions.each((index, element) => {
-        this.deselect($(element));
-      });
-      this._refresh();
+      var $el =  $(this._element)
+      $el.find('option').prop('selected', false)
+      this.els.dropdownOptions.removeClass('active')
+      this._setButtonText()
+      this._refreshInitialControls()
+      this._refresh()
     }
 
     /**
@@ -256,11 +257,12 @@ let SelectDropdownIndex = 1
      * @return void
      */
     selectAll() {
-      var $el =  $(this._element);
-      this.els.dropdownOptions.each((index, element) => {
-        this.select($(element));
-      });
-      this._refresh();
+      var $el =  $(this._element)
+      $el.find('option').prop('selected', true)
+      this.els.dropdownOptions.addClass('active')
+      this._setButtonText()
+      this._refreshInitialControls()
+      this._refresh()
     }
 
     // Private
