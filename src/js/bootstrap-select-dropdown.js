@@ -343,9 +343,7 @@ let SelectDropdownIndex = 1
       this.els.dropdownOptions.on('click', ( event ) => {
         event.preventDefault()
         if (this._multiselect) {
-          this.els.dropdown.one('hide.bs.dropdown', function( event ) {
-            event.preventDefault()
-          })
+          this._preventDropdownHide()
         }
         this.toggle($(event.currentTarget))
       })
@@ -354,9 +352,7 @@ let SelectDropdownIndex = 1
       if ( this._config.btnDeselectAll ) {
         this.els.btnDeselectAll.on('click', ( event ) => {
           event.preventDefault()
-          this.els.dropdown.one('hide.bs.dropdown', function ( event ) {
-            event.preventDefault()
-          })
+          this._preventDropdownHide()
           if (!$(event.currentTarget).hasClass('disabled')) {
             this.deselectAll()
           }
@@ -367,9 +363,7 @@ let SelectDropdownIndex = 1
       if ( this._config.btnSelectAll ) {
         this.els.btnSelectAll.on('click', ( event ) => {
           event.preventDefault()
-          this.els.dropdown.one('hide.bs.dropdown', function ( event ) {
-            event.preventDefault()
-          });
+          this._preventDropdownHide()
           if (!$(event.currentTarget).hasClass('disabled')) {
             this.selectAll()
           }
@@ -380,11 +374,7 @@ let SelectDropdownIndex = 1
       if ( this._config.btnClear ) {
         this.els.btnClear.on('click', () => {
           this.els.controlSearch.val('')
-          if ( this._dropdownActive() ) {
-            this.els.dropdown.one('hide.bs.dropdown', function(event) {
-              event.preventDefault()
-            })
-          }
+          this._preventDropdownHide()
           this._refresh()
         })
       }
@@ -392,9 +382,7 @@ let SelectDropdownIndex = 1
       // Show selected.
       this.els.controlSelected.on('click', (event) => {
         event.preventDefault();
-        this.els.dropdown.one('hide.bs.dropdown', function(event) {
-          event.preventDefault();
-        });
+        this._preventDropdownHide()
         if ( !$(event.currentTarget).hasClass('disabled') ) {
           this._sortSelected();
         }
@@ -403,9 +391,7 @@ let SelectDropdownIndex = 1
       // No results.
       this.els.dropdownItemNoResults.on('click', (event) => {
         event.preventDefault();
-        this.els.dropdown.one('hide.bs.dropdown', function(event) {
-          event.preventDefault();
-        });
+        this._preventDropdownHide()
       });
     }
 
@@ -980,6 +966,14 @@ let SelectDropdownIndex = 1
       });
       _._showInitialControls( true );
       _.resetScroll();
+    }
+
+    _preventDropdownHide() {
+      if ( this._dropdownActive() ) {
+        this.els.dropdown.one('hide.bs.dropdown', function ( event ) {
+          event.preventDefault()
+        })
+      }
     }
 
     /**
