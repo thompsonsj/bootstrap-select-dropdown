@@ -85,8 +85,7 @@ let SelectDropdownIndex = 1
      FOCUS             : `focus${EVENT_KEY}`,
      BLUR              : `blur${EVENT_KEY}`,
      FOCUSIN           : `focusin${EVENT_KEY}`,
-
-     CLICK_DATA_API    : `click${EVENT_KEY}${DATA_API_KEY}`
+     LOAD_DATA_API     : `load${EVENT_KEY}${DATA_API_KEY}`
    }
 
    const ClassName = {
@@ -101,7 +100,7 @@ let SelectDropdownIndex = 1
    }
 
    const Selector = {
-     DATA_TOGGLE        : '[data-toggle="select-dropdown"]'
+     DATA_ROLE          : '[data-role="select-dropdown"]'
    }
 
    /**
@@ -423,23 +422,6 @@ let SelectDropdownIndex = 1
       if ( _._config.hideSelect ) {
         $el.hide();
       }
-
-
-
-      // On search focus: Toggle dropdown.
-      // - Can reliance on setTimeout be removed?
-      // - Should we depend on an aria attribute for plugin logic?
-      /*if ( _._config.search ) {
-        _.els.controlSearch.on('focusin', function(){
-          if ( _.els.btnSelect.attr('aria-expanded') == 'false' ) {
-            _._alignLeft()
-            _.els.btnSelect.dropdown('toggle');
-            setTimeout(function(){
-              _.els.controlSearch.focus();
-            }, 1);
-          }
-        });
-      }*/
 
       _._refreshInitialControls();
 
@@ -1000,13 +982,15 @@ let SelectDropdownIndex = 1
     }
 
     _alignLeft() {
-      this.els.dropdownMenu.removeClass( ClassName.ALIGNMENT_RIGHT );
-      this.els.btnSelect.dropdown('update');
+      //this.els.dropdownMenu.css('width', '100%');
+      //this.els.dropdownMenu.removeClass( ClassName.ALIGNMENT_RIGHT );
+      //this.els.btnSelect.dropdown('update');
     }
 
     _alignRight() {
-      this.els.dropdownMenu.addClass( ClassName.ALIGNMENT_RIGHT );
-      this.els.btnSelect.dropdown('update');
+      //this.els.dropdownMenu.css('width', 'auto');
+      //this.els.dropdownMenu.addClass( ClassName.ALIGNMENT_RIGHT );
+      //this.els.btnSelect.dropdown('update');
     }
 
     /**
@@ -1061,7 +1045,12 @@ let SelectDropdownIndex = 1
    * ------------------------------------------------------------------------
    */
 
-   /** Todo. Move keydown events here */
+   $(window).on(Event.LOAD_DATA_API, () => {
+     $(Selector.DATA_ROLE).each(function () {
+       const $selectDropdown = $(this)
+       SelectDropdown._jQueryInterface.call($selectDropdown, $selectDropdown.data())
+     })
+   })
 
   /**
    * ------------------------------------------------------------------------

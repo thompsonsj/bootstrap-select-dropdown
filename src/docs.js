@@ -19,8 +19,10 @@ $(document).ready(function(){
       //hideSelect: false
     });
   });
-  $("select#demo_overview_example").selectDropdown({
-    'htmlClear': '<svg class="ion"><use xlink:href="#ion-close"></use></svg>'
+  $("select#demo_overview_icons_badges").selectDropdown({
+    'htmlBtnClear': '<svg class="ion"><use xlink:href="#ion-close"></use></svg>',
+    'htmlBtnDeselectAll': '<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>',
+    'htmlBtnSelectAll': '<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>'
   });
   $("select#demo_select_htmlclear").selectDropdown({
     'htmlClear': '<svg class="ion"><use xlink:href="#ion-close"></use></svg>'

@@ -13,10 +13,6 @@
     </div>
     <p class="lead">A jQuery plugin for Bootstrap 4 that converts <code>&lt;select&gt;</code> and <code>&lt;select multiselect&gt;</code> elements to dropdowns. Uses Bootstrap's dropdown plugin and fuse.js for fuzzy search.</p>
 
-    <div class="page-header">
-      <h2>Example</h2>
-    </div>
-
     <p>Use Bootstrap Select Dropdown to improve the user experience for long option lists. Compared to a regular multiselect, this plugin adds:</p>
 
     <p>
@@ -27,9 +23,35 @@
       </ul>
     </p>
 
+    <div class="page-header">
+      <h2>Example: Default</h2>
+    </div>
+
     <div class="form-group">
-      <label for="demo_overview_example">Select multiple countries</label>
-      <select id="demo_overview_example" class="form-control" multiple>
+      <label for="demo_overview">Select multiple countries</label>
+      <select id="demo_overview" class="form-control" data-role="select-dropdown" multiple>
+        {{#each countries}}
+        <option value="{{@key}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+<label for="demo_overview">Select multiple countries</label>
+<select id="demo_overview" class="form-control" data-role="select-dropdown" multiple>
+  <!-- options -->
+</select>
+</div>'
+}}}</code></pre>
+
+    <div class="page-header">
+      <h2>Example: Icons and Badges</h2>
+    </div>
+
+    <div class="form-group">
+      <label for="demo_overview_icons_badges">Select multiple countries</label>
+      <select id="demo_overview_icons_badges" class="form-control" multiple>
         {{#each countries}}
         <option value="{{@key}}">{{this}}</option>
         {{/each}}
@@ -39,14 +61,16 @@
 <pre><code>{{{ htmlentities
 '<div class="form-group">
 <select id="demo_overview_example" class="form-control" multiple>
-<!-- options -->
+  <!-- options -->
 </select>
 </div>
 
 <script>
 $(document).ready(function(){
   $("#demo_multiselect").selectDropdown({
-    \'htmlClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\'
+    \'htmlBtnClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
+    \'htmlBtnDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
+    \'htmlBtnSelectAll\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\'
   });
 });
 </script>'
