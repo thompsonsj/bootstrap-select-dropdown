@@ -40,7 +40,7 @@ let SelectDropdownIndex = 1
      keyboard: true,
      // Text
      textNoneSelected: "None selected",
-     textMultipleSelected: "Multiple selected",
+     textMultipleSelected: "%count_selected% selected",
      textNoResults: "No results",
      // Buttons
      btnClear: true,
@@ -101,6 +101,10 @@ let SelectDropdownIndex = 1
 
    const Selector = {
      DATA_ROLE          : '[data-role="select-dropdown"]'
+   }
+
+   const Keyword = {
+     COUNT_SELECTED     : '%count_selected%'
    }
 
    /**
@@ -188,7 +192,7 @@ let SelectDropdownIndex = 1
     /**
      * Select/Deselect a dropdown item, and update the corresponding option.
      * @param  {object} $dropdownItem jQuery object
-     * @return void
+     * @return {undefined}
      */
     toggle( $dropdownItem ) {
       var _ = this;
@@ -213,7 +217,7 @@ let SelectDropdownIndex = 1
     /**
      * Deselect a dropdown item.
      * @param  {object} $dropdownItem jQuery
-     * @return void
+     * @return {undefined}
      */
     deselect( $dropdownItem ){
       var $el =  $( this._element );
@@ -227,7 +231,7 @@ let SelectDropdownIndex = 1
     /**
      * Select a dropdown item.
      * @param  {object} $dropdownItem jQuery
-     * @return void
+     * @return {undefined}
      */
     select( $dropdownItem ){
       var $el =  $( this._element );
@@ -240,7 +244,7 @@ let SelectDropdownIndex = 1
 
     /**
      * Deselect all dropdown items.
-     * @return void
+     * @return {undefined}
      */
     deselectAll() {
       var $el =  $(this._element)
@@ -253,7 +257,7 @@ let SelectDropdownIndex = 1
 
     /**
      * Select all dropdown items.
-     * @return void
+     * @return {undefined}
      */
     selectAll() {
       var $el =  $(this._element)
@@ -459,7 +463,7 @@ let SelectDropdownIndex = 1
      * * If results haven't changed, do nothing (improves performance).
      * * If results have changed, hide non-matching options, reorder...etc.
      * @param  {[type]} s Search term
-     * @return void
+     * @return {undefined}
      */
     _search(s) {
       var results = null;
@@ -770,36 +774,45 @@ let SelectDropdownIndex = 1
 
     /**
      * Set button text.
-     * @return void
+     * @return {undefined}
      */
     _setButtonText() {
-      var _ = this;
-      var $el = $( _._element );
-      var $btn = _.els.btnSelect;
-      var selected = $el.val();
+      let btnText
+      let selected = $( this._element ).val()
       if ( selected.length < 1 ) {
-        $btn.text( _._config.textNoneSelected );
+        btnText = this._config.textNoneSelected
       }
-      else if ( selected.length <= _._config.maxListLength ) {
-        var textValues = $el
+      else if ( selected.length <= this._config.maxListLength ) {
+        var textValues = $( this._element )
           .find('option:selected')
           .map(function (i, element) {
-            return $(element).text();
+            return $(element).text()
           })
-          .get();
-        $btn.text( textValues.join(", ") );
+          .get()
+        btnText = textValues.join(", ")
       }
       else {
-        $btn.text( _._config.textMultipleSelected );
+        btnText = this._config.textMultipleSelected
+        btnText = btnText.replace( Keyword.COUNT_SELECTED, selected.length )
       }
+
+      this.els.btnSelect.text( btnText )
     }
 
+    /**
+     * Restore initial dropdown state.
+     *
+     * * Remove hover.
+     * * Hide the 'no results' dropdown item.
+     * * Reset sort order.
+     * * Show initial controls.
+     * @return {undefined}
+     */
     _refresh() {
-      var _ = this;
-      _._hoverRemove();
-      _.els.dropdownItemNoResults.hide();
-      _._sortReset();
-      _._showInitialControls();
+      this._hoverRemove();
+      this.els.dropdownItemNoResults.hide();
+      this._sortReset();
+      this._showInitialControls();
     }
 
     _hide( results ) {
@@ -863,7 +876,7 @@ let SelectDropdownIndex = 1
     /**
      * Move the hover class up.
      *
-     * @return void
+     * @return {undefined}
      */
     _hoverUp() {
       var _ = this;
@@ -884,7 +897,7 @@ let SelectDropdownIndex = 1
     /**
      * Move the hover class down.
      *
-     * @return void
+     * @return {undefined}
      */
     _hoverDown() {
       var _ = this;
@@ -904,7 +917,7 @@ let SelectDropdownIndex = 1
 
     /**
      * Remove hover class from all dropdown options.
-     * @return void
+     * @return {undefined}
      */
     _hoverRemove() {
       var _ = this;
@@ -913,7 +926,7 @@ let SelectDropdownIndex = 1
 
     /**
      * Sort: Reset sort order.
-     * @return void
+     * @return {undefined}
      */
     _sortReset() {
       var _ = this;
@@ -929,7 +942,7 @@ let SelectDropdownIndex = 1
      * reorder according to an array of index values. The order of the index
      * array is preserved, to make change detection easier elsewhere.
      * @param  {array} indexes Array of index values (strings).
-     * @return void
+     * @return {undefined}
      */
     _reorder( indexes ) {
       var _ = this;
@@ -948,7 +961,7 @@ let SelectDropdownIndex = 1
 
     /**
      * Sort: Move selected items to the top.
-     * @return void
+     * @return {undefined}
      */
     _sortSelected() {
       var _ = this;

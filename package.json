@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js --mode production",
     "dev": "webpack --config webpack.dev.js --mode development",
-    "serve": "webpack-dev-server --config webpack.dev.js --mode development",
+    "serve": "webpack-dev-server --watch --config webpack.dev.js --mode development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --watch --config webpack.dev.js"
   },
