@@ -21,7 +21,7 @@
           </span>
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="/">v0.8.0</a>
+              <a class="nav-link" href="/">v0.9.0</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="https://github.com/thompsonsj/bootstrap-select-dropdown">
@@ -41,7 +41,7 @@
     <div class="container">
 
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-lg-3">
 
     <ul class="nav nav-pills flex-column nav-secondary">
     	<li class="nav-item">
@@ -51,7 +51,7 @@
     		<a class="nav-link active" href="getting-started.html">Getting started</a>
     	</li>
     	<li class="nav-item">
-    		<a class="nav-link " href="usage.html">Usage</a>
+    		<a class="nav-link " href="examples.html">Examples</a>
     	</li>
     	<li class="nav-item">
     		<a class="nav-link " href="options.html">Options</a>
@@ -62,7 +62,7 @@
     </ul>
 
   </div>
-  <div class="col-md-9">
+  <div class="col-lg-9">
 
     <div class="page-header">
       <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
@@ -75,7 +75,13 @@
 
     <h3>Quick start</h3>
 
-    <p class="highlight">Get started quickly by using CDNs/hosted files. Check <a href="https://getbootstrap.com/docs/4.0/getting-started/introduction/" target="_blank">Introduction | Bootstrap</a> for the latest versions.</p>
+    <p class="highlight">
+      Get started quickly by using CDNs/hosted files.
+    </p>
+
+    <p>
+      The following code demonstrates embedding files for both Bootstrap and Bootstrap Select Dropdown. Check <a href="https://getbootstrap.com/docs/4.0/getting-started/introduction/" target="_blank">Introduction | Bootstrap</a> for the latest versions.
+    </p>
 
 <pre><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css&quot; integrity=&quot;sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm&quot; crossorigin=&quot;anonymous&quot;&gt;
 &lt;link rel=&quot;stylesheet&quot; href=&quot;css/bootstrap-select-dropdown.css&quot;&gt;
@@ -84,6 +90,30 @@
 &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js&quot; integrity=&quot;sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js&quot; integrity=&quot;sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;js/bootstrap-select-dropdown.js&quot;&gt;&lt;/script&gt;</code></pre>
+
+    <h3>npm</h3>
+
+    <p>
+      Install Bootstrap Select Dropdown in your Node.js apps with <a href="https://www.npmjs.com/package/bootstrap-select-dropdown"></a>the npm package</a>.
+    </p>
+
+    <pre><code>npm install bootstrap-select-dropdown</code></pre>
+
+    <h3>Webpack</h3>
+
+    <p class="highlight">
+      Include Bootstrap Select Dropdown in your Bootstrap project using Webpack.
+    </p>
+
+    <p>
+      Import Bootstrap Select Dropdown by importing in your app's entry point.
+    </p>
+
+    <pre><code>import &apos;bootstrap-select-dropdown&apos;</code></pre>
+
+    <p>
+      If using search, Bootstrap Select Dropdown depends on <a href="http://fusejs.io/">Fuse.js</a>. In this case, include Fuse.js in your <code>package.json</code> using <code>npm install --save fuse.js</code>.
+    </p>
 
   </div><!-- /.col-md-9 -->
 </div><!-- /.row -->

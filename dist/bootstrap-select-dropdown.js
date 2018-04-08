@@ -319,9 +319,11 @@ var SelectDropdown = function ($) {
     observeDomMutations: false,
     maxHeight: '300px',
     keyboard: true,
+    badges: false,
+    badgesDismissable: true,
     // Text
     textNoneSelected: "None selected",
-    textMultipleSelected: "Multiple selected",
+    textMultipleSelected: "%count_selected% selected",
     textNoResults: "No results",
     // Buttons
     btnClear: true,
@@ -331,21 +333,25 @@ var SelectDropdown = function ($) {
     htmlBtnClear: "Clear search",
     htmlBtnDeselectAll: "Deselect all", // Multiselect only
     htmlBtnSelectAll: "Select all", // Multiselect only
+    htmlBtnBadgeRemove: "[deselect]", // Badges only
     // Classes
     classBtnClear: "btn btn-outline-secondary",
     classBtnDeselectAll: "btn btn-outline-secondary", // Multiselect only
     classBtnSelectAll: "btn btn-outline-secondary", // Multiselect only
-    classBtnSelect: "btn btn-primary"
+    classBtnSelect: "btn btn-primary",
+    classBadge: "badge badge-dark mr-1",
+    classBadgeContainer: "mt-2 mb-3"
   };
 
   var DefaultType = {
-    profile: 'string',
     maxListLength: 'number',
     hideSelect: 'boolean',
     search: 'boolean',
     observeDomMutations: 'boolean',
     maxHeight: 'string',
     keyboard: 'boolean',
+    badges: 'boolean',
+    badgesDismissable: 'boolean',
     textNoneSelected: 'string',
     textMultipleSelected: 'string',
     textNoResults: 'string',
@@ -355,25 +361,23 @@ var SelectDropdown = function ($) {
     htmlBtnClear: 'string',
     htmlBtnDeselectAll: 'string',
     htmlBtnSelectAll: 'string',
+    htmlBtnBadgeRemove: 'string',
     classBtnClear: 'string',
     classBtnDeselectAll: 'string',
     classBtnSelectAll: 'string',
-    classBtnSelect: 'string'
+    classBtnSelect: 'string',
+    classBadge: 'string',
+    classBadgeContainer: 'string'
   };
 
   var Event = {
+    CLICK: 'click' + EVENT_KEY,
     KEYUP: 'keyup' + EVENT_KEY,
-    HIDE: 'hide' + EVENT_KEY,
-    HIDDEN: 'hidden' + EVENT_KEY,
-    SHOW: 'show' + EVENT_KEY,
-    SHOWN: 'shown' + EVENT_KEY,
+    KEYDOWN: 'keydown' + EVENT_KEY,
+    FOCUS: 'focus' + EVENT_KEY,
+    BLUR: 'blur' + EVENT_KEY,
     FOCUSIN: 'focusin' + EVENT_KEY,
-    RESIZE: 'resize' + EVENT_KEY,
-    CLICK_DISMISS: 'click.dismiss' + EVENT_KEY,
-    KEYDOWN_DISMISS: 'keydown.dismiss' + EVENT_KEY,
-    MOUSEUP_DISMISS: 'mouseup.dismiss' + EVENT_KEY,
-    MOUSEDOWN_DISMISS: 'mousedown.dismiss' + EVENT_KEY,
-    CLICK_DATA_API: 'click' + EVENT_KEY + DATA_API_KEY
+    LOAD_DATA_API: 'load' + EVENT_KEY + DATA_API_KEY
   };
 
   var ClassName = {
@@ -388,7 +392,11 @@ var SelectDropdown = function ($) {
   };
 
   var Selector = {
-    DATA_TOGGLE: '[data-toggle="select-dropdown"]'
+    DATA_ROLE: '[data-role="select-dropdown"]'
+  };
+
+  var Keyword = {
+    COUNT_SELECTED: '%count_selected%'
 
     /**
      * ------------------------------------------------------------------------
@@ -421,6 +429,12 @@ var SelectDropdown = function ($) {
       this.ids.dropdownItemDeselect = this._prefix + 'deselect';
       this.ids.dropdownItemShowSelected = this._prefix + 'selected';
 
+      // Selectors.
+      this.selectors = {};
+      if (this._config.badges) {
+        this.selectors.badge = this._classListToSelector(this._config.classBadge);
+      }
+
       // Properties: Elements.
       this.els = {};
       this.els.btnSelect = this._buildBtnSelect();
@@ -445,6 +459,9 @@ var SelectDropdown = function ($) {
       this.els.dropdownOptions = this.els.dropdownItems.filter(function (index, element) {
         return _this._isOption($(element));
       });
+      if (this._config.badges) {
+        this.els.badgeContainer = this._buildBadgeContainer();
+      }
 
       if (this._config.search) {
         this._haystack = [];
@@ -476,7 +493,7 @@ var SelectDropdown = function ($) {
       /**
        * Select/Deselect a dropdown item, and update the corresponding option.
        * @param  {object} $dropdownItem jQuery object
-       * @return void
+       * @return {undefined}
        */
       value: function toggle($dropdownItem) {
         var _ = this;
@@ -493,14 +510,14 @@ var SelectDropdown = function ($) {
           $option.prop('selected', true);
           $dropdownItem.addClass('active');
         }
-        _._setButtonText();
+        _._externalFeedback();
         _._refreshInitialControls();
       }
 
       /**
        * Deselect a dropdown item.
        * @param  {object} $dropdownItem jQuery
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -517,7 +534,7 @@ var SelectDropdown = function ($) {
       /**
        * Select a dropdown item.
        * @param  {object} $dropdownItem jQuery
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -533,35 +550,33 @@ var SelectDropdown = function ($) {
 
       /**
        * Deselect all dropdown items.
-       * @return void
+       * @return {undefined}
        */
 
     }, {
       key: 'deselectAll',
       value: function deselectAll() {
-        var _this2 = this;
-
         var $el = $(this._element);
-        this.els.dropdownOptions.each(function (index, element) {
-          _this2.deselect($(element));
-        });
+        $el.find('option').prop('selected', false);
+        this.els.dropdownOptions.removeClass('active');
+        this._externalFeedback();
+        this._refreshInitialControls();
         this._refresh();
       }
 
       /**
        * Select all dropdown items.
-       * @return void
+       * @return {undefined}
        */
 
     }, {
       key: 'selectAll',
       value: function selectAll() {
-        var _this3 = this;
-
         var $el = $(this._element);
-        this.els.dropdownOptions.each(function (index, element) {
-          _this3.select($(element));
-        });
+        $el.find('option').prop('selected', true);
+        this.els.dropdownOptions.addClass('active');
+        this._externalFeedback();
+        this._refreshInitialControls();
         this._refresh();
       }
 
@@ -585,26 +600,34 @@ var SelectDropdown = function ($) {
     }, {
       key: '_addEventListeners',
       value: function _addEventListeners() {
-        var _this4 = this;
+        var _this2 = this;
 
         if (this._config.search) {
           this.els.controlSearch.on(Event.KEYUP, function (event) {
-            return _this4._keyup(event);
+            return _this2._keyup(event);
           });
           this.els.controlSearch.on(Event.FOCUS, function (event) {
-            return _this4._hoverSet();
+            _this2._hoverSet();
+            if (_this2.els.btnSelect.attr('aria-expanded') == 'false') {
+              _this2._alignLeft();
+              _this2.els.btnSelect.dropdown('toggle');
+              setTimeout(function () {
+                _this2.els.controlSearch.focus();
+              }, 1);
+            }
           });
           this.els.controlSearch.on(Event.BLUR, function (event) {
-            return _this4._hoverRemove();
+            _this2._hoverRemove();
+            _this2._alignRight();
           });
         }
         // Handle cut and paste.
         this.els.controlSearch.bind({
           paste: function paste() {
-            $(this).trigger('keydown');
+            $(this).trigger(Event.KEYDOWN);
           },
           cut: function cut() {
-            $(this).trigger('keydown');
+            $(this).trigger(Event.KEYDOWN);
           }
         });
         this._assignClickHandlers();
@@ -640,76 +663,72 @@ var SelectDropdown = function ($) {
     }, {
       key: '_assignClickHandlers',
       value: function _assignClickHandlers() {
-        var _this5 = this;
+        var _this3 = this;
 
         // Select item.
-        this.els.dropdownOptions.on('click', function (event) {
+        this.els.dropdownOptions.on(Event.CLICK, function (event) {
           event.preventDefault();
-          if (_this5._multiselect) {
-            _this5.els.dropdown.one('hide.bs.dropdown', function (event) {
-              event.preventDefault();
-            });
+          if (_this3._multiselect) {
+            _this3._preventDropdownHide();
           }
-          _this5.toggle($(event.currentTarget));
+          _this3.toggle($(event.currentTarget));
         });
 
         // Deselect all.
         if (this._config.btnDeselectAll) {
-          this.els.btnDeselectAll.on('click', function (event) {
+          this.els.btnDeselectAll.on(Event.CLICK, function (event) {
             event.preventDefault();
-            _this5.els.dropdown.one('hide.bs.dropdown', function (event) {
-              event.preventDefault();
-            });
+            _this3._preventDropdownHide();
             if (!$(event.currentTarget).hasClass('disabled')) {
-              _this5.deselectAll();
+              _this3.deselectAll();
             }
           });
         }
 
         // Select all.
         if (this._config.btnSelectAll) {
-          this.els.btnSelectAll.on('click', function (event) {
+          this.els.btnSelectAll.on(Event.CLICK, function (event) {
             event.preventDefault();
-            _this5.els.dropdown.one('hide.bs.dropdown', function (event) {
-              event.preventDefault();
-            });
+            _this3._preventDropdownHide();
             if (!$(event.currentTarget).hasClass('disabled')) {
-              _this5.selectAll();
+              _this3.selectAll();
             }
           });
         }
 
         // Clear search.
         if (this._config.btnClear) {
-          this.els.btnClear.on('click', function () {
-            _this5.els.controlSearch.val('');
-            if (_this5._dropdownActive()) {
-              _this5.els.dropdown.one('hide.bs.dropdown', function (event) {
-                event.preventDefault();
-              });
-            }
-            _this5._refresh();
+          this.els.btnClear.on(Event.CLICK, function () {
+            _this3.els.controlSearch.val('');
+            _this3._preventDropdownHide();
+            _this3._refresh();
           });
         }
 
         // Show selected.
-        this.els.controlSelected.on('click', function (event) {
+        this.els.controlSelected.on(Event.CLICK, function (event) {
           event.preventDefault();
-          _this5.els.dropdown.one('hide.bs.dropdown', function (event) {
-            event.preventDefault();
-          });
+          _this3._preventDropdownHide();
           if (!$(event.currentTarget).hasClass('disabled')) {
-            _this5._sortSelected();
+            _this3._sortSelected();
           }
         });
 
         // No results.
-        this.els.dropdownItemNoResults.on('click', function (event) {
+        this.els.dropdownItemNoResults.on(Event.CLICK, function (event) {
           event.preventDefault();
-          _this5.els.dropdown.one('hide.bs.dropdown', function (event) {
-            event.preventDefault();
-          });
+          _this3._preventDropdownHide();
         });
+
+        // Badges.
+        if (this._config.badges) {
+          this.els.badgeContainer.on(Event.CLICK, 'a', function (event) {
+            event.preventDefault();
+            var $target = $(event.currentTarget);
+            _this3.deselect(_this3._dropdownItemByOption($target.data('option')));
+            $target.parent(_this3.selectors.badge).remove();
+          });
+        }
       }
     }, {
       key: 'init',
@@ -718,7 +737,7 @@ var SelectDropdown = function ($) {
         var $el = $(_._element);
 
         // Build.
-        _._setButtonText();
+        _._externalFeedback();
         this.els.dropdown.append(_.els.dropdownMenu);
         _.els.dropdownItemsContainer.append(_.els.dropdownItems);
         if (_._multiselect) {
@@ -729,19 +748,8 @@ var SelectDropdown = function ($) {
         if (_._config.hideSelect) {
           $el.hide();
         }
-
-        // On search focus: Toggle dropdown.
-        // - Can reliance on setTimeout be removed?
-        // - Should we depend on an aria attribute for plugin logic?
-        if (_._config.search) {
-          _.els.controlSearch.on('focusin', function () {
-            if (_.els.btnSelect.attr('aria-expanded') == 'false') {
-              _.els.btnSelect.dropdown('toggle');
-              setTimeout(function () {
-                _.els.controlSearch.focus();
-              }, 1);
-            }
-          });
+        if (this._config.badges) {
+          this.els.dropdown.after(this.els.badgeContainer);
         }
 
         _._refreshInitialControls();
@@ -784,7 +792,7 @@ var SelectDropdown = function ($) {
 
       /**
        * Check whether the supplied element has a `multiple` attribute,
-       * @param  {object}  element
+       * @param  {Object}  element
        * @return {Boolean}
        */
 
@@ -803,8 +811,8 @@ var SelectDropdown = function ($) {
        *
        * * If results haven't changed, do nothing (improves performance).
        * * If results have changed, hide non-matching options, reorder...etc.
-       * @param  {[type]} s Search term
-       * @return void
+       * @param  {String} s Search term
+       * @return {undefined}
        */
 
     }, {
@@ -851,7 +859,7 @@ var SelectDropdown = function ($) {
           'data-target': '#' + _.ids.dropdownContainerId,
           'aria-haspopup': 'true',
           'aria-expanded': 'false'
-        });
+        }).text('Select');
       }
 
       /**
@@ -987,17 +995,19 @@ var SelectDropdown = function ($) {
     }, {
       key: '_buildDropdownMenu',
       value: function _buildDropdownMenu() {
-        var _ = this;
         var $dropdownMenu = $('<div>', {
-          class: ClassName.MENU + ' ' + ClassName.ALIGNMENT_RIGHT,
-          'aria-labelledby': _.ids.dropdownButtonId
+          class: ClassName.MENU,
+          'aria-labelledby': this.ids.dropdownButtonId
         });
-        if (_._config.maxHeight) {
+        if (this._config.maxHeight) {
           $dropdownMenu.css({
             'height': 'auto',
-            'max-height': _._config.maxHeight,
+            'max-height': this._config.maxHeight,
             'overflow-x': 'hidden'
           });
+        }
+        if (this._config.search) {
+          $dropdownMenu.addClass(ClassName.ALIGNMENT_RIGHT);
         }
         return $dropdownMenu;
       }
@@ -1018,31 +1028,33 @@ var SelectDropdown = function ($) {
     }, {
       key: '_buildDropdownItems',
       value: function _buildDropdownItems() {
-        var _ = this;
-        var $el = $(_._element);
+        var _this4 = this;
+
         var s = 0; // Sort index
         var o = 0; // Option index
         var $items = $();
-        var $optgroups = $el.find('optgroup');
+        var $optgroups = $(this._element).find('optgroup');
         if ($optgroups.length) {
-          $optgroups.each(function () {
-            $items = $items.add(_._buildDropdownHeader($(this).attr('label')).data('index', s));
-            s = _._incrementIndex(s);
-            $(this).find('option').each(function () {
-              $items = $items.add(_._buildDropdownItem($(this)).data('index', s).data('option', o));
-              s = _._incrementIndex(s);
+          $optgroups.each(function (index, element) {
+            $items = $items.add(_this4._buildDropdownHeader($(element).attr('label')).data('index', s));
+            s = _this4._incrementIndex(s);
+            $(element).find('option').each(function (index, element) {
+              $(element).data('option', o);
+              $items = $items.add(_this4._buildDropdownItem($(element)).data('index', s).data('option', o));
+              s = _this4._incrementIndex(s);
               o++;
             });
           });
         } else {
-          $el.find('option').each(function (index, value) {
-            $items = $items.add(_._buildDropdownItem($(this)).data('index', s).data('option', o));
-            s = _._incrementIndex(s);
+          $(this._element).find('option').each(function (index, element) {
+            $(element).data('option', o);
+            $items = $items.add(_this4._buildDropdownItem($(element)).data('index', s).data('option', o));
+            s = _this4._incrementIndex(s);
             o++;
           });
         }
-        if (_._config.search) {
-          $items = $items.add(_.els.dropdownItemNoResults);
+        if (this._config.search) {
+          $items = $items.add(this.els.dropdownItemNoResults);
         }
         return $items;
       }
@@ -1076,6 +1088,30 @@ var SelectDropdown = function ($) {
         }
         return $dropdownItem;
       }
+    }, {
+      key: '_buildBadgeContainer',
+      value: function _buildBadgeContainer() {
+        return $('<div>', {
+          'class': this._config.classBadgeContainer
+        });
+      }
+
+      /**
+       * Build badge.
+       * @param  {Integer} option Option index number
+       * @param  {String} text
+       * @return {Object} jQuery object
+       */
+
+    }, {
+      key: '_buildBadge',
+      value: function _buildBadge(option, text) {
+        return $('<span>', {
+          'class': this._config.classBadge
+        }).text(text + ' ').append($('<a>', {
+          'href': '#'
+        }).html(this._config.htmlBtnBadgeRemove).data('option', option));
+      }
 
       /**
        * Boolean: Bootstrap Dropdown visible.
@@ -1108,55 +1144,102 @@ var SelectDropdown = function ($) {
         }
         return false;
       }
+    }, {
+      key: '_externalFeedback',
+      value: function _externalFeedback() {
+        this._setButtonText();
+        if (this._config.badges) {
+          this._setBadges();
+        }
+      }
 
       /**
        * Set button text.
-       * @return void
+       * @return {undefined}
        */
 
     }, {
       key: '_setButtonText',
       value: function _setButtonText() {
-        var _ = this;
-        var $el = $(_._element);
-        var $btn = _.els.btnSelect;
-        var selected = $el.val();
+        var btnText = void 0;
+        var selected = $(this._element).val();
         if (selected.length < 1) {
-          $btn.text(_._config.textNoneSelected);
-        } else if (selected.length <= _._config.maxListLength) {
-          var textValues = $el.find('option:selected').map(function (i, element) {
-            return $(element).text();
-          }).get();
-          $btn.text(textValues.join(", "));
+          btnText = this._config.textNoneSelected;
+        } else if (selected.length <= this._config.maxListLength) {
+          btnText = this._getTextValues().join(", ");
         } else {
-          $btn.text(_._config.textMultipleSelected);
+          btnText = this._config.textMultipleSelected;
+          btnText = btnText.replace(Keyword.COUNT_SELECTED, selected.length);
         }
+
+        this.els.btnSelect.text(btnText);
       }
+    }, {
+      key: '_setBadges',
+      value: function _setBadges(selected) {
+        var _this5 = this;
+
+        var badges = $();
+        var $selected = $(this._element).find('option:selected');
+        $selected.each(function (index, element) {
+          badges = badges.add(_this5._buildBadge($(element).data('option'), $(element).text()));
+        });
+        this.els.badgeContainer.html('').append(badges);
+      }
+    }, {
+      key: '_getText',
+      value: function _getText(value) {
+        return $(this._element).find("option[value='" + value + "']").first().text();
+      }
+    }, {
+      key: '_getTextValues',
+      value: function _getTextValues() {
+        return $(this._element).find('option:selected').map(function (i, element) {
+          return $(element).text();
+        }).get();
+      }
+
+      /**
+       * Restore initial dropdown state.
+       *
+       * * Remove hover.
+       * * Hide the 'no results' dropdown item.
+       * * Reset sort order.
+       * * Show initial controls.
+       * @return {undefined}
+       */
+
     }, {
       key: '_refresh',
       value: function _refresh() {
-        var _ = this;
-        _._hoverRemove();
-        _.els.dropdownItemNoResults.hide();
-        _._sortReset();
-        _._showInitialControls();
+        this._hoverRemove();
+        this.els.dropdownItemNoResults.hide();
+        this._sortReset();
+        this._showInitialControls();
       }
     }, {
       key: '_hide',
       value: function _hide(results) {
-        var _ = this;
-        var notResults = $(_._indexes).not(results).get();
+        var _this6 = this;
+
+        var notResults = $(this._indexes).not(results).get();
         $.each(notResults, function (index, value) {
-          _._dropdownItemByIndex(value).hide();
+          _this6._dropdownItemByIndex(value).hide();
         });
-        _.els.btnSelect.dropdown('update');
+        this.els.btnSelect.dropdown('update');
       }
     }, {
       key: '_dropdownItemByIndex',
-      value: function _dropdownItemByIndex(index) {
-        var _ = this;
-        return _.els.dropdownItems.filter(function () {
-          return $(this).data('index') == index;
+      value: function _dropdownItemByIndex(s) {
+        return this.els.dropdownItems.filter(function (index, element) {
+          return $(element).data('index') == s;
+        });
+      }
+    }, {
+      key: '_dropdownItemByOption',
+      value: function _dropdownItemByOption(o) {
+        return this.els.dropdownItems.filter(function (index, element) {
+          return $(element).data('option') == o;
         });
       }
     }, {
@@ -1212,7 +1295,7 @@ var SelectDropdown = function ($) {
       /**
        * Move the hover class up.
        *
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -1233,7 +1316,7 @@ var SelectDropdown = function ($) {
       /**
        * Move the hover class down.
        *
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -1253,7 +1336,7 @@ var SelectDropdown = function ($) {
 
       /**
        * Remove hover class from all dropdown options.
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -1265,7 +1348,7 @@ var SelectDropdown = function ($) {
 
       /**
        * Sort: Reset sort order.
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -1284,7 +1367,7 @@ var SelectDropdown = function ($) {
        * reorder according to an array of index values. The order of the index
        * array is preserved, to make change detection easier elsewhere.
        * @param  {array} indexes Array of index values (strings).
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -1306,7 +1389,7 @@ var SelectDropdown = function ($) {
 
       /**
        * Sort: Move selected items to the top.
-       * @return void
+       * @return {undefined}
        */
 
     }, {
@@ -1321,6 +1404,15 @@ var SelectDropdown = function ($) {
         _._showInitialControls(true);
         _.resetScroll();
       }
+    }, {
+      key: '_preventDropdownHide',
+      value: function _preventDropdownHide() {
+        if (this._dropdownActive()) {
+          this.els.dropdown.one('hide.bs.dropdown', function (event) {
+            event.preventDefault();
+          });
+        }
+      }
 
       /**
        * Helper: Reset scroll.
@@ -1332,11 +1424,43 @@ var SelectDropdown = function ($) {
     }, {
       key: '_resetScroll',
       value: function _resetScroll() {
-        var _ = this;
-        _.els.dropdownMenu.animate({
+        this.els.dropdownMenu.animate({
           scrollTop: 0
         }, 50);
       }
+
+      /**
+       * Helper: Class to selector.
+       *
+       * Convert a space separated class list to a selector.
+       * @param  {string} classList Space separated list of classes.
+       * @return {string}           Selector.
+       */
+
+    }, {
+      key: '_classListToSelector',
+      value: function _classListToSelector(classList) {
+        var selector = classList;
+        if (classList.length) {
+          var classes = classList.split(/\s+/);
+          selector = '.' + classes.join('.');
+        }
+        return selector;
+      }
+    }, {
+      key: '_alignLeft',
+      value: function _alignLeft() {
+        //this.els.dropdownMenu.css('width', '100%');
+        //this.els.dropdownMenu.removeClass( ClassName.ALIGNMENT_RIGHT );
+        //this.els.btnSelect.dropdown('update');
+      }
+    }, {
+      key: '_alignRight',
+      value: function _alignRight() {}
+      //this.els.dropdownMenu.css('width', 'auto');
+      //this.els.dropdownMenu.addClass( ClassName.ALIGNMENT_RIGHT );
+      //this.els.btnSelect.dropdown('update');
+
 
       /**
        * Helper: Compare two arrays.
@@ -1405,7 +1529,12 @@ var SelectDropdown = function ($) {
    * ------------------------------------------------------------------------
    */
 
-  /** Todo. Move keydown events here */
+  $(window).on(Event.LOAD_DATA_API, function () {
+    $(Selector.DATA_ROLE).each(function () {
+      var $selectDropdown = $(this);
+      SelectDropdown._jQueryInterface.call($selectDropdown, $selectDropdown.data());
+    });
+  });
 
   /**
    * ------------------------------------------------------------------------
@@ -1432,18 +1561,7 @@ exports.default = SelectDropdown;
 "use strict";
 
 
-__webpack_require__(9);
 __webpack_require__(3);
-
-/***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -11,6 +11,7 @@ $(document).ready(function(){
     "select#demo_options_html"
   ], function( index, value ){
     $( value ).selectDropdown({
+      'maxListLength': 0,
       'badges': true,
       'htmlBtnClear': '<svg class="ion"><use xlink:href="#ion-close"></use></svg>',
       'htmlBtnDeselectAll': '<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>',

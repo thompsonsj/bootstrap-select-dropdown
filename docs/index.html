@@ -21,7 +21,7 @@
           </span>
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="/">v0.8.0</a>
+              <a class="nav-link" href="/">v0.9.0</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="https://github.com/thompsonsj/bootstrap-select-dropdown">
@@ -41,7 +41,7 @@
     <div class="container">
 
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-lg-3">
 
     <ul class="nav nav-pills flex-column nav-secondary">
     	<li class="nav-item">
@@ -51,7 +51,7 @@
     		<a class="nav-link " href="getting-started.html">Getting started</a>
     	</li>
     	<li class="nav-item">
-    		<a class="nav-link " href="usage.html">Usage</a>
+    		<a class="nav-link " href="examples.html">Examples</a>
     	</li>
     	<li class="nav-item">
     		<a class="nav-link " href="options.html">Options</a>
@@ -62,7 +62,7 @@
     </ul>
 
   </div>
-  <div class="col-md-9">
+  <div class="col-lg-9">
 
     <div class="page-header">
       <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
@@ -355,8 +355,16 @@
       <h2>Example: Icons and Badges</h2>
     </div>
 
+    <p>
+      For lists where it is likely a large collection of items will be selected, better visual feedback can be achieved by enabling <code>badges</code>.
+    </p>
+
+    <p>
+      Icons are used in this example. Bootstrap does not ship with an icon framework by default, so some integration may be required to get this to work. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
+    </p>
+
     <div class="form-group">
-      <label for="demo_overview_icons_badges">Select multiple countries</label>
+      <label for="demo_overview_icons_badges">Select one or more countries</label>
       <select id="demo_overview_icons_badges" class="form-control" multiple>
         <option value="AF">Afghanistan</option>
         <option value="AX">Åland Islands</option>
@@ -617,19 +625,22 @@
     </div>
 
 <pre><code>&lt;div class=&quot;form-group&quot;&gt;
+  &lt;label for=&quot;demo_overview_icons_badges&quot;&gt;Select one or more countries&lt;/label&gt;
   &lt;select id=&quot;demo_overview_example&quot; class=&quot;form-control&quot; multiple&gt;
     &lt;!-- options --&gt;
   &lt;/select&gt;
 &lt;/div&gt;
 
 &lt;script&gt;
-$(document).ready(function(){
-  $(&quot;#demo_multiselect&quot;).selectDropdown({
-    &apos;htmlBtnClear&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
-    &apos;htmlBtnDeselectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
-    &apos;htmlBtnSelectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;
+  $(document).ready(function(){
+    $(&quot;#demo_multiselect&quot;).selectDropdown({
+      &apos;badges&apos;: true,
+      &apos;htmlBtnClear&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
+      &apos;htmlBtnDeselectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close-circled&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
+      &apos;htmlBtnSelectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-checkmark-circled&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
+      &apos;htmlBtnBadgeRemove&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;
+    });
   });
-});
 &lt;/script&gt;</code></pre>
 
   </div><!-- /.col-md-9 -->

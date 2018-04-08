@@ -847,10 +847,8 @@ let SelectDropdownIndex = 1
     }
 
     _externalFeedback() {
-      if ( !this._config.badges ) {
-        this._setButtonText()
-      }
-      else {
+      this._setButtonText()
+      if ( this._config.badges ) {
         this._setBadges()
       }
     }

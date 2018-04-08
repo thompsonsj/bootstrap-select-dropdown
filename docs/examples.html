@@ -21,7 +21,7 @@
           </span>
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="/">v0.8.0</a>
+              <a class="nav-link" href="/">v0.9.0</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="https://github.com/thompsonsj/bootstrap-select-dropdown">
@@ -41,7 +41,7 @@
     <div class="container">
 
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-lg-3">
 
     <ul class="nav nav-pills flex-column nav-secondary">
     	<li class="nav-item">
@@ -51,7 +51,7 @@
     		<a class="nav-link " href="getting-started.html">Getting started</a>
     	</li>
     	<li class="nav-item">
-    		<a class="nav-link active" href="usage.html">Usage</a>
+    		<a class="nav-link active" href="examples.html">Examples</a>
     	</li>
     	<li class="nav-item">
     		<a class="nav-link " href="options.html">Options</a>
@@ -62,7 +62,7 @@
     </ul>
 
   </div>
-  <div class="col-md-9">
+  <div class="col-lg-9">
 
     <div class="page-header">
       <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
@@ -70,408 +70,191 @@
     <p class="lead">A jQuery plugin for Bootstrap 4 that converts <code>&lt;select&gt;</code> and <code>&lt;select multiselect&gt;</code> elements to dropdowns. Uses fuse.js for fuzzy search and Bootstrap's dropdown plugin.</p>
 
     <div class="page-header">
-      <h2 id="nav-usage">Usage</h2>
+      <h2 id="examples">Examples</h2>
     </div>
-    <h3>Select</h3>
+
+    <div class="page-header">
+      <h3>Defaults (no options)</h3>
+    </div>
+
+    <h4>Select</h4>
+
+    <p>
+      Default Bootstrap Select Dropdown on a <code>&lt;select&gt;</code> element.
+    </p>
 
     <div class="form-group">
-      <select id="demo_select" class="form-control">
-        <option value="1">Option 1</option>
-        <option value="2">Option 2</option>
-        <option value="3">Option 3</option>
-        <option value="4">Option 4</option>
-        <option value="5">Option 5</option>
-        <option value="6">Option 6</option>
-        <option value="7">Option 7</option>
-        <option value="8">Option 8</option>
-        <option value="9">Option 9</option>
-        <option value="10">Option 10</option>
-        <option value="11">Option 11</option>
-        <option value="12">Option 12</option>
-        <option value="13">Option 13</option>
-        <option value="14">Option 14</option>
-        <option value="15">Option 15</option>
-        <option value="16">Option 16</option>
-        <option value="17">Option 17</option>
-        <option value="18">Option 18</option>
+      <label for="demo_default_select">Select your favourite food</label>
+      <select id="demo_default_select" class="form-control" data-role="select-dropdown">
+        <option value="apples">Apples</option>
+        <option value="bananas">Bananas</option>
+        <option value="beef">Beef</option>
+        <option value="chicken">Chicken</option>
+        <option value="condensed-milk">Condensed milk</option>
+        <option value="dark-chocolate">Dark chocolate</option>
+        <option value="dried-bananas">Dried bananas</option>
+        <option value="eggs">Eggs</option>
+        <option value="ice-cream">Ice cream</option>
+        <option value="milk">Milk</option>
+        <option value="milk-chocolate">Milk chocolate</option>
+        <option value="msg">Monosodium Glutamate</option>
+        <option value="starfruit">Starfruit</option>
+        <option value="strawberries">Strawberries</option>
       </select>
     </div>
 
 <pre><code>&lt;div class=&quot;form-group&quot;&gt;
-&lt;select id=&quot;demo_select&quot; class=&quot;form-control&quot;&gt;
-&lt;!-- options --&gt;
-&lt;/select&gt;
-&lt;/div&gt;
-
-&lt;script&gt;
-$(document).ready(function(){
-$(&quot;#demo_select&quot;).selectDropdown();
-});
-&lt;/script&gt;</code></pre>
+  &lt;label for=&quot;demo_default_select&quot;&gt;Select your favourite food&lt;/label&gt;
+  &lt;select id=&quot;demo_default_select&quot; class=&quot;form-control&quot; data-role=&quot;select-dropdown&quot;&gt;
+    &lt;!-- options --&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
 
     <h3>Select with option groups</h3>
 
+    <p>
+      Default Bootstrap Select Dropdown on a <code>&lt;select&gt;</code> with <code>&lt;optgroup&gt;</code> elements.
+    </p>
+
     <div class="form-group">
-      <select id="demo_select_optgroups" class="form-control">
-        <optgroup label="Group 1">
-          <option value="1-1">Group 1 Option 1</option>
-          <option value="1-2">Group 1 Option 2</option>
-          <option value="1-3">Group 1 Option 3</option>
+      <label for="demo_default_select_optgroups">Select food from food groups</label>
+      <select id="demo_default_select_optgroups" class="form-control" data-role="select-dropdown">
+        <optgroup label="Carbohydrates">
+          <option value="bread">Bread</option>
+          <option value="cereal">Cereal</option>
+          <option value="porridge">Porridge</option>
+          <option value="pasta">Pasta</option>
+          <option value="potatoes">Potatoes</option>
+          <option value="rice">Rice</option>
         </optgroup>
-        <optgroup label="Group 2">
-          <option value="2-1">Group 2 Option 1</option>
-          <option value="2-2">Group 2 Option 2</option>
-          <option value="2-3">Group 2 Option 3</option>
-          <option value="2-4">Group 2 Option 4</option>
-          <option value="2-5">Group 2 Option 5</option>
-          <option value="2-6">Group 2 Option 6</option>
-          <option value="2-7">Group 2 Option 7</option>
-          <option value="2-8">Group 2 Option 8</option>
-          <option value="2-9">Group 2 Option 9</option>
+        <optgroup label="Protein">
+          <option value="beans">Beans</option>
+          <option value="chickpeas">Chickpeas</option>
+          <option value="ham">Ham</option>
+          <option value="fish">Fish</option>
+          <option value="lentils">Lentils</option>
+          <option value="sausages">Sausages</option>
         </optgroup>
-        <optgroup label="Group 3">
-          <option value="3-1">Group 3 Option 1</option>
-          <option value="3-2">Group 3 Option 2</option>
-          <option value="3-3">Group 3 Option 3</option>
-          <option value="3-4">Group 3 Option 4</option>
-          <option value="3-5">Group 3 Option 5</option>
-          <option value="3-6">Group 3 Option 6</option>
+        <optgroup label="Milk and dairy products">
+          <option value="cheese">Cheese</option>
+          <option value="custard">Custard</option>
+          <option value="milk">Milk</option>
+          <option value="yoghurt">Yoghurt</option>
+        </optgroup>
+        <optgroup label="Fruit and vegetables">
+          <option value="apples">Apples</option>
+          <option value="bananas">Bananas</option>
+          <option value="melon">Melon</option>
+          <option value="oranges">Oranges</option>
+          <option value="pineapple">Pineapple</option>
+          <option value="salad">Salad</option>
+        </optgroup>
+        <optgroup label="Fats and sugars">
+          <option value="biscuits">Biscuits</option>
+          <option value="chocolate">Chocolate</option>
+          <option value="cooking-oil">Cooking oil</option>
+          <option value="pastries">Pastries</option>
+          <option value="salad-dressing">Salad dressing</option>
+          <option value="sweets">Sweets</option>
         </optgroup>
       </select>
     </div>
 
 <pre><code>&lt;div class=&quot;form-group&quot;&gt;
-&lt;select id=&quot;demo_select_optgroups&quot; class=&quot;form-control&quot; multiple&gt;
-&lt;optgroup label=&quot;Group 1&quot;&gt;
-&lt;!-- options --&gt;
-&lt;/optgroup&gt;
-&lt;/select&gt;
-&lt;/div&gt;
-
-&lt;script&gt;
-$(document).ready(function(){
-$(&quot;#demo_select_optgroups&quot;).selectDropdown();
-});
-&lt;/script&gt;</code></pre>
+  &lt;label for=&quot;demo_default_select_optgroups&quot;&gt;Select food from food groups&lt;/label&gt;
+  &lt;select id=&quot;demo_default_select_optgroups&quot; class=&quot;form-control&quot; data-role=&quot;select-dropdown&quot;&gt;
+    &lt;!-- optgroup --&gt;
+      &lt;!-- options --&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
 
     <h3>Multiselect</h3>
 
+    <p>
+      Default Bootstrap Select Dropdown on a <code>&lt;select multiple&gt;</code> element.
+    </p>
+
     <div class="form-group">
-      <select id="demo_multiselect" class="form-control" multiple>
-        <option value="AF">Afghanistan</option>
-        <option value="AX">&Aring;land Islands</option>
-        <option value="AL">Albania</option>
-        <option value="DZ">Algeria</option>
-        <option value="AS">American Samoa</option>
-        <option value="AD">Andorra</option>
-        <option value="AO">Angola</option>
-        <option value="AI">Anguilla</option>
-        <option value="AQ">Antarctica</option>
-        <option value="AG">Antigua &amp; Barbuda</option>
-        <option value="AR">Argentina</option>
-        <option value="AM">Armenia</option>
-        <option value="AW">Aruba</option>
-        <option value="AC">Ascension Island</option>
-        <option value="AU">Australia</option>
-        <option value="AT">Austria</option>
-        <option value="AZ">Azerbaijan</option>
-        <option value="BS">Bahamas</option>
-        <option value="BH">Bahrain</option>
-        <option value="BD">Bangladesh</option>
-        <option value="BB">Barbados</option>
-        <option value="BY">Belarus</option>
-        <option value="BE">Belgium</option>
-        <option value="BZ">Belize</option>
-        <option value="BJ">Benin</option>
-        <option value="BM">Bermuda</option>
-        <option value="BT">Bhutan</option>
-        <option value="BO">Bolivia</option>
-        <option value="BA">Bosnia &amp; Herzegovina</option>
-        <option value="BW">Botswana</option>
-        <option value="BR">Brazil</option>
-        <option value="IO">British Indian Ocean Territory</option>
-        <option value="VG">British Virgin Islands</option>
-        <option value="BN">Brunei</option>
-        <option value="BG">Bulgaria</option>
-        <option value="BF">Burkina Faso</option>
-        <option value="BI">Burundi</option>
-        <option value="KH">Cambodia</option>
-        <option value="CM">Cameroon</option>
-        <option value="CA">Canada</option>
-        <option value="IC">Canary Islands</option>
-        <option value="CV">Cape Verde</option>
-        <option value="BQ">Caribbean Netherlands</option>
-        <option value="KY">Cayman Islands</option>
-        <option value="CF">Central African Republic</option>
-        <option value="EA">Ceuta &amp; Melilla</option>
-        <option value="TD">Chad</option>
-        <option value="CL">Chile</option>
-        <option value="CN">China</option>
-        <option value="CX">Christmas Island</option>
-        <option value="CC">Cocos (Keeling) Islands</option>
-        <option value="CO">Colombia</option>
-        <option value="KM">Comoros</option>
-        <option value="CG">Congo - Brazzaville</option>
-        <option value="CD">Congo - Kinshasa</option>
-        <option value="CK">Cook Islands</option>
-        <option value="CR">Costa Rica</option>
-        <option value="CI">C&ocirc;te d&rsquo;Ivoire</option>
-        <option value="HR">Croatia</option>
-        <option value="CU">Cuba</option>
-        <option value="CW">Cura&ccedil;ao</option>
-        <option value="CY">Cyprus</option>
-        <option value="CZ">Czechia</option>
-        <option value="DK">Denmark</option>
-        <option value="DG">Diego Garcia</option>
-        <option value="DJ">Djibouti</option>
-        <option value="DM">Dominica</option>
-        <option value="DO">Dominican Republic</option>
-        <option value="EC">Ecuador</option>
-        <option value="EG">Egypt</option>
-        <option value="SV">El Salvador</option>
-        <option value="GQ">Equatorial Guinea</option>
-        <option value="ER">Eritrea</option>
-        <option value="EE">Estonia</option>
-        <option value="ET">Ethiopia</option>
-        <option value="EZ">Eurozone</option>
-        <option value="FK">Falkland Islands</option>
-        <option value="FO">Faroe Islands</option>
-        <option value="FJ">Fiji</option>
-        <option value="FI">Finland</option>
-        <option value="FR">France</option>
-        <option value="GF">French Guiana</option>
-        <option value="PF">French Polynesia</option>
-        <option value="TF">French Southern Territories</option>
-        <option value="GA">Gabon</option>
-        <option value="GM">Gambia</option>
-        <option value="GE">Georgia</option>
-        <option value="DE">Germany</option>
-        <option value="GH">Ghana</option>
-        <option value="GI">Gibraltar</option>
-        <option value="GR">Greece</option>
-        <option value="GL">Greenland</option>
-        <option value="GD">Grenada</option>
-        <option value="GP">Guadeloupe</option>
-        <option value="GU">Guam</option>
-        <option value="GT">Guatemala</option>
-        <option value="GG">Guernsey</option>
-        <option value="GN">Guinea</option>
-        <option value="GW">Guinea-Bissau</option>
-        <option value="GY">Guyana</option>
-        <option value="HT">Haiti</option>
-        <option value="HN">Honduras</option>
-        <option value="HK">Hong Kong SAR China</option>
-        <option value="HU">Hungary</option>
-        <option value="IS">Iceland</option>
-        <option value="IN">India</option>
-        <option value="ID">Indonesia</option>
-        <option value="IR">Iran</option>
-        <option value="IQ">Iraq</option>
-        <option value="IE">Ireland</option>
-        <option value="IM">Isle of Man</option>
-        <option value="IL">Israel</option>
-        <option value="IT">Italy</option>
-        <option value="JM">Jamaica</option>
-        <option value="JP">Japan</option>
-        <option value="JE">Jersey</option>
-        <option value="JO">Jordan</option>
-        <option value="KZ">Kazakhstan</option>
-        <option value="KE">Kenya</option>
-        <option value="KI">Kiribati</option>
-        <option value="XK">Kosovo</option>
-        <option value="KW">Kuwait</option>
-        <option value="KG">Kyrgyzstan</option>
-        <option value="LA">Laos</option>
-        <option value="LV">Latvia</option>
-        <option value="LB">Lebanon</option>
-        <option value="LS">Lesotho</option>
-        <option value="LR">Liberia</option>
-        <option value="LY">Libya</option>
-        <option value="LI">Liechtenstein</option>
-        <option value="LT">Lithuania</option>
-        <option value="LU">Luxembourg</option>
-        <option value="MO">Macau SAR China</option>
-        <option value="MK">Macedonia</option>
-        <option value="MG">Madagascar</option>
-        <option value="MW">Malawi</option>
-        <option value="MY">Malaysia</option>
-        <option value="MV">Maldives</option>
-        <option value="ML">Mali</option>
-        <option value="MT">Malta</option>
-        <option value="MH">Marshall Islands</option>
-        <option value="MQ">Martinique</option>
-        <option value="MR">Mauritania</option>
-        <option value="MU">Mauritius</option>
-        <option value="YT">Mayotte</option>
-        <option value="MX">Mexico</option>
-        <option value="FM">Micronesia</option>
-        <option value="MD">Moldova</option>
-        <option value="MC">Monaco</option>
-        <option value="MN">Mongolia</option>
-        <option value="ME">Montenegro</option>
-        <option value="MS">Montserrat</option>
-        <option value="MA">Morocco</option>
-        <option value="MZ">Mozambique</option>
-        <option value="MM">Myanmar (Burma)</option>
-        <option value="NA">Namibia</option>
-        <option value="NR">Nauru</option>
-        <option value="NP">Nepal</option>
-        <option value="NL">Netherlands</option>
-        <option value="NC">New Caledonia</option>
-        <option value="NZ">New Zealand</option>
-        <option value="NI">Nicaragua</option>
-        <option value="NE">Niger</option>
-        <option value="NG">Nigeria</option>
-        <option value="NU">Niue</option>
-        <option value="NF">Norfolk Island</option>
-        <option value="KP">North Korea</option>
-        <option value="MP">Northern Mariana Islands</option>
-        <option value="NO">Norway</option>
-        <option value="OM">Oman</option>
-        <option value="PK">Pakistan</option>
-        <option value="PW">Palau</option>
-        <option value="PS">Palestinian Territories</option>
-        <option value="PA">Panama</option>
-        <option value="PG">Papua New Guinea</option>
-        <option value="PY">Paraguay</option>
-        <option value="PE">Peru</option>
-        <option value="PH">Philippines</option>
-        <option value="PN">Pitcairn Islands</option>
-        <option value="PL">Poland</option>
-        <option value="PT">Portugal</option>
-        <option value="PR">Puerto Rico</option>
-        <option value="QA">Qatar</option>
-        <option value="RE">R&eacute;union</option>
-        <option value="RO">Romania</option>
-        <option value="RU">Russia</option>
-        <option value="RW">Rwanda</option>
-        <option value="WS">Samoa</option>
-        <option value="SM">San Marino</option>
-        <option value="ST">S&atilde;o Tom&eacute; &amp; Pr&iacute;ncipe</option>
-        <option value="SA">Saudi Arabia</option>
-        <option value="SN">Senegal</option>
-        <option value="RS">Serbia</option>
-        <option value="SC">Seychelles</option>
-        <option value="SL">Sierra Leone</option>
-        <option value="SG">Singapore</option>
-        <option value="SX">Sint Maarten</option>
-        <option value="SK">Slovakia</option>
-        <option value="SI">Slovenia</option>
-        <option value="SB">Solomon Islands</option>
-        <option value="SO">Somalia</option>
-        <option value="ZA">South Africa</option>
-        <option value="GS">South Georgia &amp; South Sandwich Islands</option>
-        <option value="KR">South Korea</option>
-        <option value="SS">South Sudan</option>
-        <option value="ES">Spain</option>
-        <option value="LK">Sri Lanka</option>
-        <option value="BL">St. Barth&eacute;lemy</option>
-        <option value="SH">St. Helena</option>
-        <option value="KN">St. Kitts &amp; Nevis</option>
-        <option value="LC">St. Lucia</option>
-        <option value="MF">St. Martin</option>
-        <option value="PM">St. Pierre &amp; Miquelon</option>
-        <option value="VC">St. Vincent &amp; Grenadines</option>
-        <option value="SD">Sudan</option>
-        <option value="SR">Suriname</option>
-        <option value="SJ">Svalbard &amp; Jan Mayen</option>
-        <option value="SZ">Swaziland</option>
-        <option value="SE">Sweden</option>
-        <option value="CH">Switzerland</option>
-        <option value="SY">Syria</option>
-        <option value="TW">Taiwan</option>
-        <option value="TJ">Tajikistan</option>
-        <option value="TZ">Tanzania</option>
-        <option value="TH">Thailand</option>
-        <option value="TL">Timor-Leste</option>
-        <option value="TG">Togo</option>
-        <option value="TK">Tokelau</option>
-        <option value="TO">Tonga</option>
-        <option value="TT">Trinidad &amp; Tobago</option>
-        <option value="TA">Tristan da Cunha</option>
-        <option value="TN">Tunisia</option>
-        <option value="TR">Turkey</option>
-        <option value="TM">Turkmenistan</option>
-        <option value="TC">Turks &amp; Caicos Islands</option>
-        <option value="TV">Tuvalu</option>
-        <option value="UM">U.S. Outlying Islands</option>
-        <option value="VI">U.S. Virgin Islands</option>
-        <option value="UG">Uganda</option>
-        <option value="UA">Ukraine</option>
-        <option value="AE">United Arab Emirates</option>
-        <option value="GB">United Kingdom</option>
-        <option value="UN">United Nations</option>
-        <option value="US">United States</option>
-        <option value="UY">Uruguay</option>
-        <option value="UZ">Uzbekistan</option>
-        <option value="VU">Vanuatu</option>
-        <option value="VA">Vatican City</option>
-        <option value="VE">Venezuela</option>
-        <option value="VN">Vietnam</option>
-        <option value="WF">Wallis &amp; Futuna</option>
-        <option value="EH">Western Sahara</option>
-        <option value="YE">Yemen</option>
-        <option value="ZM">Zambia</option>
-        <option value="ZW">Zimbabwe</option>
+      <label for="demo_default_multiselect">Select one or more favourite foods</label>
+      <select id="demo_default_multiselect" class="form-control" data-role="select-dropdown" multiple>
+        <option value="apples">Apples</option>
+        <option value="bananas">Bananas</option>
+        <option value="beef">Beef</option>
+        <option value="chicken">Chicken</option>
+        <option value="condensed-milk">Condensed milk</option>
+        <option value="dark-chocolate">Dark chocolate</option>
+        <option value="dried-bananas">Dried bananas</option>
+        <option value="eggs">Eggs</option>
+        <option value="ice-cream">Ice cream</option>
+        <option value="milk">Milk</option>
+        <option value="milk-chocolate">Milk chocolate</option>
+        <option value="msg">Monosodium Glutamate</option>
+        <option value="starfruit">Starfruit</option>
+        <option value="strawberries">Strawberries</option>
       </select>
     </div>
 
 <pre><code>&lt;div class=&quot;form-group&quot;&gt;
-&lt;select id=&quot;demo_multiselect&quot; class=&quot;form-control&quot; multiple&gt;
-&lt;!-- options --&gt;
-&lt;/select&gt;
-&lt;/div&gt;
-
-&lt;script&gt;
-$(document).ready(function(){
-$(&quot;#demo_multiselect&quot;).selectDropdown();
-});
-&lt;/script&gt;</code></pre>
+  &lt;label for=&quot;demo_default_multiselect&quot;&gt;Select one or more favourite foods&lt;/label&gt;
+  &lt;select id=&quot;demo_default_multiselect&quot; class=&quot;form-control&quot; data-role=&quot;select-dropdown multiple&gt;
+    &lt;!-- options --&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
 
     <h3>Multiselect with option groups</h3>
 
     <div class="form-group">
-      <select id="demo_multiselect_optgroups" class="form-control" multiple>
-        <optgroup label="Group 1">
-          <option value="1-1">Group 1 Option 1</option>
-          <option value="1-2">Group 1 Option 2</option>
-          <option value="1-3">Group 1 Option 3</option>
+      <label for="demo_default_multiselect_optgroups">Select one or more foods from food groups</label>
+      <select id="demo_default_multiselect_optgroups" class="form-control" data-role="select-dropdown" multiple>
+        <optgroup label="Carbohydrates">
+          <option value="bread">Bread</option>
+          <option value="cereal">Cereal</option>
+          <option value="porridge">Porridge</option>
+          <option value="pasta">Pasta</option>
+          <option value="potatoes">Potatoes</option>
+          <option value="rice">Rice</option>
         </optgroup>
-        <optgroup label="Group 2">
-          <option value="2-1">Group 2 Option 1</option>
-          <option value="2-2">Group 2 Option 2</option>
-          <option value="2-3">Group 2 Option 3</option>
-          <option value="2-4">Group 2 Option 4</option>
-          <option value="2-5">Group 2 Option 5</option>
-          <option value="2-6">Group 2 Option 6</option>
-          <option value="2-7">Group 2 Option 7</option>
-          <option value="2-8">Group 2 Option 8</option>
-          <option value="2-9">Group 2 Option 9</option>
+        <optgroup label="Protein">
+          <option value="beans">Beans</option>
+          <option value="chickpeas">Chickpeas</option>
+          <option value="ham">Ham</option>
+          <option value="fish">Fish</option>
+          <option value="lentils">Lentils</option>
+          <option value="sausages">Sausages</option>
         </optgroup>
-        <optgroup label="Group 3">
-          <option value="3-1">Group 3 Option 1</option>
-          <option value="3-2">Group 3 Option 2</option>
-          <option value="3-3">Group 3 Option 3</option>
-          <option value="3-4">Group 3 Option 4</option>
-          <option value="3-5">Group 3 Option 5</option>
-          <option value="3-6">Group 3 Option 6</option>
+        <optgroup label="Milk and dairy products">
+          <option value="cheese">Cheese</option>
+          <option value="custard">Custard</option>
+          <option value="milk">Milk</option>
+          <option value="yoghurt">Yoghurt</option>
+        </optgroup>
+        <optgroup label="Fruit and vegetables">
+          <option value="apples">Apples</option>
+          <option value="bananas">Bananas</option>
+          <option value="melon">Melon</option>
+          <option value="oranges">Oranges</option>
+          <option value="pineapple">Pineapple</option>
+          <option value="salad">Salad</option>
+        </optgroup>
+        <optgroup label="Fats and sugars">
+          <option value="biscuits">Biscuits</option>
+          <option value="chocolate">Chocolate</option>
+          <option value="cooking-oil">Cooking oil</option>
+          <option value="pastries">Pastries</option>
+          <option value="salad-dressing">Salad dressing</option>
+          <option value="sweets">Sweets</option>
         </optgroup>
       </select>
     </div>
 
 <pre><code>&lt;div class=&quot;form-group&quot;&gt;
-&lt;select id=&quot;demo_multiselect_optgroups&quot; class=&quot;form-control&quot; multiple&gt;
-&lt;optgroup label=&quot;Group 1&quot;&gt;
-&lt;!-- options --&gt;
-&lt;/optgroup&gt;
-&lt;/select&gt;
-&lt;/div&gt;
-
-&lt;script&gt;
-$(document).ready(function(){
-$(&quot;#demo_multiselect_optgroups&quot;).selectDropdown();
-});
-&lt;/script&gt;</code></pre>
+  &lt;label for=&quot;demo_default_multiselect_optgroups&quot;&gt;Select one or more foods from food groups&lt;/label&gt;
+  &lt;select id=&quot;demo_default_multiselect_optgroups&quot; class=&quot;form-control&quot; data-role=&quot;select-dropdown&quot; multiple&gt;
+    &lt;optgroup label=&quot;Carbohydrates&quot;&gt;
+      &lt;!-- options --&gt;
+    &lt;/optgroup&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
 
   </div><!-- /.col-md-9 -->
 </div><!-- /.row -->

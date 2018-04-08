@@ -24,7 +24,6 @@ import $ from 'jquery';
 import 'bootstrap';
 import 'popper.js';
 import Fuse from 'fuse.js';
-window.Fuse = Fuse;
 import 'bootstrap-select-dropdown';
 ```
 
