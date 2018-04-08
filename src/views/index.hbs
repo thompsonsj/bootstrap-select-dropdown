@@ -1,12 +1,12 @@
 {{> meta/head}}
 
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-lg-3">
 
     {{> nav/secondary overview=true }}
 
   </div>
-  <div class="col-md-9">
+  <div class="col-lg-9">
 
     <div class="page-header">
       <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
@@ -28,7 +28,7 @@
     </div>
 
     <div class="form-group">
-      <label for="demo_overview">Select multiple countries</label>
+      <label for="demo_overview">Select one or more countries</label>
       <select id="demo_overview" class="form-control" data-role="select-dropdown" multiple>
         {{#each countries}}
         <option value="{{@key}}">{{this}}</option>
@@ -38,10 +38,10 @@
 
 <pre><code>{{{ htmlentities
 '<div class="form-group">
-<label for="demo_overview">Select multiple countries</label>
-<select id="demo_overview" class="form-control" data-role="select-dropdown" multiple>
-  <!-- options -->
-</select>
+  <label for="demo_overview">Select one or more countries</label>
+    <select id="demo_overview" class="form-control" data-role="select-dropdown" multiple>
+    <!-- options -->
+  </select>
 </div>'
 }}}</code></pre>
 
@@ -49,8 +49,16 @@
       <h2>Example: Icons and Badges</h2>
     </div>
 
+    <p>
+      For lists where it is likely a large collection of items will be selected, better visual feedback can be achieved by enabling <code>badges</code>.
+    </p>
+
+    <p>
+      Icons are used in this example. Bootstrap does not ship with an icon framework by default, so some integration may be required to get this to work. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
+    </p>
+
     <div class="form-group">
-      <label for="demo_overview_icons_badges">Select multiple countries</label>
+      <label for="demo_overview_icons_badges">Select one or more countries</label>
       <select id="demo_overview_icons_badges" class="form-control" multiple>
         {{#each countries}}
         <option value="{{@key}}">{{this}}</option>
@@ -60,19 +68,22 @@
 
 <pre><code>{{{ htmlentities
 '<div class="form-group">
-<select id="demo_overview_example" class="form-control" multiple>
-  <!-- options -->
-</select>
+  <label for="demo_overview_icons_badges">Select one or more countries</label>
+  <select id="demo_overview_example" class="form-control" multiple>
+    <!-- options -->
+  </select>
 </div>
 
 <script>
-$(document).ready(function(){
-  $("#demo_multiselect").selectDropdown({
-    \'htmlBtnClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
-    \'htmlBtnDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
-    \'htmlBtnSelectAll\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\'
+  $(document).ready(function(){
+    $("#demo_multiselect").selectDropdown({
+      \'badges\': true,
+      \'htmlBtnClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
+      \'htmlBtnDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>\',
+      \'htmlBtnSelectAll\': \'<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>\',
+      \'htmlBtnBadgeRemove\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\'
+    });
   });
-});
 </script>'
 }}}</code></pre>
 

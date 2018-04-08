@@ -1,15 +1,15 @@
 {{> meta/head}}
 
 <div class="row">
-  <div class="col-md-3">
+  <div class="col-lg-3">
 
     {{> nav/secondary getting-started=true }}
 
   </div>
-  <div class="col-md-9">
+  <div class="col-lg-9">
 
     <div class="page-header">
-      <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
+      <h1>{{name}} <small>for Bootstrap 4</small></h1>
     </div>
     <p class="lead">A jQuery plugin for Bootstrap 4 that converts <code>&lt;select&gt;</code> and <code>&lt;select multiselect&gt;</code> elements to dropdowns. Uses fuse.js for fuzzy search and Bootstrap's dropdown plugin.</p>
 
@@ -19,7 +19,13 @@
 
     <h3>Quick start</h3>
 
-    <p class="highlight">Get started quickly by using CDNs/hosted files. Check <a href="https://getbootstrap.com/docs/4.0/getting-started/introduction/" target="_blank">Introduction | Bootstrap</a> for the latest versions.</p>
+    <p class="highlight">
+      Get started quickly by using CDNs/hosted files.
+    </p>
+
+    <p>
+      The following code demonstrates embedding files for both Bootstrap and {{name}}. Check <a href="https://getbootstrap.com/docs/4.0/getting-started/introduction/" target="_blank">Introduction | Bootstrap</a> for the latest versions.
+    </p>
 
 <pre><code>{{{
 htmlentities
@@ -31,6 +37,36 @@ htmlentities
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="js/bootstrap-select-dropdown.js"></script>'
 }}}</code></pre>
+
+    <h3>npm</h3>
+
+    <p>
+      Install {{name}} in your Node.js apps with <a href="{{npmUrl}}"></a>the npm package</a>.
+    </p>
+
+    <pre><code>{{{
+    htmlentities
+    'npm install bootstrap-select-dropdown'
+    }}}</code></pre>
+
+    <h3>Webpack</h3>
+
+    <p class="highlight">
+      Include {{name}} in your Bootstrap project using Webpack.
+    </p>
+
+    <p>
+      Import {{name}} by importing in your app's entry point.
+    </p>
+
+    <pre><code>{{{
+    htmlentities
+    'import \'bootstrap-select-dropdown\''
+    }}}</code></pre>
+
+    <p>
+      If using search, {{name}} depends on <a href="http://fusejs.io/">Fuse.js</a>. In this case, include Fuse.js in your <code>package.json</code> using <code>npm install --save fuse.js</code>.
+    </p>
 
   </div><!-- /.col-md-9 -->
 </div><!-- /.row -->

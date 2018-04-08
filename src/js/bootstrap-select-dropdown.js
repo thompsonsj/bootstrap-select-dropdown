@@ -38,6 +38,8 @@ let SelectDropdownIndex = 1
      observeDomMutations: false,
      maxHeight: '300px',
      keyboard: true,
+     badges: false,
+     badgesDismissable: true,
      // Text
      textNoneSelected: "None selected",
      textMultipleSelected: "%count_selected% selected",
@@ -50,21 +52,25 @@ let SelectDropdownIndex = 1
      htmlBtnClear: "Clear search",
      htmlBtnDeselectAll: "Deselect all", // Multiselect only
      htmlBtnSelectAll: "Select all", // Multiselect only
+     htmlBtnBadgeRemove: "[deselect]", // Badges only
      // Classes
      classBtnClear : "btn btn-outline-secondary",
      classBtnDeselectAll : "btn btn-outline-secondary", // Multiselect only
      classBtnSelectAll : "btn btn-outline-secondary", // Multiselect only
-     classBtnSelect : "btn btn-primary"
+     classBtnSelect : "btn btn-primary",
+     classBadge: "badge badge-dark mr-1",
+     classBadgeContainer : "mt-2 mb-3"
    }
 
    const DefaultType = {
-     profile              : 'string',
      maxListLength        : 'number',
      hideSelect           : 'boolean',
      search               : 'boolean',
      observeDomMutations  : 'boolean',
      maxHeight            : 'string',
      keyboard             : 'boolean',
+     badges               : 'boolean',
+     badgesDismissable    : 'boolean',
      textNoneSelected     : 'string',
      textMultipleSelected : 'string',
      textNoResults        : 'string',
@@ -74,14 +80,19 @@ let SelectDropdownIndex = 1
      htmlBtnClear         : 'string',
      htmlBtnDeselectAll   : 'string',
      htmlBtnSelectAll     : 'string',
+     htmlBtnBadgeRemove   : 'string',
      classBtnClear        : 'string',
      classBtnDeselectAll  : 'string',
      classBtnSelectAll    : 'string',
-     classBtnSelect       : 'string'
+     classBtnSelect       : 'string',
+     classBadge           : 'string',
+     classBadgeContainer  : 'string'
    }
 
    const Event = {
+     CLICK             : `click${EVENT_KEY}`,
      KEYUP             : `keyup${EVENT_KEY}`,
+     KEYDOWN           : `keydown${EVENT_KEY}`,
      FOCUS             : `focus${EVENT_KEY}`,
      BLUR              : `blur${EVENT_KEY}`,
      FOCUSIN           : `focusin${EVENT_KEY}`,
@@ -126,12 +137,18 @@ let SelectDropdownIndex = 1
       this._resultsChanged = false
       this._hoverItem = $()
 
-      this.ids = {};
+      this.ids = {}
       this.ids.dropdownContainerId = this._prefix + 'container'
       this.ids.dropdownButtonId = this._prefix + 'button'
       this.ids.controlSearchId = this._prefix + 'search'
       this.ids.dropdownItemDeselect = this._prefix + 'deselect'
       this.ids.dropdownItemShowSelected = this._prefix + 'selected'
+
+      // Selectors.
+      this.selectors = {}
+      if ( this._config.badges ) {
+        this.selectors.badge = this._classListToSelector( this._config.classBadge )
+      }
 
       // Properties: Elements.
       this.els = {}
@@ -157,6 +174,9 @@ let SelectDropdownIndex = 1
       this.els.dropdownOptions = this.els.dropdownItems.filter( ( index, element ) => {
         return this._isOption( $( element ) )
       })
+      if ( this._config.badges ) {
+        this.els.badgeContainer = this._buildBadgeContainer()
+      }
 
       if (this._config.search) {
         this._haystack = []
@@ -210,7 +230,7 @@ let SelectDropdownIndex = 1
         $option.prop('selected', true);
         $dropdownItem.addClass('active');
       }
-      _._setButtonText();
+      _._externalFeedback();
       _._refreshInitialControls();
     }
 
@@ -250,7 +270,7 @@ let SelectDropdownIndex = 1
       var $el =  $(this._element)
       $el.find('option').prop('selected', false)
       this.els.dropdownOptions.removeClass('active')
-      this._setButtonText()
+      this._externalFeedback()
       this._refreshInitialControls()
       this._refresh()
     }
@@ -263,7 +283,7 @@ let SelectDropdownIndex = 1
       var $el =  $(this._element)
       $el.find('option').prop('selected', true)
       this.els.dropdownOptions.addClass('active')
-      this._setButtonText()
+      this._externalFeedback()
       this._refreshInitialControls()
       this._refresh()
     }
@@ -311,10 +331,10 @@ let SelectDropdownIndex = 1
       // Handle cut and paste.
       this.els.controlSearch.bind({
           paste (){
-            $(this).trigger('keydown');
+            $(this).trigger( Event.KEYDOWN );
           },
           cut (){
-            $(this).trigger('keydown');
+            $(this).trigger( Event.KEYDOWN );
           }
       });
       this._assignClickHandlers();
@@ -351,20 +371,20 @@ let SelectDropdownIndex = 1
 
     _assignClickHandlers() {
       // Select item.
-      this.els.dropdownOptions.on('click', ( event ) => {
+      this.els.dropdownOptions.on( Event.CLICK, ( event ) => {
         event.preventDefault()
-        if (this._multiselect) {
+        if ( this._multiselect ) {
           this._preventDropdownHide()
         }
-        this.toggle($(event.currentTarget))
+        this.toggle( $( event.currentTarget ) )
       })
 
       // Deselect all.
       if ( this._config.btnDeselectAll ) {
-        this.els.btnDeselectAll.on('click', ( event ) => {
+        this.els.btnDeselectAll.on( Event.CLICK, ( event ) => {
           event.preventDefault()
           this._preventDropdownHide()
-          if (!$(event.currentTarget).hasClass('disabled')) {
+          if (!$( event.currentTarget ).hasClass('disabled')) {
             this.deselectAll()
           }
         })
@@ -372,10 +392,10 @@ let SelectDropdownIndex = 1
 
       // Select all.
       if ( this._config.btnSelectAll ) {
-        this.els.btnSelectAll.on('click', ( event ) => {
+        this.els.btnSelectAll.on( Event.CLICK, ( event ) => {
           event.preventDefault()
           this._preventDropdownHide()
-          if (!$(event.currentTarget).hasClass('disabled')) {
+          if (!$( event.currentTarget ).hasClass('disabled')) {
             this.selectAll()
           }
         })
@@ -383,7 +403,7 @@ let SelectDropdownIndex = 1
 
       // Clear search.
       if ( this._config.btnClear ) {
-        this.els.btnClear.on('click', () => {
+        this.els.btnClear.on( Event.CLICK, () => {
           this.els.controlSearch.val('')
           this._preventDropdownHide()
           this._refresh()
@@ -391,19 +411,29 @@ let SelectDropdownIndex = 1
       }
 
       // Show selected.
-      this.els.controlSelected.on('click', (event) => {
+      this.els.controlSelected.on( Event.CLICK, (event) => {
         event.preventDefault();
         this._preventDropdownHide()
-        if ( !$(event.currentTarget).hasClass('disabled') ) {
+        if ( !$( event.currentTarget ).hasClass('disabled') ) {
           this._sortSelected();
         }
       });
 
       // No results.
-      this.els.dropdownItemNoResults.on('click', (event) => {
+      this.els.dropdownItemNoResults.on( Event.CLICK, (event) => {
         event.preventDefault();
         this._preventDropdownHide()
       });
+
+      // Badges.
+      if ( this._config.badges ) {
+        this.els.badgeContainer.on( Event.CLICK, 'a', (event) => {
+          event.preventDefault()
+          let $target = $( event.currentTarget )
+          this.deselect( this._dropdownItemByOption( $target.data('option') ) )
+          $target.parent( this.selectors.badge ).remove()
+        })
+      }
     }
 
     init() {
@@ -411,7 +441,7 @@ let SelectDropdownIndex = 1
       var $el = $( _._element );
 
       // Build.
-      _._setButtonText();
+      _._externalFeedback();
       this.els.dropdown
         .append( _.els.dropdownMenu );
       _.els.dropdownItemsContainer
@@ -425,6 +455,11 @@ let SelectDropdownIndex = 1
       $el.after( this.els.dropdown );
       if ( _._config.hideSelect ) {
         $el.hide();
+      }
+      if( this._config.badges ) {
+        this.els.dropdown.after(
+          this.els.badgeContainer
+        )
       }
 
       _._refreshInitialControls();
@@ -446,7 +481,7 @@ let SelectDropdownIndex = 1
 
     /**
      * Check whether the supplied element has a `multiple` attribute,
-     * @param  {object}  element
+     * @param  {Object}  element
      * @return {Boolean}
      */
     _isMultiselect(element) {
@@ -462,7 +497,7 @@ let SelectDropdownIndex = 1
      *
      * * If results haven't changed, do nothing (improves performance).
      * * If results have changed, hide non-matching options, reorder...etc.
-     * @param  {[type]} s Search term
+     * @param  {String} s Search term
      * @return {undefined}
      */
     _search(s) {
@@ -510,7 +545,8 @@ let SelectDropdownIndex = 1
         'data-target': '#' + _.ids.dropdownContainerId,
         'aria-haspopup': 'true',
         'aria-expanded': 'false'
-      });
+      })
+      .text('Select');
     }
 
     /**
@@ -690,31 +726,42 @@ let SelectDropdownIndex = 1
     }
 
     _buildDropdownItems() {
-      var _ = this;
-      var $el = $( _._element );
-      var s = 0; // Sort index
-      var o = 0; // Option index
-      var $items = $();
-      var $optgroups = $el.find('optgroup');
+      let s = 0 // Sort index
+      let o = 0 // Option index
+      let $items = $()
+      let $optgroups = $( this._element ).find('optgroup')
       if ( $optgroups.length ) {
-        $optgroups.each( function(){
-          $items = $items.add( _._buildDropdownHeader( $( this ).attr('label') ).data('index', s ) );
-          s = _._incrementIndex( s );
-          $( this ).find('option').each( function() {
-            $items = $items.add( _._buildDropdownItem( $( this ) ).data('index', s ).data('option', o) );
-            s = _._incrementIndex( s );
-            o++;
-          });
-        });
+        $optgroups.each( ( index, element ) => {
+          $items = $items.add(
+            this._buildDropdownHeader( $( element ).attr('label') )
+            .data('index', s )
+          )
+          s = this._incrementIndex( s );
+          $( element ).find('option').each( ( index, element ) => {
+            $( element ).data('option', o )
+            $items = $items.add(
+              this._buildDropdownItem( $( element ) )
+              .data('index', s )
+              .data('option', o )
+            )
+            s = this._incrementIndex( s );
+            o++
+          })
+        })
       } else {
-        $el.find('option').each( function( index, value ) {
-          $items = $items.add( _._buildDropdownItem( $( this ) ).data('index', s ).data('option', o) );
-          s = _._incrementIndex( s );
-          o++;
-        });
+        $( this._element ).find('option').each( ( index, element ) => {
+          $( element ).data('option', o )
+          $items = $items.add(
+            this._buildDropdownItem( $( element ) )
+            .data('index', s )
+            .data('option', o)
+          )
+          s = this._incrementIndex( s )
+          o++
+        })
       }
-      if ( _._config.search ) {
-        $items = $items.add( _.els.dropdownItemNoResults );
+      if ( this._config.search ) {
+        $items = $items.add( this.els.dropdownItemNoResults );
       }
       return $items;
     }
@@ -746,6 +793,33 @@ let SelectDropdownIndex = 1
       return $dropdownItem;
     }
 
+    _buildBadgeContainer() {
+      return $('<div>', {
+        'class' : this._config.classBadgeContainer
+      })
+    }
+
+    /**
+     * Build badge.
+     * @param  {Integer} option Option index number
+     * @param  {String} text
+     * @return {Object} jQuery object
+     */
+    _buildBadge( option, text ) {
+      return $('<span>',
+        {
+          'class' : this._config.classBadge
+        })
+        .text( text + ' ' )
+        .append(
+          $('<a>', {
+              'href' : '#'
+            })
+            .html( this._config.htmlBtnBadgeRemove )
+            .data( 'option', option )
+        )
+    }
+
     /**
      * Boolean: Bootstrap Dropdown visible.
      * @return {boolean}
@@ -772,6 +846,15 @@ let SelectDropdownIndex = 1
       return false;
     }
 
+    _externalFeedback() {
+      if ( !this._config.badges ) {
+        this._setButtonText()
+      }
+      else {
+        this._setBadges()
+      }
+    }
+
     /**
      * Set button text.
      * @return {undefined}
@@ -783,13 +866,7 @@ let SelectDropdownIndex = 1
         btnText = this._config.textNoneSelected
       }
       else if ( selected.length <= this._config.maxListLength ) {
-        var textValues = $( this._element )
-          .find('option:selected')
-          .map(function (i, element) {
-            return $(element).text()
-          })
-          .get()
-        btnText = textValues.join(", ")
+        btnText = this._getTextValues().join(", ")
       }
       else {
         btnText = this._config.textMultipleSelected
@@ -797,6 +874,33 @@ let SelectDropdownIndex = 1
       }
 
       this.els.btnSelect.text( btnText )
+    }
+
+    _setBadges( selected ) {
+      let badges = $()
+      let $selected = $( this._element ).find('option:selected')
+      $selected.each( ( index, element ) => {
+        badges = badges.add( this._buildBadge( $( element ).data('option'), $( element ).text() ) )
+      })
+      this.els.badgeContainer
+        .html('')
+        .append( badges )
+    }
+
+    _getText( value ) {
+      return $( this._element )
+        .find("option[value='" + value +  "']")
+        .first()
+        .text()
+    }
+
+    _getTextValues() {
+      return $( this._element )
+        .find('option:selected')
+        .map(function (i, element) {
+          return $(element).text()
+        })
+        .get()
     }
 
     /**
@@ -823,11 +927,16 @@ let SelectDropdownIndex = 1
       this.els.btnSelect.dropdown('update')
     }
 
-    _dropdownItemByIndex( index ) {
-      var _ = this;
-      return _.els.dropdownItems.filter( function(){
-        return $(this).data('index') == index;
-      });
+    _dropdownItemByIndex( s ) {
+      return this.els.dropdownItems.filter( ( index, element ) => {
+        return $( element ).data('index') == s
+      })
+    }
+
+    _dropdownItemByOption( o ) {
+      return this.els.dropdownItems.filter( ( index, element ) => {
+        return $( element ).data('option') == o
+      })
     }
 
     _hideInitialControls() {
@@ -992,6 +1101,22 @@ let SelectDropdownIndex = 1
       this.els.dropdownMenu.animate({
           scrollTop: 0
       }, 50);
+    }
+
+    /**
+     * Helper: Class to selector.
+     *
+     * Convert a space separated class list to a selector.
+     * @param  {string} classList Space separated list of classes.
+     * @return {string}           Selector.
+     */
+    _classListToSelector( classList ) {
+      let selector = classList
+      if ( classList.length ) {
+        let classes = classList.split(/\s+/)
+        selector = '.' + classes.join('.')
+      }
+      return selector;
     }
 
     _alignLeft() {

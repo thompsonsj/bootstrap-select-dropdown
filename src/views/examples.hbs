@@ -1,0 +1,130 @@
+{{> meta/head}}
+
+<div class="row">
+  <div class="col-lg-3">
+
+    {{> nav/secondary examples=true }}
+
+  </div>
+  <div class="col-lg-9">
+
+    <div class="page-header">
+      <h1>Bootstrap Select Dropdown <small>for Bootstrap 4</small></h1>
+    </div>
+    <p class="lead">A jQuery plugin for Bootstrap 4 that converts <code>&lt;select&gt;</code> and <code>&lt;select multiselect&gt;</code> elements to dropdowns. Uses fuse.js for fuzzy search and Bootstrap's dropdown plugin.</p>
+
+    <div class="page-header">
+      <h2 id="examples">Examples</h2>
+    </div>
+
+    <div class="page-header">
+      <h3>Defaults (no options)</h3>
+    </div>
+
+    <h4>Select</h4>
+
+    <p>
+      Default {{name}} on a <code>{{{htmlentities '<select>'}}}</code> element.
+    </p>
+
+    <div class="form-group">
+      <label for="demo_default_select">Select your favourite food</label>
+      <select id="demo_default_select" class="form-control" data-role="select-dropdown">
+        {{#each food}}
+        <option value="{{@key}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <label for="demo_default_select">Select your favourite food</label>
+  <select id="demo_default_select" class="form-control" data-role="select-dropdown">
+    <!-- options -->
+  </select>
+</div>'
+}}}</code></pre>
+
+    <h3>Select with option groups</h3>
+
+    <p>
+      Default {{name}} on a <code>{{{htmlentities '<select>'}}}</code> with <code>{{{htmlentities '<optgroup>'}}}</code> elements.
+    </p>
+
+    <div class="form-group">
+      <label for="demo_default_select_optgroups">Select food from food groups</label>
+      <select id="demo_default_select_optgroups" class="form-control" data-role="select-dropdown">
+        {{#foodGroups}}
+        <optgroup label="{{label}}">
+          {{#foods}}
+          <option value="{{value}}">{{text}}</option>
+          {{/foods}}
+        </optgroup>
+        {{/foodGroups}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <label for="demo_default_select_optgroups">Select food from food groups</label>
+  <select id="demo_default_select_optgroups" class="form-control" data-role="select-dropdown">
+    <!-- optgroup -->
+      <!-- options -->
+  </select>
+</div>'
+}}}</code></pre>
+
+    <h3>Multiselect</h3>
+
+    <p>
+      Default {{name}} on a <code>{{{htmlentities '<select multiple>'}}}</code> element.
+    </p>
+
+    <div class="form-group">
+      <label for="demo_default_multiselect">Select one or more favourite foods</label>
+      <select id="demo_default_multiselect" class="form-control" data-role="select-dropdown" multiple>
+        {{#each food}}
+        <option value="{{@key}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <label for="demo_default_multiselect">Select one or more favourite foods</label>
+  <select id="demo_default_multiselect" class="form-control" data-role="select-dropdown multiple>
+    <!-- options -->
+  </select>
+</div>'
+}}}</code></pre>
+
+    <h3>Multiselect with option groups</h3>
+
+    <div class="form-group">
+      <label for="demo_default_multiselect_optgroups">Select one or more foods from food groups</label>
+      <select id="demo_default_multiselect_optgroups" class="form-control" data-role="select-dropdown" multiple>
+        {{#foodGroups}}
+        <optgroup label="{{label}}">
+          {{#foods}}
+          <option value="{{value}}">{{text}}</option>
+          {{/foods}}
+        </optgroup>
+        {{/foodGroups}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <label for="demo_default_multiselect_optgroups">Select one or more foods from food groups</label>
+  <select id="demo_default_multiselect_optgroups" class="form-control" data-role="select-dropdown" multiple>
+    <optgroup label="Carbohydrates">
+      <!-- options -->
+    </optgroup>
+  </select>
+</div>'
+}}}</code></pre>
+
+  </div><!-- /.col-md-9 -->
+</div><!-- /.row -->
+
+{{> meta/foot }}

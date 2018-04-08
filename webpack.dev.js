@@ -38,12 +38,21 @@ module.exports = {
           options: '$'
           }
         ]
+      },
+      {
+      test: require.resolve('fuse.js'),
+      use: [
+        {
+          loader: 'expose-loader',
+          options: 'Fuse'
+          }
+        ]
       }
     ]
   },
   devServer: {
     contentBase: path.join(__dirname, "docs"),
-    compress: true,
+    //compress: true,
     port: 9000
   },
   plugins: [

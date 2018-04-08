@@ -21,3 +21,14 @@
     }
   }
 }
+.badge a{
+  text-decoration: none;
+}
+@each $color, $value in $theme-colors {
+  .badge-#{$color} a {
+    color: color-yiq($value);
+    &:hover {
+      color: darken( color-yiq( $value ), 10% );
+    }
+  }
+}

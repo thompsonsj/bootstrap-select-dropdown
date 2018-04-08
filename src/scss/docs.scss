@@ -55,3 +55,26 @@ $container-max-widths: (
     }
   }
 }
+.badge {
+  .ion {
+    width: $font-size-base * 0.75;
+    height: $font-size-base * 0.75;
+    position: relative;
+    top: 1px;
+  }
+}
+@each $color, $value in $theme-colors {
+  .badge-#{$color} .ion {
+    fill: color-yiq($value);
+    &:hover {
+      fill: darken( color-yiq( $value ), 10% );
+    }
+  }
+}
+dl {
+  padding: $spacer;
+  background-color: $gray-100;
+  dd:last-child {
+    margin-bottom: 0;
+  }
+}
