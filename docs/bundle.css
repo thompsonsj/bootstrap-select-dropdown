@@ -7068,6 +7068,49 @@ a.text-dark:hover, a.text-dark:focus {
 .dropdown-item.no-results.hover {
   background-color: transparent; }
 
+.badge a {
+  text-decoration: none; }
+
+.badge-primary a {
+  color: #fff; }
+  .badge-primary a:hover {
+    color: #e6e6e6; }
+
+.badge-secondary a {
+  color: #fff; }
+  .badge-secondary a:hover {
+    color: #e6e6e6; }
+
+.badge-success a {
+  color: #fff; }
+  .badge-success a:hover {
+    color: #e6e6e6; }
+
+.badge-info a {
+  color: #fff; }
+  .badge-info a:hover {
+    color: #e6e6e6; }
+
+.badge-warning a {
+  color: #212529; }
+  .badge-warning a:hover {
+    color: #0a0c0d; }
+
+.badge-danger a {
+  color: #fff; }
+  .badge-danger a:hover {
+    color: #e6e6e6; }
+
+.badge-light a {
+  color: #212529; }
+  .badge-light a:hover {
+    color: #0a0c0d; }
+
+.badge-dark a {
+  color: #fff; }
+  .badge-dark a:hover {
+    color: #e6e6e6; }
+
 /**
  * Styles for docs only (not for dist).
  */
@@ -7104,3 +7147,55 @@ a.text-dark:hover, a.text-dark:focus {
 
 .nav-link:hover .ion {
   fill: #e9ecef; }
+
+.badge .ion {
+  width: 0.75rem;
+  height: 0.75rem;
+  position: relative;
+  top: 1px; }
+
+.badge-primary .ion {
+  fill: #fff; }
+  .badge-primary .ion:hover {
+    fill: #e6e6e6; }
+
+.badge-secondary .ion {
+  fill: #fff; }
+  .badge-secondary .ion:hover {
+    fill: #e6e6e6; }
+
+.badge-success .ion {
+  fill: #fff; }
+  .badge-success .ion:hover {
+    fill: #e6e6e6; }
+
+.badge-info .ion {
+  fill: #fff; }
+  .badge-info .ion:hover {
+    fill: #e6e6e6; }
+
+.badge-warning .ion {
+  fill: #212529; }
+  .badge-warning .ion:hover {
+    fill: #0a0c0d; }
+
+.badge-danger .ion {
+  fill: #fff; }
+  .badge-danger .ion:hover {
+    fill: #e6e6e6; }
+
+.badge-light .ion {
+  fill: #212529; }
+  .badge-light .ion:hover {
+    fill: #0a0c0d; }
+
+.badge-dark .ion {
+  fill: #fff; }
+  .badge-dark .ion:hover {
+    fill: #e6e6e6; }
+
+dl {
+  padding: 1rem;
+  background-color: #f8f9fa; }
+  dl dd:last-child {
+    margin-bottom: 0; }
