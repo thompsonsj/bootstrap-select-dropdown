@@ -859,7 +859,10 @@ let SelectDropdownIndex = 1
     _setButtonText() {
       let btnText
       let selected = $( this._element ).val()
-      if ( selected.length < 1 ) {
+      if ( !this._multiselect && selected.length > 0 ) {
+        btnText = $( this._element ).find('option:selected').text()
+      }
+      else if ( selected.length < 1 ) {
         btnText = this._config.textNoneSelected
       }
       else if ( selected.length <= this._config.maxListLength ) {
