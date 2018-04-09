@@ -1,4 +1,4 @@
-// [AIV_SHORT]  Build version: 0.10.0 - Monday, April 9th, 2018, 7:41:23 PM  
+// [AIV_SHORT]  Build version: 0.10.1 - Monday, April 9th, 2018, 9:24:31 PM  
  /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -300,7 +300,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.10.0';
+  var VERSION = '0.10.1';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -1163,7 +1163,9 @@ var SelectDropdown = function ($) {
       value: function _setButtonText() {
         var btnText = void 0;
         var selected = $(this._element).val();
-        if (selected.length < 1) {
+        if (!this._multiselect && selected.length > 0) {
+          btnText = $(this._element).find('option:selected').text();
+        } else if (selected.length < 1) {
           btnText = this._config.textNoneSelected;
         } else if (selected.length <= this._config.maxListLength) {
           btnText = this._getTextValues().join(", ");
