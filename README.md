@@ -42,3 +42,20 @@ Get started quickly by using CDNs/hosted files. Check [Introduction | Bootstrap]
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src="js/bootstrap-select-dropdown.js"></script>
 ```
+
+## Versioning
+
+Version bump, builds, file tracking, commit and tag are handled automatically using the following commands.
+
+```bash
+npm version patch -m "Commit message."
+npm version minor -m "Commit message."
+npm version major -m "Commit message."
+```
+
+These commands call `npm run preversion` and `npm run version`. In `package.json`:
+
+- The `preversion` script builds documentation and distribution files.
+- The `version` script ensures changes applied by both builds are tracked by running `git add .`.
+
+For more information on `npm version`, consult the [npm docs](https://docs.npmjs.com/cli/version).

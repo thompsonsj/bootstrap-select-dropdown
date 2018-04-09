@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Entities = require('html-entities').AllHtmlEntities;
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -45,6 +46,9 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("./package.json").version)
+    }),
     new CopyWebpackPlugin([
       {
         from: path.resolve('src/scss/_common.scss'),

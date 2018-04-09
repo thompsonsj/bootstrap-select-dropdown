@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HandlebarsPlugin = require("handlebars-webpack-plugin");
 const Entities = require('html-entities').AllHtmlEntities;
@@ -56,6 +57,9 @@ module.exports = {
     port: 9000
   },
   plugins: [
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("./package.json").version)
+    }),
     new ExtractTextPlugin('bundle.css'),
     new HandlebarsPlugin({
       entry: path.join(process.cwd(), "src", "views", "*.hbs"),

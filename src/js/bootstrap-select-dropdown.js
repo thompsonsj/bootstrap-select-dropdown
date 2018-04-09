@@ -18,7 +18,7 @@ let SelectDropdownIndex = 1
     */
 
    const NAME               = 'selectDropdown'
-   const VERSION            = '0.7.0'
+   const VERSION            = VERSION
    const DATA_KEY           = 'bs.selectDropdown'
    const EVENT_KEY          = `.${DATA_KEY}`
    const DATA_API_KEY       = '.data-api'
@@ -127,7 +127,6 @@ let SelectDropdownIndex = 1
   class SelectDropdown {
     constructor(element, config) {
       this._multiselect = this._isMultiselect(element)
-
       this._config  = this._getConfig(config)
       this._element = element
       this._prefix  = 'bsd' + this._config.SelectDropdownIndex + '-'
