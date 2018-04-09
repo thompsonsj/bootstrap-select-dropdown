@@ -1,4 +1,5 @@
-/******/ (function(modules) { // webpackBootstrap
+// [AIV_SHORT]  Build version: 0.10.0 - Monday, April 9th, 2018, 7:38:08 PM  
+ /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -299,7 +300,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = VERSION;
+  var VERSION = '0.10.0';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -1563,4 +1564,4 @@ exports.default = SelectDropdown;
 __webpack_require__(3);
 
 /***/ })
-/******/ ]);
+/******/ ]); 

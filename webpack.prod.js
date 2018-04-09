@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
+const WebpackAutoInject = require('webpack-auto-inject-version');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Entities = require('html-entities').AllHtmlEntities;
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -46,8 +46,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      VERSION: JSON.stringify(require("./package.json").version)
+    new WebpackAutoInject({
+        components: {
+            AutoIncreaseVersion: false
+        }
     }),
     new CopyWebpackPlugin([
       {

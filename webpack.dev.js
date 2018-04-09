@@ -1,5 +1,5 @@
 const path = require('path');
-const webpack = require('webpack');
+const WebpackAutoInject = require('webpack-auto-inject-version');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HandlebarsPlugin = require("handlebars-webpack-plugin");
 const Entities = require('html-entities').AllHtmlEntities;
@@ -57,8 +57,10 @@ module.exports = {
     port: 9000
   },
   plugins: [
-    new webpack.DefinePlugin({
-      VERSION: JSON.stringify(require("./package.json").version)
+    new WebpackAutoInject({
+        components: {
+            AutoIncreaseVersion: false
+        }
     }),
     new ExtractTextPlugin('bundle.css'),
     new HandlebarsPlugin({
