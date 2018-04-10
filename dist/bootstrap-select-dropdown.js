@@ -1,5 +1,4 @@
-// [AIV_SHORT]  Build version: 0.10.1 - Monday, April 9th, 2018, 9:24:31 PM  
- /******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -300,7 +299,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.10.1';
+  var VERSION = '0.11.0';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -322,6 +321,7 @@ var SelectDropdown = function ($) {
     keyboard: true,
     badges: false,
     badgesDismissable: true,
+    tooltips: false,
     // Text
     textNoneSelected: "None selected",
     textMultipleSelected: "%count_selected% selected",
@@ -353,6 +353,7 @@ var SelectDropdown = function ($) {
     keyboard: 'boolean',
     badges: 'boolean',
     badgesDismissable: 'boolean',
+    tooltips: 'boolean',
     textNoneSelected: 'string',
     textMultipleSelected: 'string',
     textNoResults: 'string',
@@ -476,6 +477,8 @@ var SelectDropdown = function ($) {
           };
         });
       }
+
+      this._propBtnClear();
 
       this._addEventListeners();
 
@@ -635,6 +638,7 @@ var SelectDropdown = function ($) {
     }, {
       key: '_keyup',
       value: function _keyup(event) {
+        this._propBtnClear();
         if (this._config.keyboard) {
           if (event.which == ENTER_KEYCODE) {
             this.toggle(this.els.dropdown.find('.hover').first());
@@ -658,7 +662,8 @@ var SelectDropdown = function ($) {
             return;
           }
         }
-        this._search($(this.els.controlSearch).val());
+        var s = $(this.els.controlSearch).val();
+        this._search(s);
       }
     }, {
       key: '_assignClickHandlers',
@@ -820,6 +825,7 @@ var SelectDropdown = function ($) {
       value: function _search(s) {
         var results = null;
         if ($.trim(s) == '') {
+          //this._els.btnClear
           this._refresh();
           if (this._lastSearch !== null) {
             this._resultsChanged = true;
@@ -870,11 +876,15 @@ var SelectDropdown = function ($) {
     }, {
       key: '_buildBtnClear',
       value: function _buildBtnClear() {
-        var _ = this;
-        return $('<button>', {
+        var button = $('<button>', {
           type: 'button',
-          class: _._config.classBtnClear
-        }).html(_._config.htmlBtnClear);
+          class: this._config.classBtnClear,
+          title: 'Clear search'
+        }).html(this._config.htmlBtnClear);
+        if (this._config.tooltips) {
+          button.data('toggle', 'tooltip').data('placement', 'top').tooltip();
+        }
+        return button;
       }
 
       /**
@@ -885,11 +895,15 @@ var SelectDropdown = function ($) {
     }, {
       key: '_buildBtnDeselectAll',
       value: function _buildBtnDeselectAll() {
-        var _ = this;
-        return $('<button>', {
+        var button = $('<button>', {
           type: 'button',
-          class: _._config.classBtnDeselectAll
-        }).html(_._config.htmlBtnDeselectAll);
+          class: this._config.classBtnDeselectAll,
+          title: 'Deselect all'
+        }).html(this._config.htmlBtnDeselectAll);
+        if (this._config.tooltips) {
+          button.data('toggle', 'tooltip').data('placement', 'top').tooltip();
+        }
+        return button;
       }
 
       /**
@@ -900,11 +914,15 @@ var SelectDropdown = function ($) {
     }, {
       key: '_buildBtnSelectAll',
       value: function _buildBtnSelectAll() {
-        var _ = this;
-        return $('<button>', {
+        var button = $('<button>', {
           type: 'button',
-          class: _._config.classBtnSelectAll
-        }).html(_._config.htmlBtnSelectAll);
+          class: this._config.classBtnSelectAll,
+          title: 'Select all'
+        }).html(this._config.htmlBtnSelectAll);
+        if (this._config.tooltips) {
+          button.data('toggle', 'tooltip').data('placement', 'top').tooltip();
+        }
+        return button;
       }
     }, {
       key: '_buildShowSelected',
@@ -1163,18 +1181,46 @@ var SelectDropdown = function ($) {
       value: function _setButtonText() {
         var btnText = void 0;
         var selected = $(this._element).val();
+        var noneSelected = false;
+        var allSelected = false;
         if (!this._multiselect && selected.length > 0) {
           btnText = $(this._element).find('option:selected').text();
         } else if (selected.length < 1) {
           btnText = this._config.textNoneSelected;
+          noneSelected = true;
         } else if (selected.length <= this._config.maxListLength) {
           btnText = this._getTextValues().join(", ");
         } else {
           btnText = this._config.textMultipleSelected;
           btnText = btnText.replace(Keyword.COUNT_SELECTED, selected.length);
         }
-
+        if (selected.length == this.els.dropdownOptions.length) {
+          allSelected = true;
+        }
+        if (allSelected) {
+          this.els.btnSelectAll.prop('disabled', true);
+        } else {
+          this.els.btnSelectAll.prop('disabled', false);
+        }
+        if (noneSelected) {
+          this.els.btnDeselectAll.prop('disabled', true);
+        } else {
+          this.els.btnDeselectAll.prop('disabled', false);
+        }
         this.els.btnSelect.text(btnText);
+      }
+    }, {
+      key: '_propBtnClear',
+      value: function _propBtnClear() {
+        if (!this._config.btnClear) {
+          return;
+        }
+        var val = this.els.controlSearch.val();
+        if ($.trim(val) == '') {
+          this.els.btnClear.prop('disabled', true);
+        } else {
+          this.els.btnClear.prop('disabled', false);
+        }
       }
     }, {
       key: '_setBadges',
@@ -1566,4 +1612,4 @@ exports.default = SelectDropdown;
 __webpack_require__(3);
 
 /***/ })
-/******/ ]); 
+/******/ ]);

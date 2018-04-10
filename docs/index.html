@@ -24,6 +24,11 @@
               <a id="version" class="nav-link" href="/"></a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="https://www.npmjs.com/package/bootstrap-select-dropdown">
+                npm
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="https://github.com/thompsonsj/bootstrap-select-dropdown">
                 <svg class="ion ion-social-github">
                   <use xlink:href="#ion-social-github"></use>
@@ -352,15 +357,11 @@
 &lt;/div&gt;</code></pre>
 
     <div class="page-header">
-      <h2>Example: Icons and Badges</h2>
+      <h2>Example: Icons, Badges and Tooltips</h2>
     </div>
 
     <p>
-      For lists where it is likely a large collection of items will be selected, better visual feedback can be achieved by enabling <code>badges</code>.
-    </p>
-
-    <p>
-      Icons are used in this example. Bootstrap does not ship with an icon framework by default, so some integration may be required to get this to work. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
+      A range of options enable Bootstrap Select Dropdown to be configured to suit a wider range of use cases.
     </p>
 
     <div class="form-group">
@@ -634,7 +635,9 @@
 &lt;script&gt;
   $(document).ready(function(){
     $(&quot;#demo_multiselect&quot;).selectDropdown({
+      &apos;maxListLength&apos;: 0,
       &apos;badges&apos;: true,
+      &apos;tooltips&apos; : true,
       &apos;htmlBtnClear&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
       &apos;htmlBtnDeselectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close-circled&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
       &apos;htmlBtnSelectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-checkmark-circled&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
@@ -642,6 +645,29 @@
     });
   });
 &lt;/script&gt;</code></pre>
+
+  <p>
+    In this example, the following options have been set.
+  </p>
+
+  <ul>
+    <li>
+      <strong>maxListLength</strong> is set to <code>0</code> to ensure the button is populated with the <code>%count_selected% selected</code> for any number of selections.
+    </li>
+    <li>
+      <strong>badges</strong> offer enhanced visual feedback for longer, more complex lists or lists where a large selection is expected.
+    </li>
+    <li>
+      Icons are used in this example. Bootstrap does not ship with an icon framework by default, so some integration may be required. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
+    </li>
+    <li>
+      <strong>tooltips</strong> clarify the functionality of each button, tooltips are added to the 'Clear search', 'Deselect all' and 'Select all' buttons. This enhances the default <code>title</code> attribute.
+    </li>
+  </ul>
+
+  <p class="highlight">
+    For a full list of options, consult the <a href="options.html">options documentation</a>.
+  </p>
 
   </div><!-- /.col-md-9 -->
 </div><!-- /.row -->
