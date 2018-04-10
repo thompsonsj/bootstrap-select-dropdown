@@ -193,6 +193,8 @@ let SelectDropdownIndex = 1
         });
       }
 
+      this._propBtnClear()
+
       this._addEventListeners()
 
       this.init()
@@ -342,6 +344,7 @@ let SelectDropdownIndex = 1
     }
 
     _keyup(event) {
+      this._propBtnClear()
       if (this._config.keyboard) {
         if ( event.which == ENTER_KEYCODE ) {
           this.toggle( this.els.dropdown.find('.hover').first() );
@@ -367,7 +370,8 @@ let SelectDropdownIndex = 1
           return;
         }
       }
-      this._search( $( this.els.controlSearch ).val() )
+      let s = $( this.els.controlSearch ).val()
+      this._search( s )
     }
 
     _assignClickHandlers() {
@@ -504,6 +508,7 @@ let SelectDropdownIndex = 1
     _search(s) {
       var results = null;
       if ( $.trim( s ) == '' ) {
+        //this._els.btnClear
         this._refresh();
         if ( this._lastSearch !== null ) {
           this._resultsChanged = true;
@@ -882,11 +887,14 @@ let SelectDropdownIndex = 1
     _setButtonText() {
       let btnText
       let selected = $( this._element ).val()
+      let noneSelected = false
+      let allSelected = false
       if ( !this._multiselect && selected.length > 0 ) {
         btnText = $( this._element ).find('option:selected').text()
       }
       else if ( selected.length < 1 ) {
         btnText = this._config.textNoneSelected
+        noneSelected = true
       }
       else if ( selected.length <= this._config.maxListLength ) {
         btnText = this._getTextValues().join(", ")
@@ -895,8 +903,34 @@ let SelectDropdownIndex = 1
         btnText = this._config.textMultipleSelected
         btnText = btnText.replace( Keyword.COUNT_SELECTED, selected.length )
       }
-
+      if ( selected.length == this.els.dropdownOptions.length ) {
+        allSelected = true
+      }
+      if ( allSelected ) {
+        this.els.btnSelectAll.prop('disabled', true)
+      }
+      else {
+        this.els.btnSelectAll.prop('disabled', false)
+      }
+      if ( noneSelected ) {
+        this.els.btnDeselectAll.prop('disabled', true)
+      }
+      else {
+        this.els.btnDeselectAll.prop('disabled', false)
+      }
       this.els.btnSelect.text( btnText )
+    }
+
+    _propBtnClear() {
+      if ( !this._config.btnClear ) {
+        return
+      }
+      let val = this.els.controlSearch.val()
+      if ( $.trim( val ) == '' ) {
+        this.els.btnClear.prop('disabled', true)
+      } else {
+        this.els.btnClear.prop('disabled', false)
+      }
     }
 
     _setBadges( selected ) {
