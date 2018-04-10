@@ -7,7 +7,7 @@
     "build": "webpack --config webpack.prod.js --mode production",
     "dev": "webpack --config webpack.dev.js --mode development",
     "serve": "webpack-dev-server --config webpack.dev.js --mode development",
-    "version": "npm run build && git add .",
+    "version": "npm run dev && npm run build && git add .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {

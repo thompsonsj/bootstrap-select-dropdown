@@ -7199,3 +7199,8 @@ dl {
   background-color: #f8f9fa; }
   dl dd:last-child {
     margin-bottom: 0; }
+
+p.highlight {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border: 1px solid #e9ecef; }
