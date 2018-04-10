@@ -40,6 +40,7 @@ let SelectDropdownIndex = 1
      keyboard: true,
      badges: false,
      badgesDismissable: true,
+     tooltips: false,
      // Text
      textNoneSelected: "None selected",
      textMultipleSelected: "%count_selected% selected",
@@ -71,6 +72,7 @@ let SelectDropdownIndex = 1
      keyboard             : 'boolean',
      badges               : 'boolean',
      badgesDismissable    : 'boolean',
+     tooltips             : 'boolean',
      textNoneSelected     : 'string',
      textMultipleSelected : 'string',
      textNoResults        : 'string',
@@ -553,12 +555,19 @@ let SelectDropdownIndex = 1
      * @return {object} jQuery
      */
     _buildBtnClear(){
-      var _ = this;
-      return $('<button>', {
+      let button = $('<button>', {
         type: 'button',
-        class: _._config.classBtnClear
+        class: this._config.classBtnClear,
+        title: 'Clear search'
       })
-      .html( _._config.htmlBtnClear );
+      .html( this._config.htmlBtnClear )
+      if ( this._config.tooltips ) {
+        button
+        .data('toggle', 'tooltip')
+        .data('placement', 'top')
+        .tooltip()
+      }
+      return button
     }
 
     /**
@@ -566,12 +575,19 @@ let SelectDropdownIndex = 1
      * @return {object} jQuery
      */
     _buildBtnDeselectAll() {
-      var _ = this;
-      return $('<button>', {
+      let button = $('<button>', {
         type: 'button',
-        class: _._config.classBtnDeselectAll
+        class: this._config.classBtnDeselectAll,
+        title: 'Deselect all'
       })
-      .html( _._config.htmlBtnDeselectAll );
+      .html( this._config.htmlBtnDeselectAll )
+      if ( this._config.tooltips ) {
+        button
+        .data('toggle', 'tooltip')
+        .data('placement', 'top')
+        .tooltip()
+      }
+      return button
     }
 
     /**
@@ -579,12 +595,19 @@ let SelectDropdownIndex = 1
      * @return {object} jQuery
      */
     _buildBtnSelectAll() {
-      var _ = this;
-      return $('<button>', {
+      let button = $('<button>', {
         type: 'button',
-        class: _._config.classBtnSelectAll
+        class: this._config.classBtnSelectAll,
+        title: 'Select all'
       })
-      .html( _._config.htmlBtnSelectAll );
+      .html( this._config.htmlBtnSelectAll )
+      if ( this._config.tooltips ) {
+        button
+        .data('toggle', 'tooltip')
+        .data('placement', 'top')
+        .tooltip()
+      }
+      return button
     }
 
     _buildShowSelected() {

@@ -78,3 +78,8 @@ dl {
     margin-bottom: 0;
   }
 }
+p.highlight {
+  background-color: $gray-100;
+  padding: $spacer;
+  border: 1px solid $gray-200;
+}

@@ -46,15 +46,11 @@
 }}}</code></pre>
 
     <div class="page-header">
-      <h2>Example: Icons and Badges</h2>
+      <h2>Example: Icons, Badges and Tooltips</h2>
     </div>
 
     <p>
-      For lists where it is likely a large collection of items will be selected, better visual feedback can be achieved by enabling <code>badges</code>.
-    </p>
-
-    <p>
-      Icons are used in this example. Bootstrap does not ship with an icon framework by default, so some integration may be required to get this to work. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
+      A range of options enable {{name}} to be configured to suit a wider range of use cases.
     </p>
 
     <div class="form-group">
@@ -77,7 +73,9 @@
 <script>
   $(document).ready(function(){
     $("#demo_multiselect").selectDropdown({
+      \'maxListLength\': 0,
       \'badges\': true,
+      \'tooltips\' : true,
       \'htmlBtnClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
       \'htmlBtnDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>\',
       \'htmlBtnSelectAll\': \'<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>\',
@@ -86,6 +84,29 @@
   });
 </script>'
 }}}</code></pre>
+
+  <p>
+    In this example, the following options have been set.
+  </p>
+
+  <ul>
+    <li>
+      <strong>maxListLength</strong> is set to <code>0</code> to ensure the button is populated with the <code>%count_selected% selected</code> for any number of selections.
+    </li>
+    <li>
+      <strong>badges</strong> offer enhanced visual feedback for longer, more complex lists or lists where a large selection is expected.
+    </li>
+    <li>
+      Icons are used in this example. Bootstrap does not ship with an icon framework by default, so some integration may be required. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
+    </li>
+    <li>
+      <strong>tooltips</strong> clarify the functionality of each button, tooltips are added to the 'Clear search', 'Deselect all' and 'Select all' buttons. This enhances the default <code>title</code> attribute.
+    </li>
+  </ul>
+
+  <p class="highlight">
+    For a full list of options, consult the <a href="options.html">options documentation</a>.
+  </p>
 
   </div><!-- /.col-md-9 -->
 </div><!-- /.row -->
