@@ -907,13 +907,17 @@ let SelectDropdownIndex = 1
         allSelected = true
       }
       if ( allSelected ) {
-        this.els.btnSelectAll.prop('disabled', true)
+        this.els.btnSelectAll
+        .prop('disabled', true)
+        .tooltip('hide')
       }
       else {
         this.els.btnSelectAll.prop('disabled', false)
       }
       if ( noneSelected ) {
-        this.els.btnDeselectAll.prop('disabled', true)
+        this.els.btnDeselectAll
+        .prop('disabled', true)
+        .tooltip('hide')
       }
       else {
         this.els.btnDeselectAll.prop('disabled', false)

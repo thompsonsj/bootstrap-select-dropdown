@@ -41,6 +41,11 @@ $container-max-widths: (
       stroke: $white;
       fill: $white;
     }
+    &.disabled .ion,
+    &:disabled .ion {
+      stroke: $body-color;
+      fill: $body-color;
+    }
   }
 }
 .nav-link {
