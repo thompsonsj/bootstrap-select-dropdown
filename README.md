@@ -53,9 +53,6 @@ npm version minor -m "Commit message."
 npm version major -m "Commit message."
 ```
 
-These commands call `npm run preversion` and `npm run version`. In `package.json`:
-
-- The `preversion` script builds documentation and distribution files.
-- The `version` script ensures changes applied by both builds are tracked by running `git add .`.
+These commands call the `version` in `package.json`. This script builds documentation and distribution (including minified) files, and ensures changes applied by both builds are tracked by running `git add .`.
 
 For more information on `npm version`, consult the [npm docs](https://docs.npmjs.com/cli/version).

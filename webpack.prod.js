@@ -48,7 +48,8 @@ module.exports = {
   plugins: [
     new WebpackAutoInject({
         components: {
-            AutoIncreaseVersion: false
+            AutoIncreaseVersion: false,
+            InjectAsComment: false
         }
     }),
     new CopyWebpackPlugin([
