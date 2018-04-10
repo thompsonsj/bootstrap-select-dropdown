@@ -7140,6 +7140,13 @@ a.text-dark:hover, a.text-dark:focus {
   stroke: #fff;
   fill: #fff; }
 
+.btn:hover.disabled .ion,
+.btn:hover:disabled .ion,
+.nav-link:hover.disabled .ion,
+.nav-link:hover:disabled .ion {
+  stroke: #212529;
+  fill: #212529; }
+
 .nav-link .ion {
   width: 1.4rem;
   height: 1.4rem;

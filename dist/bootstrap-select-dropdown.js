@@ -299,7 +299,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.11.0';
+  var VERSION = '0.11.1';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -1198,12 +1198,12 @@ var SelectDropdown = function ($) {
           allSelected = true;
         }
         if (allSelected) {
-          this.els.btnSelectAll.prop('disabled', true);
+          this.els.btnSelectAll.prop('disabled', true).tooltip('hide');
         } else {
           this.els.btnSelectAll.prop('disabled', false);
         }
         if (noneSelected) {
-          this.els.btnDeselectAll.prop('disabled', true);
+          this.els.btnDeselectAll.prop('disabled', true).tooltip('hide');
         } else {
           this.els.btnDeselectAll.prop('disabled', false);
         }
