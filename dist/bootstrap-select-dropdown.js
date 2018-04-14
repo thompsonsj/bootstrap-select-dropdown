@@ -299,7 +299,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.11.1';
+  var VERSION = '0.12.0';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -313,35 +313,39 @@ var SelectDropdown = function ($) {
     // Profile
     profile: "default",
     // Behaviour
-    maxListLength: 4,
     hideSelect: true,
     search: true,
     observeDomMutations: false,
     maxHeight: '300px',
     keyboard: true,
-    badges: false,
-    badgesDismissable: true,
-    tooltips: false,
+    badges: true, // Multiselect only
+    badgesDismissable: true, // Multiselect only
+    maxListLength: 0, // Multiselect only
     // Text
-    textNoneSelected: "None selected",
+    textNoneSelected: "Select",
     textMultipleSelected: "%count_selected% selected",
     textNoResults: "No results",
+    // Controls
+    clear: false,
+    deselectAll: true, // Multiselect only
+    selectAll: true, // Multiselect only
+    showSelected: true, // Multiselect only
     // Buttons
-    btnClear: true,
-    btnDeselectAll: true, // Multiselect only
-    btnSelectAll: true, // Multiselect only
-    // HTML
-    htmlBtnClear: "Clear search",
-    htmlBtnDeselectAll: "Deselect all", // Multiselect only
-    htmlBtnSelectAll: "Select all", // Multiselect only
-    htmlBtnBadgeRemove: "[deselect]", // Badges only
-    // Classes
-    classBtnClear: "btn btn-outline-secondary",
+    selectButtons: false,
     classBtnDeselectAll: "btn btn-outline-secondary", // Multiselect only
     classBtnSelectAll: "btn btn-outline-secondary", // Multiselect only
+    // HTML
+    htmlClear: "Clear search",
+    htmlDeselectAll: "Deselect all", // Multiselect only
+    htmlSelectAll: "Select all", // Multiselect only
+    htmlBadgeRemove: "[X]", // Badges only
+    // Classes
+    classBtnClear: "btn btn-outline-secondary",
     classBtnSelect: "btn btn-primary",
     classBadge: "badge badge-dark mr-1",
-    classBadgeContainer: "mt-2 mb-3"
+    classBadgeContainer: "mt-2 mb-3",
+    // Callbacks
+    loaded: function loaded() {}
   };
 
   var DefaultType = {
@@ -353,23 +357,24 @@ var SelectDropdown = function ($) {
     keyboard: 'boolean',
     badges: 'boolean',
     badgesDismissable: 'boolean',
-    tooltips: 'boolean',
     textNoneSelected: 'string',
     textMultipleSelected: 'string',
     textNoResults: 'string',
-    btnClear: 'boolean',
-    btnDeselectAll: 'boolean',
-    btnSelectAll: 'boolean',
-    htmlBtnClear: 'string',
-    htmlBtnDeselectAll: 'string',
-    htmlBtnSelectAll: 'string',
-    htmlBtnBadgeRemove: 'string',
+    clear: 'boolean',
+    deselectAll: 'boolean',
+    selectAll: 'boolean',
+    selectButtons: 'boolean',
     classBtnClear: 'string',
     classBtnDeselectAll: 'string',
     classBtnSelectAll: 'string',
+    htmlClear: 'string',
+    htmlDeselectAll: 'string',
+    htmlSelectAll: 'string',
+    htmlBadgeRemove: 'string',
     classBtnSelect: 'string',
     classBadge: 'string',
-    classBadgeContainer: 'string'
+    classBadgeContainer: 'string',
+    loaded: 'function'
   };
 
   var Event = {
@@ -383,6 +388,7 @@ var SelectDropdown = function ($) {
   };
 
   var ClassName = {
+    ACTIVE: 'active',
     DROPDOWN: 'dropdown',
     MENU: 'dropdown-menu',
     ITEM: 'dropdown-item',
@@ -442,16 +448,16 @@ var SelectDropdown = function ($) {
       if (this._config.search) {
         this.els.controlSearch = this._buildControlSearch();
       }
-      if (this._config.btnClear) {
-        this.els.btnClear = this._buildBtnClear();
+      if (this._config.clear) {
+        this.els.clear = this._buildBtnClear();
       }
-      if (this._config.btnDeselectAll) {
-        this.els.btnDeselectAll = this._buildBtnDeselectAll();
+      if (this._config.deselectAll) {
+        this.els.deselectAll = this._buildDeselectAll();
       }
-      if (this._config.btnSelectAll) {
-        this.els.btnSelectAll = this._buildBtnSelectAll();
+      if (this._config.selectAll) {
+        this.els.selectAll = this._buildSelectAll();
       }
-      this.els.controlSelected = this._buildShowSelected();
+      this.els.showSelected = this._buildShowSelected();
       this.els.dropdown = this._buildDropdown();
       this.els.dropdownMenu = this._buildDropdownMenu(); //This should be dropdown menu so we can build and refer to dropdown, the main container.
       this.els.dropdownItemsContainer = this._buildDropdownItemsContainer();
@@ -514,7 +520,6 @@ var SelectDropdown = function ($) {
           $dropdownItem.addClass('active');
         }
         _._externalFeedback();
-        _._refreshInitialControls();
       }
 
       /**
@@ -563,7 +568,6 @@ var SelectDropdown = function ($) {
         $el.find('option').prop('selected', false);
         this.els.dropdownOptions.removeClass('active');
         this._externalFeedback();
-        this._refreshInitialControls();
         this._refresh();
       }
 
@@ -579,7 +583,6 @@ var SelectDropdown = function ($) {
         $el.find('option').prop('selected', true);
         this.els.dropdownOptions.addClass('active');
         this._externalFeedback();
-        this._refreshInitialControls();
         this._refresh();
       }
 
@@ -592,11 +595,13 @@ var SelectDropdown = function ($) {
         _util2.default.typeCheckConfig(NAME, config, DefaultType);
         // Defaults: Enforce logic.
         if (!config.search) {
-          config.btnClear = false;
+          config.clear = false;
         }
         if (!this._multiselect) {
-          config.btnDeselectAll = false;
-          config.btnSelectAll = false;
+          config.deselectAll = false;
+          config.selectAll = false;
+          config.showSelected = false;
+          config.badges = false;
         }
         return config;
       }
@@ -680,8 +685,8 @@ var SelectDropdown = function ($) {
         });
 
         // Deselect all.
-        if (this._config.btnDeselectAll) {
-          this.els.btnDeselectAll.on(Event.CLICK, function (event) {
+        if (this._config.deselectAll) {
+          this.els.deselectAll.on(Event.CLICK, function (event) {
             event.preventDefault();
             _this3._preventDropdownHide();
             if (!$(event.currentTarget).hasClass('disabled')) {
@@ -691,8 +696,8 @@ var SelectDropdown = function ($) {
         }
 
         // Select all.
-        if (this._config.btnSelectAll) {
-          this.els.btnSelectAll.on(Event.CLICK, function (event) {
+        if (this._config.selectAll) {
+          this.els.selectAll.on(Event.CLICK, function (event) {
             event.preventDefault();
             _this3._preventDropdownHide();
             if (!$(event.currentTarget).hasClass('disabled')) {
@@ -702,20 +707,21 @@ var SelectDropdown = function ($) {
         }
 
         // Clear search.
-        if (this._config.btnClear) {
-          this.els.btnClear.on(Event.CLICK, function () {
+        if (this._config.clear) {
+          this.els.clear.on(Event.CLICK, function (event) {
             _this3.els.controlSearch.val('');
             _this3._preventDropdownHide();
+            _this3._disable($(event.currentTarget));
             _this3._refresh();
           });
         }
 
         // Show selected.
-        this.els.controlSelected.on(Event.CLICK, function (event) {
+        this.els.showSelected.on(Event.CLICK, function (event) {
           event.preventDefault();
           _this3._preventDropdownHide();
           if (!$(event.currentTarget).hasClass('disabled')) {
-            _this3._sortSelected();
+            _this3._toggleShowSelected();
           }
         });
 
@@ -738,61 +744,50 @@ var SelectDropdown = function ($) {
     }, {
       key: 'init',
       value: function init() {
-        var _ = this; // Deep reference to this.
-        var $el = $(_._element);
-
         // Build.
-        _._externalFeedback();
-        this.els.dropdown.append(_.els.dropdownMenu);
-        _.els.dropdownItemsContainer.append(_.els.dropdownItems);
-        if (_._multiselect) {
-          _.els.dropdownMenu.append(_.els.controlSelected);
+        this._externalFeedback();
+
+        // Dropdown menu.
+        if (this._config.selectAll && !this._config.selectButtons) {
+          this.els.dropdownMenu.append(this.els.selectAll);
         }
-        _.els.dropdownMenu.append(_.els.dropdownItemsContainer);
+        if (this._config.deselectAll && !this._config.selectButtons) {
+          this.els.dropdownMenu.append(this.els.deselectAll);
+        }
+        if (this._config.showSelected) {
+          this.els.dropdownMenu.append(this.els.showSelected);
+        }
+
+        // Dropdown items.
+        this.els.dropdownItemsContainer.append(this.els.dropdownItems);
+        this.els.dropdownMenu.append(this.els.dropdownItemsContainer);
+
+        // Dropdown.
+        this.els.dropdown.append(this.els.dropdownMenu);
+
+        // Replace <select>.
+        var $el = $(this._element);
         $el.after(this.els.dropdown);
-        if (_._config.hideSelect) {
+        if (this._config.hideSelect) {
           $el.hide();
         }
+
         if (this._config.badges) {
           this.els.dropdown.after(this.els.badgeContainer);
         }
-
-        _._refreshInitialControls();
-
         // DOM mutation observer
-        if (_._config.observeDomMutations) {
+        /*if ( _._config.observeDomMutations ) {
           var config = { childList: true, subtree: true };
-          var callback = function callback(mutationsList) {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-              for (var _iterator = mutationsList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var mutation = _step.value;
-
-                if (mutation.type == 'childList') {
-                  _._refresh();
-                }
-              }
-            } catch (err) {
-              _didIteratorError = true;
-              _iteratorError = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                  _iterator.return();
-                }
-              } finally {
-                if (_didIteratorError) {
-                  throw _iteratorError;
-                }
+          var callback = function( mutationsList ) {
+            for( var mutation of mutationsList ) {
+              if ( mutation.type == 'childList') {
+                _._refresh();
               }
             }
           };
-          var observer = new MutationObserver(callback);
-          observer.observe($el[0], config);
-        }
+          var observer = new MutationObserver( callback );
+          observer.observe( $el[0], config );
+        }*/
       }
 
       /**
@@ -825,7 +820,7 @@ var SelectDropdown = function ($) {
       value: function _search(s) {
         var results = null;
         if ($.trim(s) == '') {
-          //this._els.btnClear
+          //this._els.clear
           this._refresh();
           if (this._lastSearch !== null) {
             this._resultsChanged = true;
@@ -880,49 +875,54 @@ var SelectDropdown = function ($) {
           type: 'button',
           class: this._config.classBtnClear,
           title: 'Clear search'
-        }).html(this._config.htmlBtnClear);
-        if (this._config.tooltips) {
-          button.data('toggle', 'tooltip').data('placement', 'top').tooltip();
-        }
+        }).html(this._config.htmlClear);
         return button;
       }
 
       /**
-       * Build HTML: Deselect all button
+       * Build HTML: Deselect all element
        * @return {object} jQuery
        */
 
     }, {
-      key: '_buildBtnDeselectAll',
-      value: function _buildBtnDeselectAll() {
-        var button = $('<button>', {
-          type: 'button',
-          class: this._config.classBtnDeselectAll,
-          title: 'Deselect all'
-        }).html(this._config.htmlBtnDeselectAll);
-        if (this._config.tooltips) {
-          button.data('toggle', 'tooltip').data('placement', 'top').tooltip();
+      key: '_buildDeselectAll',
+      value: function _buildDeselectAll() {
+        var element = void 0;
+        if (!this._config.selectButtons) {
+          element = $('<a>', {
+            href: '#',
+            class: ClassName.ITEM
+          });
+        } else {
+          element = $('<button>', {
+            type: 'button',
+            class: this._config.classBtnDeselectAll
+          });
         }
-        return button;
+        return element.html(this._config.htmlDeselectAll).attr('title', 'Deselect all');
       }
 
       /**
-       * Build HTML: Select all button
+       * Build HTML: Select all element
        * @return {object} jQuery
        */
 
     }, {
-      key: '_buildBtnSelectAll',
-      value: function _buildBtnSelectAll() {
-        var button = $('<button>', {
-          type: 'button',
-          class: this._config.classBtnSelectAll,
-          title: 'Select all'
-        }).html(this._config.htmlBtnSelectAll);
-        if (this._config.tooltips) {
-          button.data('toggle', 'tooltip').data('placement', 'top').tooltip();
+      key: '_buildSelectAll',
+      value: function _buildSelectAll() {
+        var element = void 0;
+        if (!this._config.selectButtons) {
+          element = $('<a>', {
+            href: '#',
+            class: ClassName.ITEM
+          });
+        } else {
+          element = $('<button>', {
+            type: 'button',
+            class: this._config.classBtnSelectAll
+          });
         }
-        return button;
+        return element.html(this._config.htmlSelectAll).attr('title', 'Select all');
       }
     }, {
       key: '_buildShowSelected',
@@ -930,7 +930,6 @@ var SelectDropdown = function ($) {
         var _ = this;
         var $showSelectedItem = $('<a>', {
           href: '#',
-          id: _.ids.dropdownItemShowSelected,
           class: ClassName.ITEM,
           text: 'Show selected'
         });
@@ -963,22 +962,25 @@ var SelectDropdown = function ($) {
 
           $inputGroup.append(this.els.controlSearch);
 
-          if (this._config.btnClear) {
+          if (this._config.clear) {
             $inputGroup.append($('<div>', {
               class: ClassName.INPUT_GROUP_APPEND
-            }).append(this.els.btnClear));
+            }).append(this.els.clear));
           }
 
-          if (this._config.btnDeselectAll) {
-            $inputGroup.append($('<div>', {
-              class: ClassName.INPUT_GROUP_APPEND
-            }).append(this.els.btnDeselectAll));
-          }
+          if (this._config.selectButtons) {
 
-          if (this._config.btnSelectAll) {
-            $inputGroup.append($('<div>', {
-              class: ClassName.INPUT_GROUP_APPEND
-            }).append(this.els.btnSelectAll));
+            if (this._config.deselectAll) {
+              $inputGroup.append($('<div>', {
+                class: ClassName.INPUT_GROUP_APPEND
+              }).append(this.els.deselectAll));
+            }
+
+            if (this._config.selectAll) {
+              $inputGroup.append($('<div>', {
+                class: ClassName.INPUT_GROUP_APPEND
+              }).append(this.els.selectAll));
+            }
           }
 
           $inputGroup.append($('<div>', {
@@ -991,12 +993,12 @@ var SelectDropdown = function ($) {
             class: ClassName.BTN_GROUP
           });
 
-          if (this._config.btnDeselectAll) {
-            $btnGroup.append(this.els.btnDeselectAll);
+          if (this._config.deselectAll) {
+            $btnGroup.append(this.els.deselectAll);
           }
 
-          if (this._config.btnSelectAll) {
-            $btnGroup.append(this.els.btnSelectAll);
+          if (this._config.selectAll) {
+            $btnGroup.append(this.els.selectAll);
           }
 
           $btnGroup.append($('<div>', {
@@ -1124,11 +1126,15 @@ var SelectDropdown = function ($) {
     }, {
       key: '_buildBadge',
       value: function _buildBadge(option, text) {
-        return $('<span>', {
+        var badge = $('<span>', {
           'class': this._config.classBadge
-        }).text(text + ' ').append($('<a>', {
-          'href': '#'
-        }).html(this._config.htmlBtnBadgeRemove).data('option', option));
+        }).text(text);
+        if (this._config.badgesDismissable) {
+          badge.append(' ').append($('<a>', {
+            'href': '#'
+          }).html(this._config.htmlBadgeRemove).data('option', option));
+        }
+        return badge;
       }
 
       /**
@@ -1197,30 +1203,17 @@ var SelectDropdown = function ($) {
         if (selected.length == this.els.dropdownOptions.length) {
           allSelected = true;
         }
-        if (allSelected) {
-          this.els.btnSelectAll.prop('disabled', true).tooltip('hide');
-        } else {
-          this.els.btnSelectAll.prop('disabled', false);
-        }
-        if (noneSelected) {
-          this.els.btnDeselectAll.prop('disabled', true).tooltip('hide');
-        } else {
-          this.els.btnDeselectAll.prop('disabled', false);
-        }
+        this._refreshInitialControls(allSelected, noneSelected);
         this.els.btnSelect.text(btnText);
       }
     }, {
       key: '_propBtnClear',
       value: function _propBtnClear() {
-        if (!this._config.btnClear) {
+        if (!this._config.clear) {
           return;
         }
         var val = this.els.controlSearch.val();
-        if ($.trim(val) == '') {
-          this.els.btnClear.prop('disabled', true);
-        } else {
-          this.els.btnClear.prop('disabled', false);
-        }
+        this._disableEnable(this.els.clear, $.trim(val) == '');
       }
     }, {
       key: '_setBadges',
@@ -1293,29 +1286,66 @@ var SelectDropdown = function ($) {
     }, {
       key: '_hideInitialControls',
       value: function _hideInitialControls() {
-        var _ = this;
-        _.els.controlSelected.hide();
+        if (this._config.selectAll && !this._config.selectButtons) {
+          this.els.selectAll.hide();
+        }
+        if (this._config.deselectAll && !this._config.selectButtons) {
+          this.els.deselectAll.hide();
+        }
+        if (this._config.selected) {
+          this.els.showSelected.hide();
+        }
       }
     }, {
       key: '_showInitialControls',
-      value: function _showInitialControls(prepend) {
-        prepend = (typeof prepend === 'undefined' ? 'undefined' : _typeof(prepend)) !== ( true ? 'undefined' : undefined) ? prepend : false;
-        var _ = this;
-        if (prepend) {
-          _.els.controlSelected.prependTo(_.els.dropdownMenu);
+      value: function _showInitialControls() {
+        if (this._config.selectAll && !this._config.selectButtons) {
+          this.els.selectAll.show();
         }
-        _.els.controlSelected.show();
+        if (this._config.deselectAll && !this._config.selectButtons) {
+          this.els.deselectAll.show();
+        }
+        if (this._config.selected) {
+          this.els.showSelected.show();
+        }
       }
     }, {
       key: '_refreshInitialControls',
-      value: function _refreshInitialControls() {
-        var _ = this;
-        var $el = $(_._element);
-        if (!$el.val() || $el.val().length == 0) {
-          _.els.controlSelected.addClass('disabled');
-        } else {
-          _.els.controlSelected.removeClass('disabled');
+      value: function _refreshInitialControls(allSelected, noneSelected) {
+        if (this._config.selectAll) {
+          this._disableEnable(this.els.selectAll, allSelected);
         }
+        if (this._config.deselectAll) {
+          this._disableEnable(this.els.deselectAll, noneSelected);
+        }
+        if (this._config.showSelected) {
+          this._disableEnable(this.els.showSelected, noneSelected || allSelected);
+        }
+      }
+    }, {
+      key: '_disableEnable',
+      value: function _disableEnable($element, condition) {
+        if (condition) {
+          this._disable($element);
+        } else {
+          this._enable($element);
+        }
+      }
+    }, {
+      key: '_enable',
+      value: function _enable($element) {
+        if ($element.is('button')) {
+          $element.prop('disabled', false);
+        }
+        $element.removeClass('disabled');
+      }
+    }, {
+      key: '_disable',
+      value: function _disable($element) {
+        if ($element.is('button')) {
+          $element.prop('disabled', true);
+        }
+        $element.addClass('disabled');
       }
 
       /**
@@ -1390,8 +1420,7 @@ var SelectDropdown = function ($) {
     }, {
       key: '_hoverRemove',
       value: function _hoverRemove() {
-        var _ = this;
-        _.els.dropdownItems.removeClass(ClassName.HOVER).show();
+        this.els.dropdownOptions.removeClass(ClassName.HOVER);
       }
 
       /**
@@ -1441,16 +1470,21 @@ var SelectDropdown = function ($) {
        */
 
     }, {
-      key: '_sortSelected',
-      value: function _sortSelected() {
-        var _ = this;
-        var $el = $(_._element);
-        _.els.dropdownOptions.removeClass(ClassName.HOVER);
-        $(_.els.dropdownMenu.find('.active').get().reverse()).each(function () {
-          $(this).prependTo(_.els.dropdownItemsContainer);
-        });
-        _._showInitialControls(true);
-        _.resetScroll();
+      key: '_toggleShowSelected',
+      value: function _toggleShowSelected() {
+        var _this7 = this;
+
+        this._hoverRemove();
+        if (this.els.showSelected.hasClass(ClassName.ACTIVE)) {
+          this.els.showSelected.removeClass(ClassName.ACTIVE);
+          this._sortReset();
+        } else {
+          this.els.showSelected.addClass(ClassName.ACTIVE);
+          $(this.els.dropdownItemsContainer.find('.active').get().reverse()).each(function (index, element) {
+            $(element).prependTo(_this7.els.dropdownItemsContainer);
+          });
+          this._resetScroll();
+        }
       }
     }, {
       key: '_preventDropdownHide',
