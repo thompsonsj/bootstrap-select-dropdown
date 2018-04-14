@@ -23,6 +23,7 @@ let SelectDropdownIndex = 1
    const EVENT_KEY          = `.${DATA_KEY}`
    const DATA_API_KEY       = '.data-api'
    const JQUERY_NO_CONFLICT = $.fn[NAME]
+   const KEYUP_TIMEOUT      = 300
    const ENTER_KEYCODE      = 13
    const ESCAPE_KEYCODE     = 27
    const ARROW_UP_KEYCODE   = 38
@@ -145,6 +146,7 @@ let SelectDropdownIndex = 1
       this._lastSearch = null
       this._resultsChanged = false
       this._hoverItem = $()
+      this._keyupTimeout = null
 
       this.ids = {}
       this.ids.dropdownContainerId = this._prefix + 'container'
@@ -313,9 +315,14 @@ let SelectDropdownIndex = 1
     _addEventListeners() {
       if (this._config.search) {
         this.els.controlSearch
-          .on(Event.KEYUP, (event) => this._keyup(event))
+        .on( Event.KEYUP, ( event ) => {
+          clearTimeout( this._keyupTimeout )
+          this._keyupTimeout = setTimeout( () => {
+            this._keyup( event )
+          }, KEYUP_TIMEOUT )
+        })
         this.els.controlSearch
-          .on(Event.FOCUS, (event) => {
+          .on( Event.FOCUS, (event) => {
             this._hoverSet()
             if ( this.els.btnSelect.attr('aria-expanded') == 'false' ) {
               this._alignLeft()
