@@ -581,12 +581,6 @@ let SelectDropdownIndex = 1
         title: 'Clear search'
       })
       .html( this._config.htmlOptClear )
-      if ( this._config.tooltips ) {
-        button
-        .data('toggle', 'tooltip')
-        .data('placement', 'top')
-        .tooltip()
-      }
       return button
     }
 
