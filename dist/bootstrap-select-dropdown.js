@@ -299,11 +299,12 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.3';
+  var VERSION = '0.13.4';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
   var JQUERY_NO_CONFLICT = $.fn[NAME];
+  var KEYUP_TIMEOUT = 300;
   var ENTER_KEYCODE = 13;
   var ESCAPE_KEYCODE = 27;
   var ARROW_UP_KEYCODE = 38;
@@ -430,6 +431,7 @@ var SelectDropdown = function ($) {
       this._lastSearch = null;
       this._resultsChanged = false;
       this._hoverItem = $();
+      this._keyupTimeout = null;
 
       this.ids = {};
       this.ids.dropdownContainerId = this._prefix + 'container';
@@ -565,7 +567,7 @@ var SelectDropdown = function ($) {
       value: function deselectAll() {
         var $el = $(this._element);
         $el.find('option').prop('selected', false);
-        this.els.dropdownOptions.removeClass('active');
+        this.els.dropdownOptions.removeClass(ClassName.ACTIVE);
         this._externalFeedback();
         this._refresh();
       }
@@ -580,7 +582,7 @@ var SelectDropdown = function ($) {
       value: function selectAll() {
         var $el = $(this._element);
         $el.find('option').prop('selected', true);
-        this.els.dropdownOptions.addClass('active');
+        this.els.dropdownOptions.removeClass(ClassName.HOVER_BG).addClass(ClassName.ACTIVE);
         this._externalFeedback();
         this._refresh();
       }
@@ -607,7 +609,10 @@ var SelectDropdown = function ($) {
 
         if (this._config.search) {
           this.els.controlSearch.on(Event.KEYUP, function (event) {
-            return _this2._keyup(event);
+            clearTimeout(_this2._keyupTimeout);
+            _this2._keyupTimeout = setTimeout(function () {
+              _this2._keyup(event);
+            }, KEYUP_TIMEOUT);
           });
           this.els.controlSearch.on(Event.FOCUS, function (event) {
             _this2._hoverSet();
