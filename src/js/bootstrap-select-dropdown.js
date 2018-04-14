@@ -239,7 +239,6 @@ let SelectDropdownIndex = 1
         $dropdownItem.addClass('active');
       }
       _._externalFeedback();
-      _._refreshInitialControls();
     }
 
     /**
@@ -279,7 +278,6 @@ let SelectDropdownIndex = 1
       $el.find('option').prop('selected', false)
       this.els.dropdownOptions.removeClass('active')
       this._externalFeedback()
-      this._refreshInitialControls()
       this._refresh()
     }
 
@@ -292,7 +290,6 @@ let SelectDropdownIndex = 1
       $el.find('option').prop('selected', true)
       this.els.dropdownOptions.addClass('active')
       this._externalFeedback()
-      this._refreshInitialControls()
       this._refresh()
     }
 
@@ -487,7 +484,7 @@ let SelectDropdownIndex = 1
         $el.hide();
       }
 
-      this._refreshInitialControls();
+      this._refreshInitialControls( false, true )
 
       // DOM mutation observer
       /*if ( _._config.observeDomMutations ) {
@@ -933,18 +930,7 @@ let SelectDropdownIndex = 1
       if ( selected.length == this.els.dropdownOptions.length ) {
         allSelected = true
       }
-      if ( allSelected ) {
-        this._disable( this.els.optSelectAll )
-      }
-      else {
-        this._enable( this.els.optSelectAll )
-      }
-      if ( noneSelected ) {
-        this._disable( this.els.optDeselectAll )
-      }
-      else {
-        this._enable( this.els.optDeselectAll )
-      }
+      this._refreshInitialControls( allSelected, noneSelected )
       this.els.btnSelect.text( btnText )
     }
 
@@ -953,11 +939,7 @@ let SelectDropdownIndex = 1
         return
       }
       let val = this.els.controlSearch.val()
-      if ( $.trim( val ) == '' ) {
-        this._enable( this.els.optClear )
-      } else {
-        this._disable( this.els.optClear )
-      }
+      this._disableEnable( this.els.optSelectAll, $.trim( val ) == '' )
     }
 
     _setBadges( selected ) {
@@ -1024,26 +1006,47 @@ let SelectDropdownIndex = 1
     }
 
     _hideInitialControls() {
-      var _ = this;
-      _.els.optSelected.hide();
-    }
-
-    _showInitialControls( prepend ) {
-      prepend = (typeof prepend !== typeof undefined ) ?  prepend : false;
-      var _ = this;
-      if ( prepend ) {
-        _.els.optSelected.prependTo( _.els.dropdownMenu );
+      if ( this._config.optSelectAll && !this._config.optSelectButtons ) {
+        this.els.optSelectAll.hide()
       }
-      _.els.optSelected.show();
+      if ( this._config.optDeselectAll && !this._config.optSelectButtons ) {
+        this.els.optDeselectAll.hide()
+      }
+      if ( this._config.optSelected ) {
+        this.els.optSelected.hide()
+      }
     }
 
-    _refreshInitialControls() {
-      var _ = this;
-      var $el = $( _._element );
-      if ( !$el.val() || $el.val().length == 0 ) {
-        _.els.optSelected.addClass('disabled');
-      } else {
-        _.els.optSelected.removeClass('disabled');
+    _showInitialControls() {
+      if ( this._config.optSelectAll && !this._config.optSelectButtons ) {
+        this.els.optSelectAll.show()
+      }
+      if ( this._config.optDeselectAll && !this._config.optSelectButtons ) {
+        this.els.optDeselectAll.show()
+      }
+      if ( this._config.optSelected ) {
+        this.els.optSelected.show()
+      }
+    }
+
+    _refreshInitialControls( allSelected, noneSelected ) {
+      if ( this._config.optSelectAll ) {
+        this._disableEnable( this.els.optSelectAll, allSelected )
+      }
+      if ( this._config.optDeselectAll ) {
+        this._disableEnable( this.els.optDeselectAll, noneSelected )
+      }
+      if ( this._config.optShowSelected ) {
+        this._disableEnable( this.els.optSelected, ( noneSelected || allSelected ) )
+      }
+    }
+
+    _disableEnable( $element, condition ) {
+      if ( condition ) {
+        this._disable( $element )
+      }
+      else {
+        this._enable( $element )
       }
     }
 
@@ -1171,14 +1174,12 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _sortSelected() {
-      var _ = this;
-      var $el = $( _._element );
-      _.els.dropdownOptions.removeClass( ClassName.HOVER );
-      $( _.els.dropdownMenu.find('.active').get().reverse() ).each( function(){
-        $( this ).prependTo( _.els.dropdownItemsContainer );
+      this.els.dropdownOptions.removeClass( ClassName.HOVER );
+      $( this.els.dropdownMenu.find('.active').get().reverse() ).each( ( index, element ) => {
+        $( element ).prependTo( this.els.dropdownItemsContainer );
       });
-      _._showInitialControls( true );
-      _.resetScroll();
+      this._showInitialControls();
+      this._resetScroll();
     }
 
     _preventDropdownHide() {
