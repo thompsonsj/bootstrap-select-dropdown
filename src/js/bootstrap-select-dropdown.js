@@ -276,7 +276,7 @@ let SelectDropdownIndex = 1
     deselectAll() {
       var $el =  $(this._element)
       $el.find('option').prop('selected', false)
-      this.els.dropdownOptions.removeClass('active')
+      this.els.dropdownOptions.removeClass( ClassName.ACTIVE )
       this._externalFeedback()
       this._refresh()
     }
@@ -288,7 +288,7 @@ let SelectDropdownIndex = 1
     selectAll() {
       var $el =  $(this._element)
       $el.find('option').prop('selected', true)
-      this.els.dropdownOptions.addClass('active')
+      this.els.dropdownOptions.removeClass( ClassName.HOVER_BG ).addClass( ClassName.ACTIVE )
       this._externalFeedback()
       this._refresh()
     }
