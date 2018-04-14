@@ -32,16 +32,16 @@ let SelectDropdownIndex = 1
      // Profile
      profile: "default",
      // Behaviour
-     maxListLength: 4,
      hideSelect: true,
      search: true,
      observeDomMutations: false,
      maxHeight: '300px',
      keyboard: true,
-     badges: false,
-     badgesDismissable: true,
+     badges: true, // Multiselect only
+     badgesDismissable: true, // Multiselect only
+     maxListLength: 0, // Multiselect only
      // Text
-     textNoneSelected: "None selected",
+     textNoneSelected: "Select",
      textMultipleSelected: "%count_selected% selected",
      textNoResults: "No results",
      // Options
@@ -57,7 +57,7 @@ let SelectDropdownIndex = 1
      htmlOptClear: "Clear search",
      htmlOptDeselectAll: "Deselect all", // Multiselect only
      htmlOptSelectAll: "Select all", // Multiselect only
-     htmlBadgeRemove: "[deselect]", // Badges only
+     htmlBadgeRemove: "[x]", // Badges only
      // Classes
      classBtnClear : "btn btn-outline-secondary",
      classBtnSelect : "btn btn-primary",
@@ -309,6 +309,7 @@ let SelectDropdownIndex = 1
         config.optDeselectAll = false
         config.optSelectAll = false
         config.optShowSelected = false
+        config.badges = false
       }
       return config
     }
@@ -471,11 +472,6 @@ let SelectDropdownIndex = 1
       // Dropdown.
       this.els.dropdown
         .append( this.els.dropdownMenu )
-      if( this._config.badges ) {
-        this.els.dropdown.after(
-          this.els.badgeContainer
-        )
-      }
 
       // Replace <select>.
       let $el = $( this._element )
@@ -484,6 +480,11 @@ let SelectDropdownIndex = 1
         $el.hide();
       }
 
+      if ( this._config.badges ) {
+        this.els.dropdown.after(
+          this.els.badgeContainer
+        )
+      }
       // DOM mutation observer
       /*if ( _._config.observeDomMutations ) {
         var config = { childList: true, subtree: true };
@@ -849,11 +850,14 @@ let SelectDropdownIndex = 1
      * @return {Object} jQuery object
      */
     _buildBadge( option, text ) {
-      return $('<span>',
+      let badge = $('<span>',
         {
           'class' : this._config.classBadge
         })
-        .text( text + ' ' )
+        .text( text )
+      if ( this._config.badgesDismissable ) {
+        badge
+        .append(' ')
         .append(
           $('<a>', {
               'href' : '#'
@@ -861,6 +865,8 @@ let SelectDropdownIndex = 1
             .html( this._config.htmlBadgeRemove )
             .data( 'option', option )
         )
+      }
+      return badge
     }
 
     /**
@@ -931,7 +937,7 @@ let SelectDropdownIndex = 1
         return
       }
       let val = this.els.controlSearch.val()
-      this._disableEnable( this.els.optSelectAll, $.trim( val ) == '' )
+      this._disableEnable( this.els.optClear, $.trim( val ) == '' )
     }
 
     _setBadges( selected ) {
