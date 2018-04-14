@@ -40,27 +40,31 @@ let SelectDropdownIndex = 1
      keyboard: true,
      badges: false,
      badgesDismissable: true,
-     tooltips: false,
      // Text
      textNoneSelected: "None selected",
      textMultipleSelected: "%count_selected% selected",
      textNoResults: "No results",
+     // Options
+     optClear: true,
+     optDeselectAll: true, // Multiselect only
+     optSelectAll: true, // Multiselect only
+     optShowSelected: true, // Multiselect only
      // Buttons
-     btnClear: true,
-     btnDeselectAll: true, // Multiselect only
-     btnSelectAll: true, // Multiselect only
-     // HTML
-     htmlBtnClear: "Clear search",
-     htmlBtnDeselectAll: "Deselect all", // Multiselect only
-     htmlBtnSelectAll: "Select all", // Multiselect only
-     htmlBtnBadgeRemove: "[deselect]", // Badges only
-     // Classes
-     classBtnClear : "btn btn-outline-secondary",
+     optSelectButtons : false,
      classBtnDeselectAll : "btn btn-outline-secondary", // Multiselect only
      classBtnSelectAll : "btn btn-outline-secondary", // Multiselect only
+     // HTML
+     htmlOptClear: "Clear search",
+     htmlOptDeselectAll: "Deselect all", // Multiselect only
+     htmlOptSelectAll: "Select all", // Multiselect only
+     htmlBadgeRemove: "[deselect]", // Badges only
+     // Classes
+     classBtnClear : "btn btn-outline-secondary",
      classBtnSelect : "btn btn-primary",
      classBadge: "badge badge-dark mr-1",
-     classBadgeContainer : "mt-2 mb-3"
+     classBadgeContainer : "mt-2 mb-3",
+     // Callbacks
+     loaded : function(){}
    }
 
    const DefaultType = {
@@ -72,23 +76,24 @@ let SelectDropdownIndex = 1
      keyboard             : 'boolean',
      badges               : 'boolean',
      badgesDismissable    : 'boolean',
-     tooltips             : 'boolean',
      textNoneSelected     : 'string',
      textMultipleSelected : 'string',
      textNoResults        : 'string',
-     btnClear             : 'boolean',
-     btnDeselectAll       : 'boolean',
-     btnSelectAll         : 'boolean',
-     htmlBtnClear         : 'string',
-     htmlBtnDeselectAll   : 'string',
-     htmlBtnSelectAll     : 'string',
-     htmlBtnBadgeRemove   : 'string',
+     optClear             : 'boolean',
+     optDeselectAll       : 'boolean',
+     optSelectAll         : 'boolean',
+     optSelectButtons     : 'boolean',
      classBtnClear        : 'string',
      classBtnDeselectAll  : 'string',
      classBtnSelectAll    : 'string',
+     htmlOptClear         : 'string',
+     htmlOptDeselectAll   : 'string',
+     htmlOptSelectAll     : 'string',
+     htmlBadgeRemove      : 'string',
      classBtnSelect       : 'string',
      classBadge           : 'string',
-     classBadgeContainer  : 'string'
+     classBadgeContainer  : 'string',
+     loaded               : 'function'
    }
 
    const Event = {
@@ -157,16 +162,16 @@ let SelectDropdownIndex = 1
       if ( this._config.search ) {
         this.els.controlSearch = this._buildControlSearch()
       }
-      if ( this._config.btnClear ) {
-        this.els.btnClear = this._buildBtnClear()
+      if ( this._config.optClear ) {
+        this.els.optClear = this._buildBtnClear()
       }
-      if ( this._config.btnDeselectAll ) {
-        this.els.btnDeselectAll = this._buildBtnDeselectAll()
+      if ( this._config.optDeselectAll ) {
+        this.els.optDeselectAll = this._buildOptDeselectAll()
       }
-      if ( this._config.btnSelectAll ) {
-        this.els.btnSelectAll = this._buildBtnSelectAll()
+      if ( this._config.optSelectAll ) {
+        this.els.optSelectAll = this._buildOptSelectAll()
       }
-      this.els.controlSelected = this._buildShowSelected()
+      this.els.optSelected = this._buildShowSelected()
       this.els.dropdown = this._buildDropdown()
       this.els.dropdownMenu = this._buildDropdownMenu() //This should be dropdown menu so we can build and refer to dropdown, the main container.
       this.els.dropdownItemsContainer = this._buildDropdownItemsContainer()
@@ -301,11 +306,12 @@ let SelectDropdownIndex = 1
       Util.typeCheckConfig(NAME, config, DefaultType)
       // Defaults: Enforce logic.
       if ( !config.search ) {
-        config.btnClear = false
+        config.optClear = false
       }
       if ( !this._multiselect ) {
-        config.btnDeselectAll = false
-        config.btnSelectAll = false
+        config.optDeselectAll = false
+        config.optSelectAll = false
+        config.optShowSelected = false
       }
       return config
     }
@@ -385,8 +391,8 @@ let SelectDropdownIndex = 1
       })
 
       // Deselect all.
-      if ( this._config.btnDeselectAll ) {
-        this.els.btnDeselectAll.on( Event.CLICK, ( event ) => {
+      if ( this._config.optDeselectAll ) {
+        this.els.optDeselectAll.on( Event.CLICK, ( event ) => {
           event.preventDefault()
           this._preventDropdownHide()
           if (!$( event.currentTarget ).hasClass('disabled')) {
@@ -396,8 +402,8 @@ let SelectDropdownIndex = 1
       }
 
       // Select all.
-      if ( this._config.btnSelectAll ) {
-        this.els.btnSelectAll.on( Event.CLICK, ( event ) => {
+      if ( this._config.optSelectAll ) {
+        this.els.optSelectAll.on( Event.CLICK, ( event ) => {
           event.preventDefault()
           this._preventDropdownHide()
           if (!$( event.currentTarget ).hasClass('disabled')) {
@@ -407,8 +413,8 @@ let SelectDropdownIndex = 1
       }
 
       // Clear search.
-      if ( this._config.btnClear ) {
-        this.els.btnClear.on( Event.CLICK, () => {
+      if ( this._config.optClear ) {
+        this.els.optClear.on( Event.CLICK, () => {
           this.els.controlSearch.val('')
           this._preventDropdownHide()
           this._refresh()
@@ -416,7 +422,7 @@ let SelectDropdownIndex = 1
       }
 
       // Show selected.
-      this.els.controlSelected.on( Event.CLICK, (event) => {
+      this.els.optSelected.on( Event.CLICK, (event) => {
         event.preventDefault();
         this._preventDropdownHide()
         if ( !$( event.currentTarget ).hasClass('disabled') ) {
@@ -442,35 +448,49 @@ let SelectDropdownIndex = 1
     }
 
     init() {
-      var _ = this; // Deep reference to this.
-      var $el = $( _._element );
-
       // Build.
-      _._externalFeedback();
+      this._externalFeedback()
+
+      // Dropdown menu.
+      if ( this._config.optSelectAll && !this._config.optSelectButtons ) {
+        this.els.dropdownMenu
+        .append( this.els.optSelectAll )
+      }
+      if ( this._config.optDeselectAll && !this._config.optSelectButtons ) {
+        this.els.dropdownMenu
+        .append( this.els.optDeselectAll )
+      }
+      if ( this._config.optShowSelected ) {
+        this.els.dropdownMenu
+        .append( this.els.optSelected )
+      }
+
+      // Dropdown items.
+      this.els.dropdownItemsContainer
+        .append( this.els.dropdownItems )
+      this.els.dropdownMenu
+        .append( this.els.dropdownItemsContainer )
+
+      // Dropdown.
       this.els.dropdown
-        .append( _.els.dropdownMenu );
-      _.els.dropdownItemsContainer
-        .append( _.els.dropdownItems );
-      if ( _._multiselect ) {
-        _.els.dropdownMenu
-          .append( _.els.controlSelected );
-      }
-      _.els.dropdownMenu
-        .append( _.els.dropdownItemsContainer );
-      $el.after( this.els.dropdown );
-      if ( _._config.hideSelect ) {
-        $el.hide();
-      }
+        .append( this.els.dropdownMenu )
       if( this._config.badges ) {
         this.els.dropdown.after(
           this.els.badgeContainer
         )
       }
 
-      _._refreshInitialControls();
+      // Replace <select>.
+      let $el = $( this._element )
+      $el.after( this.els.dropdown );
+      if ( this._config.hideSelect ) {
+        $el.hide();
+      }
+
+      this._refreshInitialControls();
 
       // DOM mutation observer
-      if ( _._config.observeDomMutations ) {
+      /*if ( _._config.observeDomMutations ) {
         var config = { childList: true, subtree: true };
         var callback = function( mutationsList ) {
           for( var mutation of mutationsList ) {
@@ -481,7 +501,7 @@ let SelectDropdownIndex = 1
         };
         var observer = new MutationObserver( callback );
         observer.observe( $el[0], config );
-      }
+      }*/
     }
 
     /**
@@ -508,7 +528,7 @@ let SelectDropdownIndex = 1
     _search(s) {
       var results = null;
       if ( $.trim( s ) == '' ) {
-        //this._els.btnClear
+        //this._els.optClear
         this._refresh();
         if ( this._lastSearch !== null ) {
           this._resultsChanged = true;
@@ -565,7 +585,7 @@ let SelectDropdownIndex = 1
         class: this._config.classBtnClear,
         title: 'Clear search'
       })
-      .html( this._config.htmlBtnClear )
+      .html( this._config.htmlOptClear )
       if ( this._config.tooltips ) {
         button
         .data('toggle', 'tooltip')
@@ -576,50 +596,53 @@ let SelectDropdownIndex = 1
     }
 
     /**
-     * Build HTML: Deselect all button
+     * Build HTML: Deselect all element
      * @return {object} jQuery
      */
-    _buildBtnDeselectAll() {
-      let button = $('<button>', {
-        type: 'button',
-        class: this._config.classBtnDeselectAll,
-        title: 'Deselect all'
-      })
-      .html( this._config.htmlBtnDeselectAll )
-      if ( this._config.tooltips ) {
-        button
-        .data('toggle', 'tooltip')
-        .data('placement', 'top')
-        .tooltip()
+    _buildOptDeselectAll() {
+      let element
+      if ( !this._config.optSelectButtons ) {
+        element = $('<a>', {
+          href: '#',
+          class:  ClassName.ITEM
+        })
       }
-      return button
+      else {
+        element = $('<button>', {
+          type: 'button'
+        })
+      }
+      return element
+      .html( this._config.htmlOptDeselectAll )
+      .attr('title', 'Deselect all')
     }
 
     /**
-     * Build HTML: Select all button
+     * Build HTML: Select all element
      * @return {object} jQuery
      */
-    _buildBtnSelectAll() {
-      let button = $('<button>', {
-        type: 'button',
-        class: this._config.classBtnSelectAll,
-        title: 'Select all'
-      })
-      .html( this._config.htmlBtnSelectAll )
-      if ( this._config.tooltips ) {
-        button
-        .data('toggle', 'tooltip')
-        .data('placement', 'top')
-        .tooltip()
+    _buildOptSelectAll() {
+      let element
+      if ( !this._config.optSelectButtons ) {
+        element = $('<a>', {
+          href: '#',
+          class:  ClassName.ITEM
+        })
       }
-      return button
+      else {
+        element = $('<button>', {
+          type: 'button'
+        })
+      }
+      return element
+      .html( this._config.htmlOptSelectAll )
+      .attr('title', 'Select all')
     }
 
     _buildShowSelected() {
       var _ = this;
       var $showSelectedItem = $('<a>', {
         href: '#',
-        id: _.ids.dropdownItemShowSelected,
         class:  ClassName.ITEM,
         text: 'Show selected'
       });
@@ -650,34 +673,38 @@ let SelectDropdownIndex = 1
 
         $inputGroup.append( this.els.controlSearch )
 
-        if ( this._config.btnClear ) {
-          $inputGroup
-            .append(
-              $('<div>', {
-                class: ClassName.INPUT_GROUP_APPEND
-              })
-            .append( this.els.btnClear )
-          )
-        }
+        if ( this._config.optSelectButtons ) {
 
-        if ( this._config.btnDeselectAll ) {
-          $inputGroup
-            .append(
-              $('<div>', {
-                class: ClassName.INPUT_GROUP_APPEND
-              })
-            .append( this.els.btnDeselectAll )
-          )
-        }
+          if ( this._config.optClear ) {
+            $inputGroup
+              .append(
+                $('<div>', {
+                  class: ClassName.INPUT_GROUP_APPEND
+                })
+              .append( this.els.optClear )
+            )
+          }
 
-        if ( this._config.btnSelectAll ) {
-          $inputGroup
-            .append(
-              $('<div>', {
-                class: ClassName.INPUT_GROUP_APPEND
-              })
-            .append( this.els.btnSelectAll )
-          )
+          if ( this._config.optDeselectAll ) {
+            $inputGroup
+              .append(
+                $('<div>', {
+                  class: ClassName.INPUT_GROUP_APPEND
+                })
+              .append( this.els.optDeselectAll )
+            )
+          }
+
+          if ( this._config.optSelectAll ) {
+            $inputGroup
+              .append(
+                $('<div>', {
+                  class: ClassName.INPUT_GROUP_APPEND
+                })
+              .append( this.els.optSelectAll )
+            )
+          }
+
         }
 
         $inputGroup
@@ -696,12 +723,12 @@ let SelectDropdownIndex = 1
           class: ClassName.BTN_GROUP
         })
 
-        if ( this._config.btnDeselectAll ) {
-          $btnGroup.append( this.els.btnDeselectAll )
+        if ( this._config.optDeselectAll ) {
+          $btnGroup.append( this.els.optDeselectAll )
         }
 
-        if ( this._config.btnSelectAll ) {
-          $btnGroup.append( this.els.btnSelectAll )
+        if ( this._config.optSelectAll ) {
+          $btnGroup.append( this.els.optSelectAll )
         }
 
         $btnGroup
@@ -842,7 +869,7 @@ let SelectDropdownIndex = 1
           $('<a>', {
               'href' : '#'
             })
-            .html( this._config.htmlBtnBadgeRemove )
+            .html( this._config.htmlBadgeRemove )
             .data( 'option', option )
         )
     }
@@ -907,33 +934,33 @@ let SelectDropdownIndex = 1
         allSelected = true
       }
       if ( allSelected ) {
-        this.els.btnSelectAll
+        this.els.optSelectAll
         .prop('disabled', true)
         .tooltip('hide')
       }
       else {
-        this.els.btnSelectAll.prop('disabled', false)
+        this.els.optSelectAll.prop('disabled', false)
       }
       if ( noneSelected ) {
-        this.els.btnDeselectAll
+        this.els.optDeselectAll
         .prop('disabled', true)
         .tooltip('hide')
       }
       else {
-        this.els.btnDeselectAll.prop('disabled', false)
+        this.els.optDeselectAll.prop('disabled', false)
       }
       this.els.btnSelect.text( btnText )
     }
 
     _propBtnClear() {
-      if ( !this._config.btnClear ) {
+      if ( !this._config.optClear ) {
         return
       }
       let val = this.els.controlSearch.val()
       if ( $.trim( val ) == '' ) {
-        this.els.btnClear.prop('disabled', true)
+        this.els.optClear.prop('disabled', true)
       } else {
-        this.els.btnClear.prop('disabled', false)
+        this.els.optClear.prop('disabled', false)
       }
     }
 
@@ -1002,25 +1029,25 @@ let SelectDropdownIndex = 1
 
     _hideInitialControls() {
       var _ = this;
-      _.els.controlSelected.hide();
+      _.els.optSelected.hide();
     }
 
     _showInitialControls( prepend ) {
       prepend = (typeof prepend !== typeof undefined ) ?  prepend : false;
       var _ = this;
       if ( prepend ) {
-        _.els.controlSelected.prependTo( _.els.dropdownMenu );
+        _.els.optSelected.prependTo( _.els.dropdownMenu );
       }
-      _.els.controlSelected.show();
+      _.els.optSelected.show();
     }
 
     _refreshInitialControls() {
       var _ = this;
       var $el = $( _._element );
       if ( !$el.val() || $el.val().length == 0 ) {
-        _.els.controlSelected.addClass('disabled');
+        _.els.optSelected.addClass('disabled');
       } else {
-        _.els.controlSelected.removeClass('disabled');
+        _.els.optSelected.removeClass('disabled');
       }
     }
 
