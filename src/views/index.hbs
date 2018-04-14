@@ -46,11 +46,11 @@
 }}}</code></pre>
 
     <div class="page-header">
-      <h2>Example: Icons, Badges and Tooltips</h2>
+      <h2>Example: Icons, input group buttons and values in the button text</h2>
     </div>
 
     <p>
-      A range of options enable {{name}} to be configured to suit a wider range of use cases.
+      An example to demonstrate available options. For a full list of options, consult the <a href="options.html">options documentation</a>.
     </p>
 
     <div class="form-group">
@@ -73,13 +73,12 @@
 <script>
   $(document).ready(function(){
     $("#demo_multiselect").selectDropdown({
-      \'maxListLength\': 0,
-      \'badges\': true,
-      \'tooltips\' : true,
-      \'htmlBtnClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
-      \'htmlBtnDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>\',
-      \'htmlBtnSelectAll\': \'<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>\',
-      \'htmlBtnBadgeRemove\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\'
+      \'maxListLength\': 4,
+      \'badges\': false,
+      \'selectButtons\' : true,
+      \'htmlClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
+      \'htmlDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>\',
+      \'htmlSelectAll\': \'<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>\'
     });
   });
 </script>'
@@ -91,22 +90,18 @@
 
   <ul>
     <li>
-      <strong>maxListLength</strong> is set to <code>0</code> to ensure the button is populated with the <code>%count_selected% selected</code> for any number of selections.
+      <strong>maxListLength</strong> is set to <code>4</code>, adding up to 4 comma separated selected options to the button text. For 5 or more selections, the button text reverts to <code>%count_selected% selected</code>.
     </li>
     <li>
-      <strong>badges</strong> offer enhanced visual feedback for longer, more complex lists or lists where a large selection is expected.
+      <strong>badges</strong> are disabled for a more compact mutliselect.
     </li>
     <li>
-      Icons are used in this example. Bootstrap does not ship with an icon framework by default, so some integration may be required. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
+      <strong>selectButtons</strong> is set to <code>true</code>, which transforms the 'Deselect all' and 'Select all' dropdown options into input group buttons.
     </li>
     <li>
-      <strong>tooltips</strong> clarify the functionality of each button, tooltips are added to the 'Clear search', 'Deselect all' and 'Select all' buttons. This enhances the default <code>title</code> attribute.
+      <code>htmlClear</code>, <code>htmlDeselectAll</code> and <code>htmlSelectAll</code> contain SVG icons. Bootstrap does not ship with an icon framework by default, so some integration may be required. In this example, SCSS/CSS has been applied to make SVG icons work (height, width, fill) within buttons and badges.
     </li>
   </ul>
-
-  <p class="highlight">
-    For a full list of options, consult the <a href="options.html">options documentation</a>.
-  </p>
 
   </div><!-- /.col-md-9 -->
 </div><!-- /.row -->

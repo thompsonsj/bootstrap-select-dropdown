@@ -25,22 +25,26 @@
 '$(document).ready(function(){
   $("#multiselect").selectDropdown({
     // Behaviour
-    maxListLength: 4,
     hideSelect: true,
     search: true,
     maxHeight: "300px",
     keyboard: true,
-    badges: false,
+    badges: true,
     badgesDismissable: true,
-    tooltips: false,
+    maxListLength: 0,
     // Text
-    textNoneSelected: "None selected",
+    textNoneSelected: "Select",
     textMultipleSelected: "%count_selected% selected",
     textNoResults: "No results",
+    // Controls
+    clear: false,
+    deselectAll: true,
+    selectAll: true,
+    showSelected: true,
     // Buttons
-    btnClear: true,
-    btnDeselectAll: true,
-    btnSelectAll: true,
+    selectButtons: false,
+    classBtnDeselectAll : "btn btn-outline-secondary",
+    classBtnSelectAll : "btn btn-outline-secondary",
     // HTML
     htmlBtnClear: "Clear search",
     htmlBtnDeselectAll: "Deselect all",
@@ -49,8 +53,6 @@
     // Classes
     classBtnSelect : "btn btn-primary",
     classBtnClear : "btn btn-outline-secondary",
-    classBtnDeselectAll : "btn btn-outline-secondary",
-    classBtnSelectAll : "btn btn-outline-secondary",
     classBadge: "badge badge-dark mr-1",
     classBadgeContainer : "mt-2 mb-3"
   })
@@ -60,21 +62,6 @@
     <div class="page-header">
       <h3>Behaviour</h3>
     </div>
-
-    <h4>maxListLength</h4>
-
-    <dl class="row">
-      <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>4</code></dd>
-    </dl>
-
-    <p>
-      Limit the number of options to list as comma separated values within the dropdown button elements. If the number of selected options exceeds this limit, the value of <code>textMultipleSelected</code> will be displayed.
-    </p>
-
-    <p>
-      Set as 0 to disable.
-    </p>
 
     <h4>hideSelect</h4>
 
@@ -93,7 +80,7 @@
     </dl>
 
     <p>
-      Convert the dropdown button to an <code>input-group</code>, with a search form control and a <strong>clear search</strong> button.
+      Convert the dropdown button to an <code>input-group</code> with a search form control.
     </p>
 
     <h4>maxHeight</h4>
@@ -104,7 +91,7 @@
     </dl>
 
     <p>
-      Set a max height on the dropdown, enabling it to be scrollable. This can be disabled by setting the option to <code>false</code>.
+      Set a max height on the dropdown, making it scrollable. This can be disabled by setting to <code>false</code>.
     </p>
 
     <h4>keyboard</h4>
@@ -122,7 +109,7 @@
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>false</code></dd>
+      <dd class="col-sm-10"><code>true</code></dd>
 
       <dt class="col-sm-2">Conditions</dt>
       <dd class="col-sm-10">
@@ -151,20 +138,19 @@
       Badges can be dismissed to deselect options.
     </p>
 
-    <h4>tooltips</h4>
+    <h4>maxListLength</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>false</code></dd>
-
-      <dt class="col-sm-2">Conditions</dt>
-      <dd class="col-sm-10">
-        A button is displayed in the input group.
-      </dd>
+      <dd class="col-sm-10"><code>0</code></dd>
     </dl>
 
     <p>
-      Display tooltips on hover over input group buttons. Useful when using icons as the button text.
+      Set button text to a list of comma separated selected values. If the number of selected options exceeds this limit, the value of <code>textMultipleSelected</code> will be displayed.
+    </p>
+
+    <p>
+      The default of <code>0</code> disables this feature.
     </p>
 
     <div class="page-header">
@@ -224,14 +210,14 @@
     </p>
 
     <div class="page-header">
-      <h3>Buttons</h3>
+      <h3>Controls</h3>
     </div>
 
-    <h4>btnClear</h4>
+    <h4>clear</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>true</code></dd>
+      <dd class="col-sm-10"><code>false</code></dd>
 
       <dt class="col-sm-2">Conditions</dt>
       <dd class="col-sm-10">
@@ -243,7 +229,7 @@
       Include a clear search button in the input group.
     </p>
 
-    <h4>btnDeselectAll</h4>
+    <h4>deselectAll</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
@@ -256,10 +242,14 @@
     </dl>
 
     <p>
-      Include a deselect all button in the input group.
+      Include a deselect all option in the dropdown menu.
     </p>
 
-    <h4>btnSelectAll</h4>
+    <p>
+      Alternatively, if <code>selectButtons</code> is <code>true</code>, a deselect all button will be included in the input group.
+    </p>
+
+    <h4>selectAll</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
@@ -272,7 +262,65 @@
     </dl>
 
     <p>
-      Include a select all button in the input group.
+      Include a select all option in the dropdown menu.
+    </p>
+
+    <p>
+      Alternatively, if <code>selectButtons</code> is <code>true</code>, a select all button will be included in the input group.
+    </p>
+
+    <div class="page-header">
+      <h3>Buttons</h3>
+    </div>
+
+    <h4>selectButtons</h4>
+
+    <dl class="row">
+      <dt class="col-sm-2">Default</dt>
+      <dd class="col-sm-10"><code>false</code></dd>
+
+      <dt class="col-sm-2">Conditions</dt>
+      <dd class="col-sm-10">
+        {{conditions.multiselect}}
+      </dd>
+    </dl>
+
+    <p>
+      Include 'deselect all' and 'select all' controls as buttons within the input group rather than as dropdown menu items.
+    </p>
+
+    <h4>classBtnDeselectAll</h4>
+
+    <dl class="row">
+      <dt class="col-sm-2">Default</dt>
+      <dd class="col-sm-10"><code>"btn btn-outline-secondary"</code></dd>
+
+      <dt class="col-sm-2">Conditions</dt>
+      <dd class="col-sm-10">
+        {{conditions.multiselect}}<br />
+        {{{conditions.selectButtons}}}
+      </dd>
+    </dl>
+
+    <p>
+      The class applied to the deselect all button.
+    </p>
+
+    <h4>classBtnSelectAll</h4>
+
+    <dl class="row">
+      <dt class="col-sm-2">Default</dt>
+      <dd class="col-sm-10"><code>"btn btn-outline-secondary"</code></dd>
+
+      <dt class="col-sm-2">Conditions</dt>
+      <dd class="col-sm-10">
+        {{conditions.multiselect}}<br />
+        {{{conditions.selectButtons}}}
+      </dd>
+    </dl>
+
+    <p>
+      The class applied to the select all button.
     </p>
 
     <div class="page-header">
@@ -322,17 +370,18 @@
 <script>
   $(document).ready(function(){
     $("select#demo_options_html").selectDropdown({
-      \'badges\': true,
-      \'htmlBtnClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
-      \'htmlBtnDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>\',
-      \'htmlBtnSelectAll\': \'<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>\',
-      \'htmlBtnBadgeRemove\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\'
+      \'selectButtons\': true,
+      \'clear\': true,
+      \'htmlClear\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\',
+      \'htmlDeselectAll\': \'<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>\',
+      \'htmlSelectAll\': \'<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>\',
+      \'htmlBadgeRemove\': \'<svg class="ion"><use xlink:href="#ion-close"></use></svg>\'
     });
   });
 </script>'
 }}}</code></pre>
 
-    <h4>htmlBtnClear</h4>
+    <h4>htmlClear</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
@@ -346,7 +395,7 @@
       </dd>
     </dl>
 
-    <h4>htmlBtnDeselectAll</h4>
+    <h4>htmlDeselectAll</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
@@ -360,7 +409,7 @@
       </dd>
     </dl>
 
-    <h4>htmlBtnSelectAll</h4>
+    <h4>htmlSelectAll</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
@@ -374,11 +423,11 @@
       </dd>
     </dl>
 
-    <h4>htmlBtnBadgeRemove</h4>
+    <h4>htmlBadgeRemove</h4>
 
     <dl class="row">
       <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>"[deselect]"</code></dd>
+      <dd class="col-sm-10"><code>"[x]"</code></dd>
 
       <dt class="col-sm-2">Conditions</dt>
       <dd class="col-sm-10">
@@ -391,6 +440,23 @@
       <h3>Classes</h3>
     </div>
 
+    <h4>classBtnClear</h4>
+
+    <dl class="row">
+      <dt class="col-sm-2">Default</dt>
+      <dd class="col-sm-10"><code>"btn btn-outline-secondary"</code></dd>
+
+      <dt class="col-sm-2">Conditions</dt>
+      <dd class="col-sm-10">
+        {{{conditions.search}}}<br />
+        {{{conditions.clear}}}
+      </dd>
+    </dl>
+
+    <p>
+      The class applied to the clear button.
+    </p>
+
     <h4>classBtnSelect</h4>
 
     <dl class="row">
@@ -400,54 +466,6 @@
 
     <p>
       The class applied to the dropdown button.
-    </p>
-
-    <h4>classBtnClear</h4>
-
-    <dl class="row">
-      <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>"btn btn-outline-secondary"</code></dd>
-
-      <dt class="col-sm-2">Conditions</dt>
-      <dd class="col-sm-10">
-        {{{conditions.search}}}
-      </dd>
-    </dl>
-
-    <p>
-      The class applied to the clear button.
-    </p>
-
-    <h4>classBtnDeselectAll</h4>
-
-    <dl class="row">
-      <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>"btn btn-outline-secondary"</code></dd>
-
-      <dt class="col-sm-2">Conditions</dt>
-      <dd class="col-sm-10">
-        {{conditions.multiselect}}
-      </dd>
-    </dl>
-
-    <p>
-      The class applied to the deselect all button.
-    </p>
-
-    <h4>classBtnSelectAll</h4>
-
-    <dl class="row">
-      <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>"btn btn-outline-secondary"</code></dd>
-
-      <dt class="col-sm-2">Conditions</dt>
-      <dd class="col-sm-10">
-        {{conditions.multiselect}}
-      </dd>
-    </dl>
-
-    <p>
-      The class applied to the select all button.
     </p>
 
     <h4>classBadge</h4>
