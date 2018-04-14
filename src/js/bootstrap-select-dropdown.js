@@ -236,7 +236,7 @@ let SelectDropdownIndex = 1
       var $option = $el.find('option').eq( itemIndex );
       if ( $option.is(':selected') ) {
         $option.prop('selected', false);
-        $dropdownItem.removeClass( ClassNAme.ACTIVE );
+        $dropdownItem.removeClass( ClassName.ACTIVE );
       }
       else {
         if ( !_._multiselect ) {
