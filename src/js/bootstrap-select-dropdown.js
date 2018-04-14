@@ -484,8 +484,6 @@ let SelectDropdownIndex = 1
         $el.hide();
       }
 
-      this._refreshInitialControls( false, true )
-
       // DOM mutation observer
       /*if ( _._config.observeDomMutations ) {
         var config = { childList: true, subtree: true };
