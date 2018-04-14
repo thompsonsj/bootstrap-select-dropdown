@@ -999,6 +999,9 @@ let SelectDropdownIndex = 1
       $.each( notResults, ( index, value ) => {
         this._dropdownItemByIndex( value ).hide();
       });
+      $.each( results, ( index, value ) => {
+        this._dropdownItemByIndex( value ).show();
+      });
       this.els.btnSelect.dropdown('update')
     }
 
