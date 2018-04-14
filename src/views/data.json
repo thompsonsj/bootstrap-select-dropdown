@@ -3,7 +3,6 @@
   "npmUrl": "https://www.npmjs.com/package/bootstrap-select-dropdown",
   "conditions": {
     "badges": "<code>badges</code> is <code>true</code>.",
-    "clear": "<code>clear</code> is <code>true</code>.",
     "selectButtons": "<code>selectButtons</code> is <code>true</code>.",
     "deselect": "<code>deselectAll</code> is <code>true</code>.",
     "select": "<code>selectAll</code> is <code>true</code>.",

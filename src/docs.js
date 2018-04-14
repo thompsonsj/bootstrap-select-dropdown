@@ -11,15 +11,11 @@ $(document).ready(function(){
     'maxListLength': 4,
     'badges': false,
     'selectButtons': true,
-    'clear': true,
-    'htmlClear': '<svg class="ion"><use xlink:href="#ion-close"></use></svg>',
     'htmlDeselectAll': '<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>',
     'htmlSelectAll': '<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>'
   });
   $("select#demo_options_html").selectDropdown({
     'selectButtons': true,
-    'clear': true,
-    'htmlClear': '<svg class="ion"><use xlink:href="#ion-close"></use></svg>',
     'htmlDeselectAll': '<svg class="ion"><use xlink:href="#ion-close-circled"></use></svg>',
     'htmlSelectAll': '<svg class="ion"><use xlink:href="#ion-checkmark-circled"></use></svg>',
     'htmlBadgeRemove': '<svg class="ion"><use xlink:href="#ion-close"></use></svg>'
