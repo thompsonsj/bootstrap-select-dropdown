@@ -299,7 +299,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.0';
+  var VERSION = '0.13.1';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -517,7 +517,7 @@ var SelectDropdown = function ($) {
         var $option = $el.find('option').eq(itemIndex);
         if ($option.is(':selected')) {
           $option.prop('selected', false);
-          $dropdownItem.removeClass(ClassNAme.ACTIVE);
+          $dropdownItem.removeClass(ClassName.ACTIVE);
         } else {
           if (!_._multiselect) {
             _.els.dropdownOptions.removeClass(ClassName.ACTIVE);
