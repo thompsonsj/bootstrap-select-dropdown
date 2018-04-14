@@ -343,6 +343,7 @@ var SelectDropdown = function ($) {
     classBtnClear: "btn btn-outline-secondary",
     classBtnSelect: "btn btn-primary",
     classBadge: "badge badge-dark mr-1",
+    classBadgeLink: "text-white",
     classBadgeContainer: "mt-2 mb-3",
     // Callbacks
     loaded: function loaded() {}
@@ -373,6 +374,7 @@ var SelectDropdown = function ($) {
     htmlBadgeRemove: 'string',
     classBtnSelect: 'string',
     classBadge: 'string',
+    classBadgeLink: 'string',
     classBadgeContainer: 'string',
     loaded: 'function'
   };
@@ -389,6 +391,8 @@ var SelectDropdown = function ($) {
 
   var ClassName = {
     ACTIVE: 'active',
+    BG_TRANSPARENT: 'bg-transparent',
+    DISABLED: 'disabled',
     DROPDOWN: 'dropdown',
     MENU: 'dropdown-menu',
     ITEM: 'dropdown-item',
@@ -396,6 +400,8 @@ var SelectDropdown = function ($) {
     INPUT_GROUP: 'input-group',
     INPUT_GROUP_APPEND: 'input-group-append',
     HOVER: 'hover',
+    HOVER_BG: 'bg-light',
+    TEXT_MUTED: 'text-muted',
     ALIGNMENT_RIGHT: 'dropdown-menu-right'
   };
 
@@ -511,13 +517,13 @@ var SelectDropdown = function ($) {
         var $option = $el.find('option').eq(itemIndex);
         if ($option.is(':selected')) {
           $option.prop('selected', false);
-          $dropdownItem.removeClass('active');
+          $dropdownItem.removeClass(ClassNAme.ACTIVE);
         } else {
           if (!_._multiselect) {
-            _.els.dropdownOptions.removeClass('active');
+            _.els.dropdownOptions.removeClass(ClassName.ACTIVE);
           }
           $option.prop('selected', true);
-          $dropdownItem.addClass('active');
+          $dropdownItem.removeClass(ClassName.HOVER_BG).addClass(ClassName.ACTIVE);
         }
         _._externalFeedback();
       }
@@ -625,7 +631,7 @@ var SelectDropdown = function ($) {
             }
           });
           this.els.controlSearch.on(Event.BLUR, function (event) {
-            _this2._hoverRemove();
+            _this2._hoverRemoveAll();
             _this2._alignRight();
           });
         }
@@ -1041,7 +1047,7 @@ var SelectDropdown = function ($) {
       value: function _buildDropdownItemNoResults() {
         var _ = this;
         return $('<span>', {
-          class: ClassName.ITEM + ' ' + 'text-muted no-results',
+          class: ClassName.ITEM + ' ' + ClassName.TEXT_MUTED + ' ' + ClassName.BG_TRANSPARENT,
           text: _._config.textNoResults
         }).hide();
       }
@@ -1131,7 +1137,8 @@ var SelectDropdown = function ($) {
         }).text(text);
         if (this._config.badgesDismissable) {
           badge.append(' ').append($('<a>', {
-            'href': '#'
+            'href': '#',
+            'class': this._config.classBadgeLink
           }).html(this._config.htmlBadgeRemove).data('option', option));
         }
         return badge;
@@ -1253,7 +1260,7 @@ var SelectDropdown = function ($) {
     }, {
       key: '_refresh',
       value: function _refresh() {
-        this._hoverRemove();
+        this._hoverRemoveAll();
         this.els.dropdownItemNoResults.hide();
         this._sortReset();
         this._showInitialControls();
@@ -1337,7 +1344,10 @@ var SelectDropdown = function ($) {
         if ($element.is('button')) {
           $element.prop('disabled', false);
         }
-        $element.removeClass('disabled');
+        $element.removeClass(ClassName.DISABLED);
+        if ($element.is('a')) {
+          $element.removeClass(ClassName.TEXT_MUTED);
+        }
       }
     }, {
       key: '_disable',
@@ -1345,7 +1355,10 @@ var SelectDropdown = function ($) {
         if ($element.is('button')) {
           $element.prop('disabled', true);
         }
-        $element.addClass('disabled');
+        $element.addClass(ClassName.DISABLED);
+        if ($element.is('a')) {
+          $element.addClass(ClassName.TEXT_MUTED);
+        }
       }
 
       /**
@@ -1360,14 +1373,14 @@ var SelectDropdown = function ($) {
       key: '_hoverSet',
       value: function _hoverSet(index) {
         var _ = this;
-        _.els.dropdownOptions.removeClass(ClassName.HOVER);
+        this._hoverRemoveAll();
         if ((typeof index === 'undefined' ? 'undefined' : _typeof(index)) === ( true ? 'undefined' : undefined)) {
           var $item = _.els.dropdownOptions.first();
         } else {
           var $item = _._dropdownItemByIndex(index);
         }
         _._hoverItem = $item;
-        $item.addClass(ClassName.HOVER);
+        this._hoverAdd($item);
       }
 
       /**
@@ -1385,8 +1398,8 @@ var SelectDropdown = function ($) {
           var prev = current.prevAll('a:visible').first();
         }
         if ((typeof prev === 'undefined' ? 'undefined' : _typeof(prev)) !== ( true ? 'undefined' : undefined) && prev.length) {
-          current.removeClass(ClassName.HOVER);
-          prev.addClass(ClassName.HOVER);
+          this._hoverRemove(current);
+          this._hoverAdd(prev);
           _._hoverItem = prev;
         }
       }
@@ -1406,10 +1419,24 @@ var SelectDropdown = function ($) {
           var next = current.nextAll('a:visible').first();
         }
         if ((typeof next === 'undefined' ? 'undefined' : _typeof(next)) !== ( true ? 'undefined' : undefined) && next.length) {
-          current.removeClass(ClassName.HOVER);
-          next.addClass(ClassName.HOVER);
+          this._hoverRemove(current);
+          this._hoverAdd(next);
           _._hoverItem = next;
         }
+      }
+    }, {
+      key: '_hoverAdd',
+      value: function _hoverAdd($element) {
+        var className = ClassName.HOVER;
+        if (!$element.hasClass(ClassName.ACTIVE)) {
+          className = className + ' ' + ClassName.HOVER_BG;
+        }
+        $element.addClass(className);
+      }
+    }, {
+      key: '_hoverRemove',
+      value: function _hoverRemove($element) {
+        $element.removeClass(ClassName.HOVER + ' ' + ClassName.HOVER_BG);
       }
 
       /**
@@ -1418,8 +1445,8 @@ var SelectDropdown = function ($) {
        */
 
     }, {
-      key: '_hoverRemove',
-      value: function _hoverRemove() {
+      key: '_hoverRemoveAll',
+      value: function _hoverRemoveAll() {
         this.els.dropdownOptions.removeClass(ClassName.HOVER);
       }
 
@@ -1474,7 +1501,7 @@ var SelectDropdown = function ($) {
       value: function _toggleShowSelected() {
         var _this7 = this;
 
-        this._hoverRemove();
+        this._hoverRemoveAll();
         if (this.els.showSelected.hasClass(ClassName.ACTIVE)) {
           this.els.showSelected.removeClass(ClassName.ACTIVE);
           this._sortReset();

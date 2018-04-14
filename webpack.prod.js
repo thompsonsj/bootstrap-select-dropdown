@@ -1,12 +1,7 @@
 const path = require('path');
 const WebpackAutoInject = require('webpack-auto-inject-version');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Entities = require('html-entities').AllHtmlEntities;
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const extractCss = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
-const extractCssMin = new ExtractTextPlugin('./bootstrap-select-dropdown.css');
 const HandlebarsPlugin = require("handlebars-webpack-plugin");
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UnminifiedWebpackPlugin = require('unminified-webpack-plugin');
 
 const entities = new Entities();
@@ -34,14 +29,6 @@ module.exports = {
             presets: ['env']
           }
         }
-      },
-      {
-        test: /\.scss$/,
-        exclude: [path.resolve('node_modules')],
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: ["css-loader", "postcss-loader", "sass-loader"]
-        })
       }
     ]
   },
@@ -51,16 +38,6 @@ module.exports = {
             AutoIncreaseVersion: false,
             InjectAsComment: false
         }
-    }),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve('src/scss/_common.scss'),
-        to: path.resolve('dist/_bootstrap-select-dropdown.scss')
-      }
-    ]),
-    new ExtractTextPlugin('[name].min.css'),
-    new OptimizeCssAssetsPlugin({
-      assetNameRegExp: /\.min\.css$/g
     }),
     new HandlebarsPlugin({
       entry: path.join(process.cwd(), "src", "views", "*.hbs"),

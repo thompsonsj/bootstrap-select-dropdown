@@ -2693,7 +2693,7 @@ tbody.collapse.show {
     color: #16181b;
     text-decoration: none;
     background-color: #f8f9fa; }
-  .dropdown-item.active, .dropdown-item.hover.active, .dropdown-item:active {
+  .dropdown-item.active, .dropdown-item:active {
     color: #fff;
     text-decoration: none;
     background-color: #007bff; }
@@ -3200,7 +3200,7 @@ tbody.collapse.show {
 .tab-content > .tab-pane {
   display: none; }
 
-.tab-content > .active, .tab-content > .dropdown-item.hover.active {
+.tab-content > .active {
   display: block; }
 
 .navbar {
@@ -3804,7 +3804,7 @@ tbody.collapse.show {
 .breadcrumb-item + .breadcrumb-item:hover::before {
   text-decoration: none; }
 
-.breadcrumb-item.active, .breadcrumb-item.dropdown-item.hover.active {
+.breadcrumb-item.active {
   color: #6c757d; }
 
 .pagination {
@@ -4182,7 +4182,7 @@ tbody.collapse.show {
   .list-group-item.disabled, .list-group-item:disabled {
     color: #6c757d;
     background-color: #fff; }
-  .list-group-item.active, .list-group-item.dropdown-item.hover.active {
+  .list-group-item.active {
     z-index: 2;
     color: #fff;
     background-color: #007bff;
@@ -4692,7 +4692,7 @@ button.close {
   -webkit-perspective: 1000px;
           perspective: 1000px; }
 
-.carousel-item.active, .carousel-item.dropdown-item.hover.active,
+.carousel-item.active,
 .carousel-item-next,
 .carousel-item-prev {
   display: block; }
@@ -4713,26 +4713,22 @@ button.close {
               transform: translate3d(0, 0, 0); } }
 
 .carousel-item-next,
-.active.carousel-item-right,
-.carousel-item-right.dropdown-item.hover.active {
+.active.carousel-item-right {
   -webkit-transform: translateX(100%);
           transform: translateX(100%); }
   @supports ((-webkit-transform-style: preserve-3d) or (transform-style: preserve-3d)) {
     .carousel-item-next,
-    .active.carousel-item-right,
-    .carousel-item-right.dropdown-item.hover.active {
+    .active.carousel-item-right {
       -webkit-transform: translate3d(100%, 0, 0);
               transform: translate3d(100%, 0, 0); } }
 
 .carousel-item-prev,
-.active.carousel-item-left,
-.carousel-item-left.dropdown-item.hover.active {
+.active.carousel-item-left {
   -webkit-transform: translateX(-100%);
           transform: translateX(-100%); }
   @supports ((-webkit-transform-style: preserve-3d) or (transform-style: preserve-3d)) {
     .carousel-item-prev,
-    .active.carousel-item-left,
-    .carousel-item-left.dropdown-item.hover.active {
+    .active.carousel-item-left {
       -webkit-transform: translate3d(-100%, 0, 0);
               transform: translate3d(-100%, 0, 0); } }
 
@@ -4825,7 +4821,7 @@ button.close {
       width: 100%;
       height: 10px;
       content: ""; }
-  .carousel-indicators .active, .carousel-indicators .dropdown-item.hover.active {
+  .carousel-indicators .active {
     background-color: #fff; }
 
 .carousel-caption {
@@ -6993,7 +6989,7 @@ a.text-light:hover, a.text-light:focus {
 a.text-dark:hover, a.text-dark:focus {
   color: #1d2124 !important; }
 
-.text-muted, .dropdown-item.disabled, .page-header small {
+.text-muted, .page-header small {
   color: #6c757d !important; }
 
 .text-hide {
@@ -7057,59 +7053,6 @@ a.text-dark:hover, a.text-dark:focus {
   .table-bordered th,
   .table-bordered td {
     border: 1px solid #ddd !important; } }
-
-.dropdown-item.hover {
-  color: #212529;
-  text-decoration: none;
-  background-color: #dae0e5; }
-  .dropdown-item.hover.active {
-    /* Ensure `.active` overrides `.hover`. */ }
-
-.dropdown-item.no-results.hover {
-  background-color: transparent; }
-
-.badge a {
-  text-decoration: none; }
-
-.badge-primary a {
-  color: #fff; }
-  .badge-primary a:hover {
-    color: #e6e6e6; }
-
-.badge-secondary a {
-  color: #fff; }
-  .badge-secondary a:hover {
-    color: #e6e6e6; }
-
-.badge-success a {
-  color: #fff; }
-  .badge-success a:hover {
-    color: #e6e6e6; }
-
-.badge-info a {
-  color: #fff; }
-  .badge-info a:hover {
-    color: #e6e6e6; }
-
-.badge-warning a {
-  color: #212529; }
-  .badge-warning a:hover {
-    color: #0a0c0d; }
-
-.badge-danger a {
-  color: #fff; }
-  .badge-danger a:hover {
-    color: #e6e6e6; }
-
-.badge-light a {
-  color: #212529; }
-  .badge-light a:hover {
-    color: #0a0c0d; }
-
-.badge-dark a {
-  color: #fff; }
-  .badge-dark a:hover {
-    color: #e6e6e6; }
 
 /**
  * Styles for docs only (not for dist).

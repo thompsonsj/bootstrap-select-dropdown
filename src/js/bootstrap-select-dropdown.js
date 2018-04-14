@@ -62,6 +62,7 @@ let SelectDropdownIndex = 1
      classBtnClear : "btn btn-outline-secondary",
      classBtnSelect : "btn btn-primary",
      classBadge: "badge badge-dark mr-1",
+     classBadgeLink: "text-white",
      classBadgeContainer : "mt-2 mb-3",
      // Callbacks
      loaded : function(){}
@@ -92,6 +93,7 @@ let SelectDropdownIndex = 1
      htmlBadgeRemove      : 'string',
      classBtnSelect       : 'string',
      classBadge           : 'string',
+     classBadgeLink       : 'string',
      classBadgeContainer  : 'string',
      loaded               : 'function'
    }
@@ -108,6 +110,8 @@ let SelectDropdownIndex = 1
 
    const ClassName = {
      ACTIVE             : 'active',
+     BG_TRANSPARENT     : 'bg-transparent',
+     DISABLED           : 'disabled',
      DROPDOWN           : 'dropdown',
      MENU               : 'dropdown-menu',
      ITEM               : 'dropdown-item',
@@ -115,7 +119,9 @@ let SelectDropdownIndex = 1
      INPUT_GROUP        : 'input-group',
      INPUT_GROUP_APPEND : 'input-group-append',
      HOVER              : 'hover',
-     ALIGNMENT_RIGHT    : 'dropdown-menu-right'
+     HOVER_BG           : 'bg-light',
+     TEXT_MUTED         : 'text-muted',
+     ALIGNMENT_RIGHT    : 'dropdown-menu-right',
    }
 
    const Selector = {
@@ -230,14 +236,14 @@ let SelectDropdownIndex = 1
       var $option = $el.find('option').eq( itemIndex );
       if ( $option.is(':selected') ) {
         $option.prop('selected', false);
-        $dropdownItem.removeClass('active');
+        $dropdownItem.removeClass( ClassNAme.ACTIVE );
       }
       else {
         if ( !_._multiselect ) {
-          _.els.dropdownOptions.removeClass('active');
+          _.els.dropdownOptions.removeClass( ClassName.ACTIVE );
         }
         $option.prop('selected', true);
-        $dropdownItem.addClass('active');
+        $dropdownItem.removeClass( ClassName.HOVER_BG ).addClass( ClassName.ACTIVE );
       }
       _._externalFeedback();
     }
@@ -332,7 +338,7 @@ let SelectDropdownIndex = 1
           })
         this.els.controlSearch
           .on(Event.BLUR, (event) => {
-            this._hoverRemove()
+            this._hoverRemoveAll()
             this._alignRight()
           })
       }
@@ -768,7 +774,7 @@ let SelectDropdownIndex = 1
     _buildDropdownItemNoResults() {
       var _ = this;
       return $( '<span>', {
-        class: ClassName.ITEM + ' ' + 'text-muted no-results',
+        class: ClassName.ITEM + ' ' + ClassName.TEXT_MUTED + ' ' + ClassName.BG_TRANSPARENT,
         text: _._config.textNoResults
       }).hide();
     }
@@ -864,7 +870,8 @@ let SelectDropdownIndex = 1
         .append(' ')
         .append(
           $('<a>', {
-              'href' : '#'
+              'href'  : '#',
+              'class' : this._config.classBadgeLink
             })
             .html( this._config.htmlBadgeRemove )
             .data( 'option', option )
@@ -981,7 +988,7 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _refresh() {
-      this._hoverRemove();
+      this._hoverRemoveAll();
       this.els.dropdownItemNoResults.hide();
       this._sortReset();
       this._showInitialControls();
@@ -1056,14 +1063,20 @@ let SelectDropdownIndex = 1
       if ( $element.is( 'button' ) ) {
         $element.prop('disabled', false )
       }
-      $element.removeClass('disabled')
+      $element.removeClass( ClassName.DISABLED )
+      if ( $element.is( 'a' ) ) {
+        $element.removeClass( ClassName.TEXT_MUTED )
+      }
     }
 
     _disable( $element ) {
       if ( $element.is( 'button' ) ) {
         $element.prop('disabled', true )
       }
-      $element.addClass('disabled')
+      $element.addClass( ClassName.DISABLED )
+      if ( $element.is( 'a' ) ) {
+        $element.addClass( ClassName.TEXT_MUTED )
+      }
     }
 
     /**
@@ -1075,14 +1088,14 @@ let SelectDropdownIndex = 1
      */
     _hoverSet( index ) {
       var _ = this;
-      _.els.dropdownOptions.removeClass( ClassName.HOVER );
+      this._hoverRemoveAll()
       if ( typeof index === typeof undefined ) {
         var $item = _.els.dropdownOptions.first();
       } else {
         var $item = _._dropdownItemByIndex( index );
       }
       _._hoverItem = $item;
-      $item.addClass( ClassName.HOVER );
+      this._hoverAdd( $item )
     }
 
     /**
@@ -1100,8 +1113,8 @@ let SelectDropdownIndex = 1
         var prev = current.prevAll('a:visible').first();
       }
       if ( typeof prev !== typeof undefined && prev.length ) {
-        current.removeClass( ClassName.HOVER );
-        prev.addClass( ClassName.HOVER );
+        this._hoverRemove( current )
+        this._hoverAdd( prev )
         _._hoverItem = prev;
       }
     }
@@ -1121,17 +1134,29 @@ let SelectDropdownIndex = 1
         var next = current.nextAll('a:visible').first();
       }
       if ( typeof next !== typeof undefined && next.length ) {
-        current.removeClass( ClassName.HOVER );
-        next.addClass( ClassName.HOVER );
+        this._hoverRemove( current )
+        this._hoverAdd( next )
         _._hoverItem = next;
       }
+    }
+
+    _hoverAdd( $element ) {
+      let className = ClassName.HOVER
+      if ( !$element.hasClass( ClassName.ACTIVE ) ) {
+        className = className + ' ' + ClassName.HOVER_BG
+      }
+      $element.addClass( className )
+    }
+
+    _hoverRemove( $element ) {
+      $element.removeClass( ClassName.HOVER + ' ' + ClassName.HOVER_BG )
     }
 
     /**
      * Remove hover class from all dropdown options.
      * @return {undefined}
      */
-    _hoverRemove() {
+    _hoverRemoveAll() {
       this.els.dropdownOptions.removeClass( ClassName.HOVER );
     }
 
@@ -1175,7 +1200,7 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _toggleShowSelected() {
-      this._hoverRemove()
+      this._hoverRemoveAll()
       if ( this.els.showSelected.hasClass( ClassName.ACTIVE ) ) {
         this.els.showSelected.removeClass( ClassName.ACTIVE )
         this._sortReset()
