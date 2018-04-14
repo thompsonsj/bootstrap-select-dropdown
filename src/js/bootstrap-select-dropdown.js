@@ -934,20 +934,16 @@ let SelectDropdownIndex = 1
         allSelected = true
       }
       if ( allSelected ) {
-        this.els.optSelectAll
-        .prop('disabled', true)
-        .tooltip('hide')
+        this._disable( this.els.optSelectAll )
       }
       else {
-        this.els.optSelectAll.prop('disabled', false)
+        this._enable( this.els.optSelectAll )
       }
       if ( noneSelected ) {
-        this.els.optDeselectAll
-        .prop('disabled', true)
-        .tooltip('hide')
+        this._disable( this.els.optDeselectAll )
       }
       else {
-        this.els.optDeselectAll.prop('disabled', false)
+        this._enable( this.els.optDeselectAll )
       }
       this.els.btnSelect.text( btnText )
     }
@@ -958,9 +954,9 @@ let SelectDropdownIndex = 1
       }
       let val = this.els.controlSearch.val()
       if ( $.trim( val ) == '' ) {
-        this.els.optClear.prop('disabled', true)
+        this._enable( this.els.optClear )
       } else {
-        this.els.optClear.prop('disabled', false)
+        this._disable( this.els.optClear )
       }
     }
 
@@ -1049,6 +1045,20 @@ let SelectDropdownIndex = 1
       } else {
         _.els.optSelected.removeClass('disabled');
       }
+    }
+
+    _enable( $element ) {
+      if ( $element.is( 'button' ) ) {
+        $element.prop('disabled', false )
+      }
+      $element.removeClass('disabled')
+    }
+
+    _disable( $element ) {
+      if ( $element.is( 'button' ) ) {
+        $element.prop('disabled', true )
+      }
+      $element.addClass('disabled')
     }
 
     /**
