@@ -97,7 +97,6 @@
     textMultipleSelected: &quot;%count_selected% selected&quot;,
     textNoResults: &quot;No results&quot;,
     // Controls
-    clear: false,
     deselectAll: true,
     selectAll: true,
     showSelected: true,
@@ -106,14 +105,14 @@
     classBtnDeselectAll : &quot;btn btn-outline-secondary&quot;,
     classBtnSelectAll : &quot;btn btn-outline-secondary&quot;,
     // HTML
-    htmlBtnClear: &quot;Clear search&quot;,
-    htmlBtnDeselectAll: &quot;Deselect all&quot;,
-    htmlBtnSelectAll: &quot;Select all&quot;,
-    htmlBtnBadgeRemove: &quot;[deselect]&quot;,
+    htmlClear: &quot;Clear search&quot;,
+    htmlDeselectAll: &quot;Deselect all&quot;,
+    htmlSelectAll: &quot;Select all&quot;,
+    htmlBadgeRemove: &quot;[X]&quot;,
     // Classes
     classBtnSelect : &quot;btn btn-primary&quot;,
-    classBtnClear : &quot;btn btn-outline-secondary&quot;,
     classBadge: &quot;badge badge-dark mr-1&quot;,
+    classBadgeLink: &quot;text-white&quot;,
     classBadgeContainer : &quot;mt-2 mb-3&quot;
   })
 });</code></pre>
@@ -272,22 +271,6 @@
       <h3>Controls</h3>
     </div>
 
-    <h4>clear</h4>
-
-    <dl class="row">
-      <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>false</code></dd>
-
-      <dt class="col-sm-2">Conditions</dt>
-      <dd class="col-sm-10">
-        <code>search</code> is <code>true</code>.
-      </dd>
-    </dl>
-
-    <p>
-      Include a clear search button in the input group.
-    </p>
-
     <h4>deselectAll</h4>
 
     <dl class="row">
@@ -392,9 +375,6 @@
 
     <ul>
       <li>
-        The clear button.
-      </li>
-      <li>
         The deselect all button.
       </li>
       <li>
@@ -440,8 +420,6 @@
   $(document).ready(function(){
     $(&quot;select#demo_options_html&quot;).selectDropdown({
       &apos;selectButtons&apos;: true,
-      &apos;clear&apos;: true,
-      &apos;htmlClear&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
       &apos;htmlDeselectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close-circled&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
       &apos;htmlSelectAll&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-checkmark-circled&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;,
       &apos;htmlBadgeRemove&apos;: &apos;&lt;svg class=&quot;ion&quot;&gt;&lt;use xlink:href=&quot;#ion-close&quot;&gt;&lt;/use&gt;&lt;/svg&gt;&apos;
@@ -458,7 +436,6 @@
       <dt class="col-sm-2">Conditions</dt>
       <dd class="col-sm-10">
         <code>search</code> is <code>true</code>.<br />
-        <code>clear</code> is <code>true</code>.<br />
         Multiselect elements only.
       </dd>
     </dl>
@@ -507,23 +484,6 @@
     <div class="page-header">
       <h3>Classes</h3>
     </div>
-
-    <h4>classBtnClear</h4>
-
-    <dl class="row">
-      <dt class="col-sm-2">Default</dt>
-      <dd class="col-sm-10"><code>"btn btn-outline-secondary"</code></dd>
-
-      <dt class="col-sm-2">Conditions</dt>
-      <dd class="col-sm-10">
-        <code>search</code> is <code>true</code>.<br />
-        <code>clear</code> is <code>true</code>.
-      </dd>
-    </dl>
-
-    <p>
-      The class applied to the clear button.
-    </p>
 
     <h4>classBtnSelect</h4>
 

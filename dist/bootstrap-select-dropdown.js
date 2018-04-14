@@ -299,7 +299,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.2';
+  var VERSION = '0.13.3';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -326,7 +326,6 @@ var SelectDropdown = function ($) {
     textMultipleSelected: "%count_selected% selected",
     textNoResults: "No results",
     // Controls
-    clear: false,
     deselectAll: true, // Multiselect only
     selectAll: true, // Multiselect only
     showSelected: true, // Multiselect only
@@ -340,7 +339,6 @@ var SelectDropdown = function ($) {
     htmlSelectAll: "Select all", // Multiselect only
     htmlBadgeRemove: "[X]", // Badges only
     // Classes
-    classBtnClear: "btn btn-outline-secondary",
     classBtnSelect: "btn btn-primary",
     classBadge: "badge badge-dark mr-1",
     classBadgeLink: "text-white",
@@ -361,11 +359,9 @@ var SelectDropdown = function ($) {
     textNoneSelected: 'string',
     textMultipleSelected: 'string',
     textNoResults: 'string',
-    clear: 'boolean',
     deselectAll: 'boolean',
     selectAll: 'boolean',
     selectButtons: 'boolean',
-    classBtnClear: 'string',
     classBtnDeselectAll: 'string',
     classBtnSelectAll: 'string',
     htmlClear: 'string',
@@ -453,9 +449,7 @@ var SelectDropdown = function ($) {
       this.els.btnSelect = this._buildBtnSelect();
       if (this._config.search) {
         this.els.controlSearch = this._buildControlSearch();
-      }
-      if (this._config.clear) {
-        this.els.clear = this._buildBtnClear();
+        this.els.clear = this._buildControlClear();
       }
       if (this._config.deselectAll) {
         this.els.deselectAll = this._buildDeselectAll();
@@ -477,6 +471,7 @@ var SelectDropdown = function ($) {
       }
 
       if (this._config.search) {
+        this._hideClear();
         this._haystack = [];
         this._fuseOptions = {
           keys: ['text'],
@@ -489,8 +484,6 @@ var SelectDropdown = function ($) {
           };
         });
       }
-
-      this._propBtnClear();
 
       this._addEventListeners();
 
@@ -599,10 +592,6 @@ var SelectDropdown = function ($) {
       value: function _getConfig(config) {
         config = Object.assign({}, Default, config);
         _util2.default.typeCheckConfig(NAME, config, DefaultType);
-        // Defaults: Enforce logic.
-        if (!config.search) {
-          config.clear = false;
-        }
         if (!this._multiselect) {
           config.deselectAll = false;
           config.selectAll = false;
@@ -649,7 +638,6 @@ var SelectDropdown = function ($) {
     }, {
       key: '_keyup',
       value: function _keyup(event) {
-        this._propBtnClear();
         if (this._config.keyboard) {
           if (event.which == ENTER_KEYCODE) {
             this.toggle(this.els.dropdown.find('.hover').first());
@@ -713,12 +701,13 @@ var SelectDropdown = function ($) {
         }
 
         // Clear search.
-        if (this._config.clear) {
+        if (this._config.search) {
           this.els.clear.on(Event.CLICK, function (event) {
+            event.preventDefault();
             _this3.els.controlSearch.val('');
             _this3._preventDropdownHide();
-            _this3._disable($(event.currentTarget));
             _this3._refresh();
+            _this3.els.controlSearch.focus();
           });
         }
 
@@ -754,6 +743,9 @@ var SelectDropdown = function ($) {
         this._externalFeedback();
 
         // Dropdown menu.
+        if (this._config.search) {
+          this.els.dropdownMenu.append(this.els.clear);
+        }
         if (this._config.selectAll && !this._config.selectButtons) {
           this.els.dropdownMenu.append(this.els.selectAll);
         }
@@ -847,6 +839,7 @@ var SelectDropdown = function ($) {
           return;
         }
         if (this._resultsChanged) {
+          this._showClear();
           this._hoverSet(results[0]);
           this._hide(results);
           this._reorder(results);
@@ -870,19 +863,17 @@ var SelectDropdown = function ($) {
       }
 
       /**
-       * Build HTML: Clear button
+       * Build HTML: Clear control
        * @return {object} jQuery
        */
 
     }, {
-      key: '_buildBtnClear',
-      value: function _buildBtnClear() {
-        var button = $('<button>', {
-          type: 'button',
-          class: this._config.classBtnClear,
-          title: 'Clear search'
+      key: '_buildControlClear',
+      value: function _buildControlClear() {
+        return $('<a>', {
+          href: '#',
+          class: ClassName.ITEM
         }).html(this._config.htmlClear);
-        return button;
       }
 
       /**
@@ -967,12 +958,6 @@ var SelectDropdown = function ($) {
           });
 
           $inputGroup.append(this.els.controlSearch);
-
-          if (this._config.clear) {
-            $inputGroup.append($('<div>', {
-              class: ClassName.INPUT_GROUP_APPEND
-            }).append(this.els.clear));
-          }
 
           if (this._config.selectButtons) {
 
@@ -1214,15 +1199,6 @@ var SelectDropdown = function ($) {
         this.els.btnSelect.text(btnText);
       }
     }, {
-      key: '_propBtnClear',
-      value: function _propBtnClear() {
-        if (!this._config.clear) {
-          return;
-        }
-        var val = this.els.controlSearch.val();
-        this._disableEnable(this.els.clear, $.trim(val) == '');
-      }
-    }, {
       key: '_setBadges',
       value: function _setBadges(selected) {
         var _this5 = this;
@@ -1260,6 +1236,7 @@ var SelectDropdown = function ($) {
     }, {
       key: '_refresh',
       value: function _refresh() {
+        this._hideClear();
         this._hoverRemoveAll();
         this.els.dropdownItemNoResults.hide();
         this._sortReset();
@@ -1273,6 +1250,9 @@ var SelectDropdown = function ($) {
         var notResults = $(this._indexes).not(results).get();
         $.each(notResults, function (index, value) {
           _this6._dropdownItemByIndex(value).hide();
+        });
+        $.each(results, function (index, value) {
+          _this6._dropdownItemByIndex(value).show();
         });
         this.els.btnSelect.dropdown('update');
       }
@@ -1299,7 +1279,7 @@ var SelectDropdown = function ($) {
         if (this._config.deselectAll && !this._config.selectButtons) {
           this.els.deselectAll.hide();
         }
-        if (this._config.selected) {
+        if (this._config.showSelected) {
           this.els.showSelected.hide();
         }
       }
@@ -1312,7 +1292,7 @@ var SelectDropdown = function ($) {
         if (this._config.deselectAll && !this._config.selectButtons) {
           this.els.deselectAll.show();
         }
-        if (this._config.selected) {
+        if (this._config.showSelected) {
           this.els.showSelected.show();
         }
       }
@@ -1327,6 +1307,20 @@ var SelectDropdown = function ($) {
         }
         if (this._config.showSelected) {
           this._disableEnable(this.els.showSelected, noneSelected || allSelected);
+        }
+      }
+    }, {
+      key: '_showClear',
+      value: function _showClear() {
+        if (this._config.search) {
+          this.els.clear.show();
+        }
+      }
+    }, {
+      key: '_hideClear',
+      value: function _hideClear() {
+        if (this._config.search) {
+          this.els.clear.hide();
         }
       }
     }, {
