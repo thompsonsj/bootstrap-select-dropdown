@@ -60,7 +60,7 @@ let SelectDropdownIndex = 1
      htmlBadgeRemove: "[X]", // Badges only
      // Classes
      classBtnSelect : "btn btn-primary",
-     classBadge: "badge badge-dark mr-1",
+     classBadge: "badge badge-dark mr-1 mb-1",
      classBadgeLink: "text-white",
      classBadgeContainer : "mt-2 mb-3",
      // Callbacks
