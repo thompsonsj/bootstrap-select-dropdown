@@ -291,7 +291,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.6';
+  var VERSION = '0.13.7';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -1458,7 +1458,7 @@ var SelectDropdown = function ($) {
     }, {
       key: '_hoverRemoveAll',
       value: function _hoverRemoveAll() {
-        this.els.dropdownOptions.removeClass(ClassName.HOVER);
+        this.els.dropdownOptions.removeClass(ClassName.HOVER + ' ' + ClassName.HOVER_BG);
       }
 
       /**
