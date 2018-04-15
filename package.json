@@ -8,6 +8,7 @@
     "dev": "webpack --config webpack.dev.js --mode development",
     "serve": "webpack-dev-server --config webpack.dev.js --mode development",
     "version": "npm run dev && npm run build && git add .",
+    "postversion" : "git push && npm publish",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
