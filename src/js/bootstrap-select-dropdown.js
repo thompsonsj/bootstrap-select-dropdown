@@ -1171,7 +1171,7 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _hoverRemoveAll() {
-      this.els.dropdownOptions.removeClass( ClassName.HOVER );
+      this.els.dropdownOptions.removeClass( ClassName.HOVER + ' ' + ClassName.HOVER_BG );
     }
 
     /**
