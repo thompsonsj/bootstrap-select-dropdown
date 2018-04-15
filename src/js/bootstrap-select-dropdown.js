@@ -973,6 +973,7 @@ let SelectDropdownIndex = 1
       this._hideClear()
       this._hoverRemoveAll()
       this.els.dropdownItemNoResults.hide()
+      this.els.dropdownOptions.show()
       this._sortReset()
       this._showInitialControls()
     }
