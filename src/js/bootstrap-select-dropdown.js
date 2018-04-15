@@ -316,9 +316,11 @@ let SelectDropdownIndex = 1
       if (this._config.search) {
         this.els.controlSearch
         .on( Event.KEYUP, ( event ) => {
+          this._keyupNav( event )
           clearTimeout( this._keyupTimeout )
           this._keyupTimeout = setTimeout( () => {
-            this._keyup( event )
+            let s = $( this.els.controlSearch ).val()
+            this._search( s )
           }, KEYUP_TIMEOUT )
         })
         this.els.controlSearch
@@ -350,7 +352,7 @@ let SelectDropdownIndex = 1
       this._assignClickHandlers();
     }
 
-    _keyup(event) {
+    _keyupNav(event) {
       if (this._config.keyboard) {
         if ( event.which == ENTER_KEYCODE ) {
           this.toggle( this.els.dropdown.find('.hover').first() );
@@ -376,8 +378,7 @@ let SelectDropdownIndex = 1
           return;
         }
       }
-      let s = $( this.els.controlSearch ).val()
-      this._search( s )
+
     }
 
     _assignClickHandlers() {
