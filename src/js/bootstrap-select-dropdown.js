@@ -1254,9 +1254,7 @@ let SelectDropdownIndex = 1
      * @return {[type]} [description]
      */
     _resetScroll() {
-      this.els.dropdownMenu.animate({
-          scrollTop: 0
-      }, 50);
+      this.els.dropdownMenu.scrollTop(0)
     }
 
     /**

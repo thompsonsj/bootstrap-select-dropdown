@@ -1558,9 +1558,7 @@ var SelectDropdown = function ($) {
     }, {
       key: '_resetScroll',
       value: function _resetScroll() {
-        this.els.dropdownMenu.animate({
-          scrollTop: 0
-        }, 50);
+        this.els.dropdownMenu.scrollTop(0);
       }
 
       /**
