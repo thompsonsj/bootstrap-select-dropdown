@@ -299,7 +299,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.4';
+  var VERSION = '0.13.5';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -609,9 +609,13 @@ var SelectDropdown = function ($) {
 
         if (this._config.search) {
           this.els.controlSearch.on(Event.KEYUP, function (event) {
+            if (_this2._config.keyboard) {
+              _this2._keyupNav(event);
+            }
             clearTimeout(_this2._keyupTimeout);
             _this2._keyupTimeout = setTimeout(function () {
-              _this2._keyup(event);
+              var s = $(_this2.els.controlSearch).val();
+              _this2._search(s);
             }, KEYUP_TIMEOUT);
           });
           this.els.controlSearch.on(Event.FOCUS, function (event) {
@@ -641,33 +645,29 @@ var SelectDropdown = function ($) {
         this._assignClickHandlers();
       }
     }, {
-      key: '_keyup',
-      value: function _keyup(event) {
-        if (this._config.keyboard) {
-          if (event.which == ENTER_KEYCODE) {
-            this.toggle(this.els.dropdown.find('.hover').first());
-            if (!this._multiselect) {
-              this.els.btnSelect.dropdown('toggle');
-            }
-            return;
-          } else if (event.which == ARROW_UP_KEYCODE) {
-            if (!this._dropdownActive()) {
-              this.els.btnSelect.dropdown('toggle');
-              this.els.controlSearch.focus();
-            }
-            this._hoverUp();
-            return;
-          } else if (event.which == ARROW_DOWN_KEYCODE) {
-            if (!this._dropdownActive()) {
-              this.els.btnSelect.dropdown('toggle');
-              this.els.controlSearch.focus();
-            }
-            this._hoverDown();
-            return;
+      key: '_keyupNav',
+      value: function _keyupNav(event) {
+        if (event.which == ENTER_KEYCODE) {
+          this.toggle(this.els.dropdown.find('.hover').first());
+          if (!this._multiselect) {
+            this.els.btnSelect.dropdown('toggle');
           }
+          return;
+        } else if (event.which == ARROW_UP_KEYCODE) {
+          if (!this._dropdownActive()) {
+            this.els.btnSelect.dropdown('toggle');
+            this.els.controlSearch.focus();
+          }
+          this._hoverUp();
+          return;
+        } else if (event.which == ARROW_DOWN_KEYCODE) {
+          if (!this._dropdownActive()) {
+            this.els.btnSelect.dropdown('toggle');
+            this.els.controlSearch.focus();
+          }
+          this._hoverDown();
+          return;
         }
-        var s = $(this.els.controlSearch).val();
-        this._search(s);
       }
     }, {
       key: '_assignClickHandlers',
@@ -813,7 +813,7 @@ var SelectDropdown = function ($) {
        * Search and take appropriate action.
        *
        * * If results haven't changed, do nothing (improves performance).
-       * * If results have changed, hide non-matching options, reorder...etc.
+       * * If results have changed, apply changes.
        * @param  {String} s Search term
        * @return {undefined}
        */
@@ -823,11 +823,11 @@ var SelectDropdown = function ($) {
       value: function _search(s) {
         var results = null;
         if ($.trim(s) == '') {
-          //this._els.clear
           this._refresh();
           if (this._lastSearch !== null) {
             this._resultsChanged = true;
             this._lastSearch = null;
+            this._hoverSet();
           }
           return;
         } else {
@@ -844,13 +844,33 @@ var SelectDropdown = function ($) {
           return;
         }
         if (this._resultsChanged) {
-          this._showClear();
-          this._hoverSet(results[0]);
-          this._hide(results);
-          this._reorder(results);
-          this._resetScroll();
+          this._applySearch(results);
         }
         this._lastSearch = results;
+      }
+
+      /**
+       * Apply changes as per search results.
+       *
+       * * Remove showSelected active class if present.
+       * * Show clear control.
+       * * Set hover on the first element for keyboard navigation.
+       * * Hide non-results.
+       * * Reorder search results.
+       * * Reset scroll (scroll to top).
+       * @param  {array} results Option index numbers.
+       * @return {undefined}
+       */
+
+    }, {
+      key: '_applySearch',
+      value: function _applySearch(results) {
+        this._softDisableShowSelected();
+        this._showClear();
+        this._hoverSet(results[0]);
+        this._hide(results);
+        this._reorder(results);
+        this._resetScroll();
       }
     }, {
       key: '_buildBtnSelect',
@@ -1242,8 +1262,8 @@ var SelectDropdown = function ($) {
       key: '_refresh',
       value: function _refresh() {
         this._hideClear();
-        this._hoverRemoveAll();
         this.els.dropdownItemNoResults.hide();
+        this.els.dropdownOptions.show();
         this._sortReset();
         this._showInitialControls();
       }
@@ -1498,19 +1518,33 @@ var SelectDropdown = function ($) {
     }, {
       key: '_toggleShowSelected',
       value: function _toggleShowSelected() {
+        if (this.els.showSelected.hasClass(ClassName.ACTIVE)) {
+          this.disableShowSelected();
+        } else {
+          this._enableShowSelected();
+        }
+      }
+    }, {
+      key: '_enableShowSelected',
+      value: function _enableShowSelected() {
         var _this7 = this;
 
-        this._hoverRemoveAll();
-        if (this.els.showSelected.hasClass(ClassName.ACTIVE)) {
-          this.els.showSelected.removeClass(ClassName.ACTIVE);
-          this._sortReset();
-        } else {
-          this.els.showSelected.addClass(ClassName.ACTIVE);
-          $(this.els.dropdownItemsContainer.find('.active').get().reverse()).each(function (index, element) {
-            $(element).prependTo(_this7.els.dropdownItemsContainer);
-          });
-          this._resetScroll();
-        }
+        this.els.showSelected.addClass(ClassName.ACTIVE);
+        $(this.els.dropdownItemsContainer.find('.active').get().reverse()).each(function (index, element) {
+          $(element).prependTo(_this7.els.dropdownItemsContainer);
+        });
+        this._resetScroll();
+      }
+    }, {
+      key: '_disableShowSelected',
+      value: function _disableShowSelected() {
+        this._softDisableShowSelected();
+        this._sortReset();
+      }
+    }, {
+      key: '_softDisableShowSelected',
+      value: function _softDisableShowSelected() {
+        this.els.showSelected.removeClass(ClassName.ACTIVE);
       }
     }, {
       key: '_preventDropdownHide',
