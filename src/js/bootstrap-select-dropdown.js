@@ -316,7 +316,9 @@ let SelectDropdownIndex = 1
       if (this._config.search) {
         this.els.controlSearch
         .on( Event.KEYUP, ( event ) => {
-          this._keyupNav( event )
+          if (this._config.keyboard) {
+            this._keyupNav( event )
+          }
           clearTimeout( this._keyupTimeout )
           this._keyupTimeout = setTimeout( () => {
             let s = $( this.els.controlSearch ).val()
@@ -353,32 +355,29 @@ let SelectDropdownIndex = 1
     }
 
     _keyupNav(event) {
-      if (this._config.keyboard) {
-        if ( event.which == ENTER_KEYCODE ) {
-          this.toggle( this.els.dropdown.find('.hover').first() );
-          if ( !this._multiselect ) {
-            this.els.btnSelect.dropdown('toggle');
-          }
-          return;
+      if ( event.which == ENTER_KEYCODE ) {
+        this.toggle( this.els.dropdown.find('.hover').first() );
+        if ( !this._multiselect ) {
+          this.els.btnSelect.dropdown('toggle');
         }
-        else if ( event.which == ARROW_UP_KEYCODE ) {
-          if ( !this._dropdownActive() ) {
-            this.els.btnSelect.dropdown('toggle');
-            this.els.controlSearch.focus();
-          }
-          this._hoverUp();
-          return;
-        }
-        else if ( event.which == ARROW_DOWN_KEYCODE ) {
-          if ( !this._dropdownActive() ) {
-            this.els.btnSelect.dropdown('toggle');
-            this.els.controlSearch.focus();
-          }
-          this._hoverDown();
-          return;
-        }
+        return;
       }
-
+      else if ( event.which == ARROW_UP_KEYCODE ) {
+        if ( !this._dropdownActive() ) {
+          this.els.btnSelect.dropdown('toggle');
+          this.els.controlSearch.focus();
+        }
+        this._hoverUp();
+        return;
+      }
+      else if ( event.which == ARROW_DOWN_KEYCODE ) {
+        if ( !this._dropdownActive() ) {
+          this.els.btnSelect.dropdown('toggle');
+          this.els.controlSearch.focus();
+        }
+        this._hoverDown();
+        return;
+      }
     }
 
     _assignClickHandlers() {
@@ -526,45 +525,62 @@ let SelectDropdownIndex = 1
      * Search and take appropriate action.
      *
      * * If results haven't changed, do nothing (improves performance).
-     * * If results have changed, hide non-matching options, reorder...etc.
+     * * If results have changed, apply changes.
      * @param  {String} s Search term
      * @return {undefined}
      */
     _search(s) {
-      var results = null;
+      let results = null
       if ( $.trim( s ) == '' ) {
-        //this._els.clear
-        this._refresh();
+        this._refresh()
         if ( this._lastSearch !== null ) {
-          this._resultsChanged = true;
-          this._lastSearch = null;
+          this._resultsChanged = true
+          this._lastSearch = null
+          this._hoverSet()
         }
-        return;
+        return
       } else {
-        var fuse = new Fuse( this._haystack, this._fuseOptions );
-        results = fuse.search(s);
+        var fuse = new Fuse( this._haystack, this._fuseOptions )
+        results = fuse.search(s)
       }
-      this._resultsChanged = true;
+      this._resultsChanged = true
       if ( results ) {
         if (
           typeof this._lastSearch !== null &&
           this._arraysEqual( results, this._lastSearch )
         ) {
-          this._resultsChanged = false;
+          this._resultsChanged = false
         }
 
       } else {
-        this._refresh();
-        return;
+        this._refresh()
+        return
       }
       if ( this._resultsChanged ) {
-        this._showClear()
-        this._hoverSet( results[0] )
-        this._hide( results )
-        this._reorder( results )
-        this._resetScroll()
+        this._applySearch( results )
       }
-      this._lastSearch = results;
+      this._lastSearch = results
+    }
+
+    /**
+     * Apply changes as per search results.
+     *
+     * * Remove showSelected active class if present.
+     * * Show clear control.
+     * * Set hover on the first element for keyboard navigation.
+     * * Hide non-results.
+     * * Reorder search results.
+     * * Reset scroll (scroll to top).
+     * @param  {array} results Option index numbers.
+     * @return {undefined}
+     */
+    _applySearch( results ) {
+      this._softDisableShowSelected()
+      this._showClear()
+      this._hoverSet( results[0] )
+      this._hide( results )
+      this._reorder( results )
+      this._resetScroll()
     }
 
     _buildBtnSelect() {
@@ -971,7 +987,6 @@ let SelectDropdownIndex = 1
      */
     _refresh() {
       this._hideClear()
-      this._hoverRemoveAll()
       this.els.dropdownItemNoResults.hide()
       this.els.dropdownOptions.show()
       this._sortReset()
@@ -1199,18 +1214,29 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _toggleShowSelected() {
-      this._hoverRemoveAll()
       if ( this.els.showSelected.hasClass( ClassName.ACTIVE ) ) {
-        this.els.showSelected.removeClass( ClassName.ACTIVE )
-        this._sortReset()
+        this.disableShowSelected()
       }
       else {
-        this.els.showSelected.addClass( ClassName.ACTIVE )
-        $( this.els.dropdownItemsContainer.find('.active').get().reverse() ).each( ( index, element ) => {
-          $( element ).prependTo( this.els.dropdownItemsContainer )
-        });
-        this._resetScroll()
+        this._enableShowSelected()
       }
+    }
+
+    _enableShowSelected() {
+      this.els.showSelected.addClass( ClassName.ACTIVE )
+      $( this.els.dropdownItemsContainer.find('.active').get().reverse() ).each( ( index, element ) => {
+        $( element ).prependTo( this.els.dropdownItemsContainer )
+      });
+      this._resetScroll()
+    }
+
+    _disableShowSelected() {
+      this._softDisableShowSelected()
+      this._sortReset()
+    }
+
+    _softDisableShowSelected(){
+      this.els.showSelected.removeClass( ClassName.ACTIVE )
     }
 
     _preventDropdownHide() {
