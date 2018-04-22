@@ -46,6 +46,32 @@
 }}}</code></pre>
 
     <div class="page-header">
+      <h2>Example: Minimal</h2>
+    </div>
+
+    <p>
+      An example of a minimal configuration. A <code>profile: minimal</code> option is offered as a shortcut that sets a range of options to disable search, disable badges and remove any extra controls.
+    </p>
+
+    <div class="form-group">
+      <label for="demo_overview_minimal" class="sr-only">Select a food</label>
+      <select id="demo_overview_minimal" class="form-control" data-role="select-dropdown" data-profile="minimal">
+        {{#each food}}
+        <option value="{{@key}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+<label for="demo_overview_minimal" class="sr-only">Select a food</label>
+<select id="demo_overview_minimal" class="form-control" data-role="select-dropdown" data-profile="minimal">
+<!-- options -->
+</select>
+</div>'
+}}}</code></pre>
+
+    <div class="page-header">
       <h2>Example: Icons, input group buttons and button text values</h2>
     </div>
 

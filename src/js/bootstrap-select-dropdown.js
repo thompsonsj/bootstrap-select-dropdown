@@ -298,6 +298,23 @@ let SelectDropdownIndex = 1
     // Private
 
     _getConfig(config) {
+      if ( config.profile == 'minimal' ) {
+        if ( typeof config.search !== typeof undefined ) {
+          config.search = false
+        }
+        if ( typeof config.badges !== typeof undefined ) {
+          config.badges = false
+        }
+        if ( typeof config.deselectAll !== typeof undefined ) {
+          config.deselectAll = false
+        }
+        if ( typeof config.selectAll !== typeof undefined ) {
+          config.selectAll = false
+        }
+        if ( typeof config.showSelected !== typeof undefined ) {
+          config.showSelected = false
+        }
+      }
       config = {
         ...Default,
         ...config
@@ -341,16 +358,16 @@ let SelectDropdownIndex = 1
             this._hoverRemoveAll()
             this._alignRight()
           })
+        // Handle cut and paste.
+        this.els.controlSearch.bind({
+            paste (){
+              $(this).trigger( Event.KEYDOWN );
+            },
+            cut (){
+              $(this).trigger( Event.KEYDOWN );
+            }
+        });
       }
-      // Handle cut and paste.
-      this.els.controlSearch.bind({
-          paste (){
-            $(this).trigger( Event.KEYDOWN );
-          },
-          cut (){
-            $(this).trigger( Event.KEYDOWN );
-          }
-      });
       this._assignClickHandlers();
     }
 
