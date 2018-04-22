@@ -291,7 +291,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.7';
+  var VERSION = '0.13.8';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -584,6 +584,23 @@ var SelectDropdown = function ($) {
     }, {
       key: '_getConfig',
       value: function _getConfig(config) {
+        if (config.profile == 'minimal') {
+          if (_typeof(config.search) !== ( true ? 'undefined' : undefined)) {
+            config.search = false;
+          }
+          if (_typeof(config.badges) !== ( true ? 'undefined' : undefined)) {
+            config.badges = false;
+          }
+          if (_typeof(config.deselectAll) !== ( true ? 'undefined' : undefined)) {
+            config.deselectAll = false;
+          }
+          if (_typeof(config.selectAll) !== ( true ? 'undefined' : undefined)) {
+            config.selectAll = false;
+          }
+          if (_typeof(config.showSelected) !== ( true ? 'undefined' : undefined)) {
+            config.showSelected = false;
+          }
+        }
         config = Object.assign({}, Default, config);
         _util2.default.typeCheckConfig(NAME, config, DefaultType);
         if (!this._multiselect) {
@@ -624,16 +641,16 @@ var SelectDropdown = function ($) {
             _this2._hoverRemoveAll();
             _this2._alignRight();
           });
+          // Handle cut and paste.
+          this.els.controlSearch.bind({
+            paste: function paste() {
+              $(this).trigger(Event.KEYDOWN);
+            },
+            cut: function cut() {
+              $(this).trigger(Event.KEYDOWN);
+            }
+          });
         }
-        // Handle cut and paste.
-        this.els.controlSearch.bind({
-          paste: function paste() {
-            $(this).trigger(Event.KEYDOWN);
-          },
-          cut: function cut() {
-            $(this).trigger(Event.KEYDOWN);
-          }
-        });
         this._assignClickHandlers();
       }
     }, {
