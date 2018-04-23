@@ -349,7 +349,7 @@ let SelectDropdownIndex = 1
               this._alignLeft()
               this.els.btnSelect.dropdown('toggle');
               setTimeout( () => {
-                this.els.controlSearch.focus();
+                this._searchControlFocus()
               }, 1);
             }
           })
@@ -373,9 +373,9 @@ let SelectDropdownIndex = 1
 
     _keyupNav(event) {
       if ( event.which == ENTER_KEYCODE ) {
-        this.toggle( this.els.dropdown.find('.hover').first() );
+        this.toggle( this.els.dropdown.find('.hover').first() )
         if ( !this._multiselect ) {
-          this.els.btnSelect.dropdown('toggle');
+          this.els.btnSelect.dropdown('toggle')
         }
         return;
       }
@@ -386,8 +386,8 @@ let SelectDropdownIndex = 1
         this._hoverDown();
       }
       if ( !this._dropdownActive() ) {
-        this.els.btnSelect.dropdown('toggle');
-        this.els.controlSearch.focus();
+        this.els.btnSelect.dropdown('toggle')
+        this._searchControlFocus()
       }
     }
 
@@ -430,7 +430,7 @@ let SelectDropdownIndex = 1
           this.els.controlSearch.val('')
           this._preventDropdownHide()
           this._refresh()
-          this.els.controlSearch.focus()
+          this._searchControlFocus()
         })
       }
 
@@ -1256,6 +1256,12 @@ let SelectDropdownIndex = 1
           event.preventDefault()
         })
       }
+    }
+
+    _searchControlFocus() {
+      this.els.controlSearch
+      .focus()
+      .val( this.els.controlSearch.val() )
     }
 
     /**
