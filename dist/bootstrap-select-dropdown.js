@@ -291,7 +291,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.8';
+  var VERSION = '0.13.9';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -633,7 +633,7 @@ var SelectDropdown = function ($) {
               _this2._alignLeft();
               _this2.els.btnSelect.dropdown('toggle');
               setTimeout(function () {
-                _this2.els.controlSearch.focus();
+                _this2._searchControlFocus();
               }, 1);
             }
           });
@@ -663,19 +663,13 @@ var SelectDropdown = function ($) {
           }
           return;
         } else if (event.which == ARROW_UP_KEYCODE) {
-          if (!this._dropdownActive()) {
-            this.els.btnSelect.dropdown('toggle');
-            this.els.controlSearch.focus();
-          }
           this._hoverUp();
-          return;
         } else if (event.which == ARROW_DOWN_KEYCODE) {
-          if (!this._dropdownActive()) {
-            this.els.btnSelect.dropdown('toggle');
-            this.els.controlSearch.focus();
-          }
           this._hoverDown();
-          return;
+        }
+        if (!this._dropdownActive()) {
+          this.els.btnSelect.dropdown('toggle');
+          this._searchControlFocus();
         }
       }
     }, {
@@ -721,7 +715,7 @@ var SelectDropdown = function ($) {
             _this3.els.controlSearch.val('');
             _this3._preventDropdownHide();
             _this3._refresh();
-            _this3.els.controlSearch.focus();
+            _this3._searchControlFocus();
           });
         }
 
@@ -1563,6 +1557,11 @@ var SelectDropdown = function ($) {
             event.preventDefault();
           });
         }
+      }
+    }, {
+      key: '_searchControlFocus',
+      value: function _searchControlFocus() {
+        this.els.controlSearch.focus().val(this.els.controlSearch.val());
       }
 
       /**
