@@ -7,6 +7,13 @@ import SelectDropdown from './js/bootstrap-select-dropdown.js';
 
 $(document).ready(function(){
   $('#version').text('v' + '[AIV]{version}[/AIV]')
+  $( "select#demo_overview_minimal_multiselect" ).selectDropdown({
+    'search': false,
+    'badges': false,
+    'deselectAll': false,
+    'selectAll': false,
+    'showSelected': false
+  });
   $( "select#demo_overview_icons_badges" ).selectDropdown({
     'maxListLength': 4,
     'badges': false,

@@ -380,20 +380,14 @@ let SelectDropdownIndex = 1
         return;
       }
       else if ( event.which == ARROW_UP_KEYCODE ) {
-        if ( !this._dropdownActive() ) {
-          this.els.btnSelect.dropdown('toggle');
-          this.els.controlSearch.focus();
-        }
         this._hoverUp();
-        return;
       }
       else if ( event.which == ARROW_DOWN_KEYCODE ) {
-        if ( !this._dropdownActive() ) {
-          this.els.btnSelect.dropdown('toggle');
-          this.els.controlSearch.focus();
-        }
         this._hoverDown();
-        return;
+      }
+      if ( !this._dropdownActive() ) {
+        this.els.btnSelect.dropdown('toggle');
+        this.els.controlSearch.focus();
       }
     }
 

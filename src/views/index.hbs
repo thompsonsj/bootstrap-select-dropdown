@@ -28,6 +28,28 @@
     </div>
 
     <div class="form-group">
+      <label for="demo_overview">Select a country</label>
+      <select id="demo_overview" class="form-control" data-role="select-dropdown">
+        {{#each countries}}
+        <option value="{{@key}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+  <label for="demo_overview">Select one or more countries</label>
+    <select id="demo_overview" class="form-control" data-role="select-dropdown">
+    <!-- options -->
+  </select>
+</div>'
+}}}</code></pre>
+
+    <div class="page-header">
+      <h2>Example: Default (multiselect)</h2>
+    </div>
+
+    <div class="form-group">
       <label for="demo_overview">Select one or more countries</label>
       <select id="demo_overview" class="form-control" data-role="select-dropdown" multiple>
         {{#each countries}}
@@ -54,7 +76,7 @@
     </p>
 
     <div class="form-group">
-      <label for="demo_overview_minimal" class="sr-only">Select a food</label>
+      <label for="demo_overview_minimal">Select a food</label>
       <select id="demo_overview_minimal" class="form-control" data-role="select-dropdown" data-profile="minimal">
         {{#each food}}
         <option value="{{@key}}">{{this}}</option>
@@ -64,7 +86,7 @@
 
 <pre><code>{{{ htmlentities
 '<div class="form-group">
-<label for="demo_overview_minimal" class="sr-only">Select a food</label>
+<label for="demo_overview_minimal">Select a food</label>
 <select id="demo_overview_minimal" class="form-control" data-role="select-dropdown" data-profile="minimal">
 <!-- options -->
 </select>
@@ -72,7 +94,45 @@
 }}}</code></pre>
 
     <div class="page-header">
-      <h2>Example: Icons, input group buttons and button text values</h2>
+      <h2>Example: Minimal (multiselect)</h2>
+    </div>
+
+    <p>
+      An example of a minimal configuration on a <code>{{{htmlentities '<select multiselect>'}}}</code> element. Individual configuration options are set in this example rather than using the <code>profile: minimal</code> shortcut.
+    </p>
+
+    <div class="form-group">
+      <label for="demo_overview_minimal_multiselect">Select a food</label>
+      <select id="demo_overview_minimal_multiselect" class="form-control" multiple>
+        {{#each food}}
+        <option value="{{@key}}">{{this}}</option>
+        {{/each}}
+      </select>
+    </div>
+
+<pre><code>{{{ htmlentities
+'<div class="form-group">
+<label for="demo_overview_minimal_multiselect">Select a food</label>
+<select id="demo_overview_minimal_multiselect" class="form-control">
+<!-- options -->
+</select>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $("#demo_multiselect").selectDropdown({
+      \'search\': false,
+      \'badges\': false,
+      \'deselectAll\': false,
+      \'selectAll\': false,
+      \'showSelected\': false
+    });
+  });
+</script>'
+}}}</code></pre>
+
+    <div class="page-header">
+      <h2>Example: Icons, input group buttons and button text values (multiselect)</h2>
     </div>
 
     <p>
