@@ -49,6 +49,15 @@ module.exports = {
       helpers: {
         htmlentities: function(context, options) {
           return entities.encode( context );
+        },
+        jsonoption: function(value) {
+          if (value == 'boolean_false') {
+            return 'false';
+          }
+          if (value == 'boolean_true') {
+            return 'true';
+          }
+          return value;
         }
       }
     }),
