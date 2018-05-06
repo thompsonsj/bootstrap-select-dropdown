@@ -735,7 +735,7 @@ let SelectDropdownIndex = 1
         $dropdown
           .append( $inputGroup );
       }
-      else if ( this._hasButtons ) {
+      else if ( this._config.selectButtons ) {
         let $btnGroup = $('<div>', {
           class: ClassName.BTN_GROUP
         })
