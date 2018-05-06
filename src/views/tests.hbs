@@ -1,0 +1,42 @@
+{{> meta/head}}
+
+{{> elements/title}}
+
+{{#each tests}}
+<div class="page-header">
+  <h2>Test {{@index}}</h2>
+</div>
+
+<div class="form-group">
+  <label for="demo_overview">Test {{@index}} label</label>
+  <select id="test_{{@index}}" class="form-control" {{#if multiselect}}multiple="multiple"{{/if}}>
+    {{#if optgroups}}
+    {{#../foodGroups}}
+    <optgroup label="{{label}}">
+      {{#foods}}
+      <option value="{{value}}">{{text}}</option>
+      {{/foods}}
+    </optgroup>
+    {{/../foodGroups}}
+    {{else}}
+    {{#each ../food}}
+    <option value="{{@key}}">{{this}}</option>
+    {{/each}}
+    {{/if}}
+  </select>
+</div>
+{{/each}}
+
+{{> meta/foot}}
+<script>
+{{#each tests}}
+  $(document).ready(function(){
+    $('#test_{{@index}}').selectDropdown({
+      {{#each options}}
+      "{{@key}}" : {{jsonoption this}}{{#if @last}}{{else}},{{/if}}
+      {{/each}}
+    });
+  });
+{{/each}}
+</script>
+{{> meta/end}}
