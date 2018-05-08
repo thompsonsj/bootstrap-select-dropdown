@@ -93,7 +93,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.1.0): util.js
+ * Bootstrap (v4.1.1): util.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -291,7 +291,7 @@ var SelectDropdown = function ($) {
    */
 
   var NAME = 'selectDropdown';
-  var VERSION = '0.13.11';
+  var VERSION = '0.13.12';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = '.' + DATA_KEY;
   var DATA_API_KEY = '.data-api';
@@ -1007,7 +1007,7 @@ var SelectDropdown = function ($) {
           }).append(this.els.btnSelect));
 
           $dropdown.append($inputGroup);
-        } else if (this._hasButtons) {
+        } else if (this._config.selectButtons) {
           var $btnGroup = $('<div>', {
             class: ClassName.BTN_GROUP
           });
