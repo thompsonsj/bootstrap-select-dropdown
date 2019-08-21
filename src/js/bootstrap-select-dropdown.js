@@ -225,8 +225,7 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     toggle( $dropdownItem ) {
-      var _ = this;
-      var $el =  $( _._element );
+      var $el =  $( this._element );
       var itemIndex = $dropdownItem.data('option');
       var $option = $el.find('option').eq( itemIndex );
       if ( $option.is(':selected') ) {
@@ -234,13 +233,13 @@ let SelectDropdownIndex = 1
         $dropdownItem.removeClass( ClassName.ACTIVE );
       }
       else {
-        if ( !_._multiselect ) {
-          _.els.dropdownOptions.removeClass( ClassName.ACTIVE );
+        if ( !this._multiselect ) {
+          this.els.dropdownOptions.removeClass( ClassName.ACTIVE );
         }
         $option.prop('selected', true);
         $dropdownItem.removeClass( ClassName.HOVER_BG ).addClass( ClassName.ACTIVE );
       }
-      _._externalFeedback();
+      this._externalFeedback();
     }
 
     /**
@@ -595,13 +594,12 @@ let SelectDropdownIndex = 1
     }
 
     _buildBtnSelect() {
-      var _ = this;
       return $('<button>', {
-        class: _._config.classBtnSelect + ' dropdown-toggle',
+        class: this._config.classBtnSelect + ' dropdown-toggle',
         type: 'button',
-        id: _.ids.dropdownButtonId,
+        id: this.ids.dropdownButtonId,
         'data-toggle': 'dropdown',
-        'data-target': '#' + _.ids.dropdownContainerId,
+        'data-target': '#' + this.ids.dropdownContainerId,
         'aria-haspopup': 'true',
         'aria-expanded': 'false'
       })
@@ -667,7 +665,6 @@ let SelectDropdownIndex = 1
     }
 
     _buildShowSelected() {
-      var _ = this;
       var $showSelectedItem = $('<a>', {
         href: '#',
         class:  ClassName.ITEM,
@@ -789,10 +786,9 @@ let SelectDropdownIndex = 1
     }
 
     _buildDropdownItemNoResults() {
-      var _ = this;
       return $( '<span>', {
         class: ClassName.ITEM + ' ' + ClassName.TEXT_MUTED + ' ' + ClassName.BG_TRANSPARENT,
-        text: _._config.textNoResults
+        text: this._config.textNoResults
       }).hide();
     }
 
@@ -838,8 +834,7 @@ let SelectDropdownIndex = 1
     }
 
     _incrementIndex( index ) {
-      var _ = this;
-      _._indexes.push( index.toString() );
+      this._indexes.push( index.toString() );
       index++;
       return index;
     }
@@ -852,7 +847,6 @@ let SelectDropdownIndex = 1
     }
 
     _buildDropdownItem( $option ) {
-      var _ = this;
       var $dropdownItem = $( '<a>', {
         href: '#',
         class: ClassName.ITEM,
@@ -1112,14 +1106,13 @@ let SelectDropdownIndex = 1
      * @param {integer} index Dropdown menu item index.
      */
     _hoverSet( index ) {
-      var _ = this;
       this._hoverRemoveAll()
       if ( typeof index === typeof undefined ) {
-        var $item = _.els.dropdownOptions.first();
+        var $item = this.els.dropdownOptions.first();
       } else {
-        var $item = _._dropdownItemByIndex( index );
+        var $item = this._dropdownItemByIndex( index );
       }
-      _._hoverItem = $item;
+      this._hoverItem = $item;
       this._hoverAdd( $item )
     }
 
@@ -1129,8 +1122,7 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _hoverUp() {
-      var _ = this;
-      var current = _._hoverItem;
+      var current = this._hoverItem;
       if (
         typeof current !== typeof undefined &&
         current.length
@@ -1140,7 +1132,7 @@ let SelectDropdownIndex = 1
       if ( typeof prev !== typeof undefined && prev.length ) {
         this._hoverRemove( current )
         this._hoverAdd( prev )
-        _._hoverItem = prev;
+        this._hoverItem = prev;
       }
     }
 
@@ -1150,8 +1142,7 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _hoverDown() {
-      var _ = this;
-      var current = _._hoverItem;
+      var current = this._hoverItem;
       if (
         typeof current !== typeof undefined &&
         current.length
@@ -1161,7 +1152,7 @@ let SelectDropdownIndex = 1
       if ( typeof next !== typeof undefined && next.length ) {
         this._hoverRemove( current )
         this._hoverAdd( next )
-        _._hoverItem = next;
+        this._hoverItem = next;
       }
     }
 
@@ -1190,10 +1181,9 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _sortReset() {
-      var _ = this;
       var i;
-      for ( i = _.els.dropdownItems.length; i >= 0; i--) {
-        _._dropdownItemByIndex( i ).prependTo( _.els.dropdownItemsContainer );
+      for ( i = this.els.dropdownItems.length; i >= 0; i--) {
+        this._dropdownItemByIndex( i ).prependTo( this.els.dropdownItemsContainer );
       }
     }
 
@@ -1206,18 +1196,17 @@ let SelectDropdownIndex = 1
      * @return {undefined}
      */
     _reorder( indexes ) {
-      var _ = this;
-      _.els.dropdownItemNoResults.hide();
+      this.els.dropdownItemNoResults.hide();
       if ( typeof indexes === typeof undefined || indexes.length == 0) {
-        _.els.dropdownItemNoResults.show();
+        this.els.dropdownItemNoResults.show();
         return;
       }
       var indexesReversed = indexes.slice(0); // Clone
       indexesReversed = indexesReversed.reverse();
       $.each( indexesReversed, function( index, value ) {
-        _._dropdownItemByIndex( value ).prependTo( _.els.dropdownItemsContainer );
+        this._dropdownItemByIndex( value ).prependTo( this.els.dropdownItemsContainer );
       });
-      _._hideInitialControls();
+      this._hideInitialControls();
     }
 
     /**
