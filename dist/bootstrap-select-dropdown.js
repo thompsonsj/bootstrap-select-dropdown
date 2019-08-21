@@ -297,7 +297,9 @@ var external_Fuse_ = __webpack_require__(1);
 var external_Fuse_default = /*#__PURE__*/__webpack_require__.n(external_Fuse_);
 
 // CONCATENATED MODULE: ./src/js/bootstrap-select-dropdown.js
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -654,7 +656,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
           }
         }
 
-        config = _objectSpread({}, Default, config);
+        config = _objectSpread({}, Default, {}, config);
         util.typeCheckConfig(NAME, config, DefaultType);
 
         if (!this._multiselect) {
@@ -975,7 +977,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
         var _ = this;
 
         return $('<button>', {
-          class: _._config.classBtnSelect + ' dropdown-toggle',
+          "class": _._config.classBtnSelect + ' dropdown-toggle',
           type: 'button',
           id: _.ids.dropdownButtonId,
           'data-toggle': 'dropdown',
@@ -994,7 +996,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
       value: function _buildControlClear() {
         return $('<a>', {
           href: '#',
-          class: ClassName.ITEM
+          "class": ClassName.ITEM
         }).html(this._config.htmlClear);
       }
       /**
@@ -1010,12 +1012,12 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
         if (!this._config.selectButtons) {
           element = $('<a>', {
             href: '#',
-            class: ClassName.ITEM
+            "class": ClassName.ITEM
           });
         } else {
           element = $('<button>', {
             type: 'button',
-            class: this._config.classBtnDeselectAll
+            "class": this._config.classBtnDeselectAll
           });
         }
 
@@ -1034,12 +1036,12 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
         if (!this._config.selectButtons) {
           element = $('<a>', {
             href: '#',
-            class: ClassName.ITEM
+            "class": ClassName.ITEM
           });
         } else {
           element = $('<button>', {
             type: 'button',
-            class: this._config.classBtnSelectAll
+            "class": this._config.classBtnSelectAll
           });
         }
 
@@ -1052,7 +1054,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
 
         var $showSelectedItem = $('<a>', {
           href: '#',
-          class: ClassName.ITEM,
+          "class": ClassName.ITEM,
           text: 'Show selected'
         });
         return $showSelectedItem;
@@ -1062,7 +1064,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
       value: function _buildControlSearch() {
         return $('<input>', {
           type: 'text',
-          class: 'form-control',
+          "class": 'form-control',
           placeholder: 'Search',
           'aria-label': 'Search',
           'aria-describedby': this.ids.controlSearchId
@@ -1073,36 +1075,36 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
       value: function _buildDropdown() {
         var $dropdown = $('<div>', {
           id: this.ids.dropdownContainerId,
-          class: ClassName.DROPDOWN
+          "class": ClassName.DROPDOWN
         }); // Build dropdown.
 
         if (this._config.search) {
           var $inputGroup = $('<div>', {
-            class: ClassName.INPUT_GROUP
+            "class": ClassName.INPUT_GROUP
           });
           $inputGroup.append(this.els.controlSearch);
 
           if (this._config.selectButtons) {
             if (this._config.deselectAll) {
               $inputGroup.append($('<div>', {
-                class: ClassName.INPUT_GROUP_APPEND
+                "class": ClassName.INPUT_GROUP_APPEND
               }).append(this.els.deselectAll));
             }
 
             if (this._config.selectAll) {
               $inputGroup.append($('<div>', {
-                class: ClassName.INPUT_GROUP_APPEND
+                "class": ClassName.INPUT_GROUP_APPEND
               }).append(this.els.selectAll));
             }
           }
 
           $inputGroup.append($('<div>', {
-            class: ClassName.INPUT_GROUP_APPEND
+            "class": ClassName.INPUT_GROUP_APPEND
           }).append(this.els.btnSelect));
           $dropdown.append($inputGroup);
         } else if (this._config.selectButtons) {
           var $btnGroup = $('<div>', {
-            class: ClassName.BTN_GROUP
+            "class": ClassName.BTN_GROUP
           });
 
           if (this._config.deselectAll) {
@@ -1114,7 +1116,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
           }
 
           $btnGroup.append($('<div>', {
-            class: ClassName.BTN_GROUP
+            "class": ClassName.BTN_GROUP
           }).append(this.els.btnSelect));
           $dropdown.append($btnGroup);
         } else {
@@ -1127,7 +1129,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
       key: "_buildDropdownMenu",
       value: function _buildDropdownMenu() {
         var $dropdownMenu = $('<div>', {
-          class: ClassName.MENU,
+          "class": ClassName.MENU,
           'aria-labelledby': this.ids.dropdownButtonId
         });
 
@@ -1156,7 +1158,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
         var _ = this;
 
         return $('<span>', {
-          class: ClassName.ITEM + ' ' + ClassName.TEXT_MUTED + ' ' + ClassName.BG_TRANSPARENT,
+          "class": ClassName.ITEM + ' ' + ClassName.TEXT_MUTED + ' ' + ClassName.BG_TRANSPARENT,
           text: _._config.textNoResults
         }).hide();
       }
@@ -1212,7 +1214,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
       key: "_buildDropdownHeader",
       value: function _buildDropdownHeader(text) {
         return $('<h6>', {
-          class: 'dropdown-header',
+          "class": 'dropdown-header',
           text: text
         });
       }
@@ -1223,7 +1225,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
 
         var $dropdownItem = $('<a>', {
           href: '#',
-          class: ClassName.ITEM,
+          "class": ClassName.ITEM,
           text: $option.text()
         });
 
@@ -1776,7 +1778,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
         return this.each(function () {
           var data = $(this).data(DATA_KEY);
 
-          var _config = _objectSpread({}, SelectDropdown.Default, $(this).data(), _typeof(config) === 'object' && config, {
+          var _config = _objectSpread({}, SelectDropdown.Default, {}, $(this).data(), {}, _typeof(config) === 'object' && config, {
             SelectDropdownIndex: SelectDropdownIndex
           });
 
