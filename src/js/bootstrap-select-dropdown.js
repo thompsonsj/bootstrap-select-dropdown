@@ -35,7 +35,6 @@ let SelectDropdownIndex = 1
      // Behaviour
      hideSelect: true,
      search: true,
-     observeDomMutations: false,
      maxHeight: '300px',
      keyboard: true,
      badges: true, // Multiselect only
@@ -71,7 +70,6 @@ let SelectDropdownIndex = 1
      maxListLength        : 'number',
      hideSelect           : 'boolean',
      search               : 'boolean',
-     observeDomMutations  : 'boolean',
      maxHeight            : 'string',
      keyboard             : 'boolean',
      badges               : 'boolean',
@@ -345,7 +343,6 @@ let SelectDropdownIndex = 1
           .on( Event.FOCUS, (event) => {
             this._hoverSet()
             if ( this.els.btnSelect.attr('aria-expanded') == 'false' ) {
-              this._alignLeft()
               this.els.btnSelect.dropdown('toggle');
               setTimeout( () => {
                 this._searchControlFocus()
@@ -355,7 +352,6 @@ let SelectDropdownIndex = 1
         this.els.controlSearch
           .on(Event.BLUR, (event) => {
             this._hoverRemoveAll()
-            this._alignRight()
           })
         // Handle cut and paste.
         this.els.controlSearch.bind({
@@ -503,19 +499,6 @@ let SelectDropdownIndex = 1
           this.els.badgeContainer
         )
       }
-      // DOM mutation observer
-      /*if ( _._config.observeDomMutations ) {
-        var config = { childList: true, subtree: true };
-        var callback = function( mutationsList ) {
-          for( var mutation of mutationsList ) {
-            if ( mutation.type == 'childList') {
-              _._refresh();
-            }
-          }
-        };
-        var observer = new MutationObserver( callback );
-        observer.observe( $el[0], config );
-      }*/
     }
 
     /**
@@ -1277,18 +1260,6 @@ let SelectDropdownIndex = 1
         selector = '.' + classes.join('.')
       }
       return selector;
-    }
-
-    _alignLeft() {
-      //this.els.dropdownMenu.css('width', '100%');
-      //this.els.dropdownMenu.removeClass( ClassName.ALIGNMENT_RIGHT );
-      //this.els.btnSelect.dropdown('update');
-    }
-
-    _alignRight() {
-      //this.els.dropdownMenu.css('width', 'auto');
-      //this.els.dropdownMenu.addClass( ClassName.ALIGNMENT_RIGHT );
-      //this.els.btnSelect.dropdown('update');
     }
 
     /**
