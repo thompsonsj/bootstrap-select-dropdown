@@ -674,75 +674,74 @@ let SelectDropdownIndex = 1
 
       // Build dropdown.
       if ( this._config.search ) {
-        let $inputGroup = $('<div>', {
-          class: ClassName.INPUT_GROUP
-        })
-
-        $inputGroup.append( this.els.controlSearch )
-
-        if ( this._config.selectButtons ) {
-
-          if ( this._config.deselectAll ) {
-            $inputGroup
-              .append(
-                $('<div>', {
-                  class: ClassName.INPUT_GROUP_APPEND
-                })
-              .append( this.els.deselectAll )
-            )
-          }
-
-          if ( this._config.selectAll ) {
-            $inputGroup
-              .append(
-                $('<div>', {
-                  class: ClassName.INPUT_GROUP_APPEND
-                })
-              .append( this.els.selectAll )
-            )
-          }
-
-        }
-
-        $inputGroup
-          .append(
-            $('<div>', {
-              class: ClassName.INPUT_GROUP_APPEND
-            })
-            .append( this.els.btnSelect )
-          )
-
         $dropdown
-          .append( $inputGroup );
+          .append( this._buildDropdownInputGroup() );
       }
       else if ( this._config.selectButtons ) {
-        let $btnGroup = $('<div>', {
-          class: ClassName.BTN_GROUP
-        })
-
-        if ( this._config.deselectAll ) {
-          $btnGroup.append( this.els.deselectAll )
-        }
-
-        if ( this._config.selectAll ) {
-          $btnGroup.append( this.els.selectAll )
-        }
-
-        $btnGroup
-          .append(
-            $('<div>', {
-              class: ClassName.BTN_GROUP
-            })
-            .append( this.els.btnSelect )
-          )
-
-        $dropdown.append( $btnGroup );
+        $dropdown
+          .append( this._buildDropdownBtnGroup() );
       }
       else {
         $dropdown.append( this.els.btnSelect )
       }
 
       return $dropdown
+    }
+
+    _buildDropdownInputGroup() {
+      let $inputGroup = $("<div>", {
+        class: ClassName.INPUT_GROUP
+      })
+
+      $inputGroup.append(this.els.controlSearch)
+
+      if (this._config.selectButtons) {
+        if (this._config.deselectAll) {
+          $inputGroup.append(
+            $("<div>", {
+              class: ClassName.INPUT_GROUP_APPEND
+            }).append(this.els.deselectAll)
+          )
+        }
+
+        if (this._config.selectAll) {
+          $inputGroup.append(
+            $("<div>", {
+              class: ClassName.INPUT_GROUP_APPEND
+            }).append(this.els.selectAll)
+          )
+        }
+      }
+
+      $inputGroup.append(
+        $("<div>", {
+          class: ClassName.INPUT_GROUP_APPEND
+        }).append(this.els.btnSelect)
+      )
+
+      return $inputGroup
+    }
+
+    _buildDropdownBtnGroup() {
+      let $btnGroup = $("<div>", {
+        class: ClassName.BTN_GROUP
+      })
+
+      if (this._config.deselectAll) {
+        $btnGroup.append(this.els.deselectAll)
+      }
+
+      if (this._config.selectAll) {
+        $btnGroup.append(this.els.selectAll)
+      }
+
+      $btnGroup.append(
+        $("<div>", {
+          class: ClassName.BTN_GROUP
+        }).append(this.els.btnSelect)
+      )
+
+      return $btnGroup
     }
 
     _buildDropdownMenu() {
