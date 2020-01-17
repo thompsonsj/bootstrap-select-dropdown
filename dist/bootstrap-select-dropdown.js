@@ -344,7 +344,6 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     // Behaviour
     hideSelect: true,
     search: true,
-    observeDomMutations: false,
     maxHeight: '300px',
     keyboard: true,
     badges: true,
@@ -390,7 +389,6 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     maxListLength: 'number',
     hideSelect: 'boolean',
     search: 'boolean',
-    observeDomMutations: 'boolean',
     maxHeight: 'string',
     keyboard: 'boolean',
     badges: 'boolean',
@@ -544,9 +542,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
        * @return {undefined}
        */
       value: function toggle($dropdownItem) {
-        var _ = this;
-
-        var $el = $(_._element);
+        var $el = $(this._element);
         var itemIndex = $dropdownItem.data('option');
         var $option = $el.find('option').eq(itemIndex);
 
@@ -554,15 +550,15 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
           $option.prop('selected', false);
           $dropdownItem.removeClass(ClassName.ACTIVE);
         } else {
-          if (!_._multiselect) {
-            _.els.dropdownOptions.removeClass(ClassName.ACTIVE);
+          if (!this._multiselect) {
+            this.els.dropdownOptions.removeClass(ClassName.ACTIVE);
           }
 
           $option.prop('selected', true);
           $dropdownItem.removeClass(ClassName.HOVER_BG).addClass(ClassName.ACTIVE);
         }
 
-        _._externalFeedback();
+        this._externalFeedback();
       }
       /**
        * Deselect a dropdown item.
@@ -690,8 +686,6 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
             _this2._hoverSet();
 
             if (_this2.els.btnSelect.attr('aria-expanded') == 'false') {
-              _this2._alignLeft();
-
               _this2.els.btnSelect.dropdown('toggle');
 
               setTimeout(function () {
@@ -701,8 +695,6 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
           });
           this.els.controlSearch.on(Event.BLUR, function (event) {
             _this2._hoverRemoveAll();
-
-            _this2._alignRight();
           }); // Handle cut and paste.
 
           this.els.controlSearch.bind({
@@ -862,21 +854,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
 
         if (this._config.badges) {
           this.els.dropdown.after(this.els.badgeContainer);
-        } // DOM mutation observer
-
-        /*if ( _._config.observeDomMutations ) {
-          var config = { childList: true, subtree: true };
-          var callback = function( mutationsList ) {
-            for( var mutation of mutationsList ) {
-              if ( mutation.type == 'childList') {
-                _._refresh();
-              }
-            }
-          };
-          var observer = new MutationObserver( callback );
-          observer.observe( $el[0], config );
-        }*/
-
+        }
       }
       /**
        * Check whether the supplied element has a `multiple` attribute,
@@ -974,14 +952,12 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_buildBtnSelect",
       value: function _buildBtnSelect() {
-        var _ = this;
-
         return $('<button>', {
-          "class": _._config.classBtnSelect + ' dropdown-toggle',
+          "class": this._config.classBtnSelect + ' dropdown-toggle',
           type: 'button',
-          id: _.ids.dropdownButtonId,
+          id: this.ids.dropdownButtonId,
           'data-toggle': 'dropdown',
-          'data-target': '#' + _.ids.dropdownContainerId,
+          'data-target': '#' + this.ids.dropdownContainerId,
           'aria-haspopup': 'true',
           'aria-expanded': 'false'
         }).text('Select');
@@ -1050,8 +1026,6 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_buildShowSelected",
       value: function _buildShowSelected() {
-        var _ = this;
-
         var $showSelectedItem = $('<a>', {
           href: '#',
           "class": ClassName.ITEM,
@@ -1079,51 +1053,61 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
         }); // Build dropdown.
 
         if (this._config.search) {
-          var $inputGroup = $('<div>', {
-            "class": ClassName.INPUT_GROUP
-          });
-          $inputGroup.append(this.els.controlSearch);
-
-          if (this._config.selectButtons) {
-            if (this._config.deselectAll) {
-              $inputGroup.append($('<div>', {
-                "class": ClassName.INPUT_GROUP_APPEND
-              }).append(this.els.deselectAll));
-            }
-
-            if (this._config.selectAll) {
-              $inputGroup.append($('<div>', {
-                "class": ClassName.INPUT_GROUP_APPEND
-              }).append(this.els.selectAll));
-            }
-          }
-
-          $inputGroup.append($('<div>', {
-            "class": ClassName.INPUT_GROUP_APPEND
-          }).append(this.els.btnSelect));
-          $dropdown.append($inputGroup);
+          $dropdown.append(this._buildDropdownInputGroup());
         } else if (this._config.selectButtons) {
-          var $btnGroup = $('<div>', {
-            "class": ClassName.BTN_GROUP
-          });
-
-          if (this._config.deselectAll) {
-            $btnGroup.append(this.els.deselectAll);
-          }
-
-          if (this._config.selectAll) {
-            $btnGroup.append(this.els.selectAll);
-          }
-
-          $btnGroup.append($('<div>', {
-            "class": ClassName.BTN_GROUP
-          }).append(this.els.btnSelect));
-          $dropdown.append($btnGroup);
+          $dropdown.append(this._buildDropdownBtnGroup());
         } else {
           $dropdown.append(this.els.btnSelect);
         }
 
         return $dropdown;
+      }
+    }, {
+      key: "_buildDropdownInputGroup",
+      value: function _buildDropdownInputGroup() {
+        var $inputGroup = $("<div>", {
+          "class": ClassName.INPUT_GROUP
+        });
+        $inputGroup.append(this.els.controlSearch);
+
+        if (this._config.selectButtons) {
+          if (this._config.deselectAll) {
+            $inputGroup.append($("<div>", {
+              "class": ClassName.INPUT_GROUP_APPEND
+            }).append(this.els.deselectAll));
+          }
+
+          if (this._config.selectAll) {
+            $inputGroup.append($("<div>", {
+              "class": ClassName.INPUT_GROUP_APPEND
+            }).append(this.els.selectAll));
+          }
+        }
+
+        $inputGroup.append($("<div>", {
+          "class": ClassName.INPUT_GROUP_APPEND
+        }).append(this.els.btnSelect));
+        return $inputGroup;
+      }
+    }, {
+      key: "_buildDropdownBtnGroup",
+      value: function _buildDropdownBtnGroup() {
+        var $btnGroup = $("<div>", {
+          "class": ClassName.BTN_GROUP
+        });
+
+        if (this._config.deselectAll) {
+          $btnGroup.append(this.els.deselectAll);
+        }
+
+        if (this._config.selectAll) {
+          $btnGroup.append(this.els.selectAll);
+        }
+
+        $btnGroup.append($("<div>", {
+          "class": ClassName.BTN_GROUP
+        }).append(this.els.btnSelect));
+        return $btnGroup;
       }
     }, {
       key: "_buildDropdownMenu",
@@ -1155,11 +1139,9 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_buildDropdownItemNoResults",
       value: function _buildDropdownItemNoResults() {
-        var _ = this;
-
         return $('<span>', {
           "class": ClassName.ITEM + ' ' + ClassName.TEXT_MUTED + ' ' + ClassName.BG_TRANSPARENT,
-          text: _._config.textNoResults
+          text: this._config.textNoResults
         }).hide();
       }
     }, {
@@ -1203,9 +1185,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_incrementIndex",
       value: function _incrementIndex(index) {
-        var _ = this;
-
-        _._indexes.push(index.toString());
+        this._indexes.push(index.toString());
 
         index++;
         return index;
@@ -1221,8 +1201,6 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_buildDropdownItem",
       value: function _buildDropdownItem($option) {
-        var _ = this;
-
         var $dropdownItem = $('<a>', {
           href: '#',
           "class": ClassName.ITEM,
@@ -1519,17 +1497,15 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_hoverSet",
       value: function _hoverSet(index) {
-        var _ = this;
-
         this._hoverRemoveAll();
 
         if (_typeof(index) === ( true ? "undefined" : undefined)) {
-          var $item = _.els.dropdownOptions.first();
+          var $item = this.els.dropdownOptions.first();
         } else {
-          var $item = _._dropdownItemByIndex(index);
+          var $item = this._dropdownItemByIndex(index);
         }
 
-        _._hoverItem = $item;
+        this._hoverItem = $item;
 
         this._hoverAdd($item);
       }
@@ -1542,9 +1518,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_hoverUp",
       value: function _hoverUp() {
-        var _ = this;
-
-        var current = _._hoverItem;
+        var current = this._hoverItem;
 
         if (_typeof(current) !== ( true ? "undefined" : undefined) && current.length) {
           var prev = current.prevAll('a:visible').first();
@@ -1555,7 +1529,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
 
           this._hoverAdd(prev);
 
-          _._hoverItem = prev;
+          this._hoverItem = prev;
         }
       }
       /**
@@ -1567,9 +1541,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_hoverDown",
       value: function _hoverDown() {
-        var _ = this;
-
-        var current = _._hoverItem;
+        var current = this._hoverItem;
 
         if (_typeof(current) !== ( true ? "undefined" : undefined) && current.length) {
           var next = current.nextAll('a:visible').first();
@@ -1580,7 +1552,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
 
           this._hoverAdd(next);
 
-          _._hoverItem = next;
+          this._hoverItem = next;
         }
       }
     }, {
@@ -1617,12 +1589,10 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_sortReset",
       value: function _sortReset() {
-        var _ = this;
-
         var i;
 
-        for (i = _.els.dropdownItems.length; i >= 0; i--) {
-          _._dropdownItemByIndex(i).prependTo(_.els.dropdownItemsContainer);
+        for (i = this.els.dropdownItems.length; i >= 0; i--) {
+          this._dropdownItemByIndex(i).prependTo(this.els.dropdownItemsContainer);
         }
       }
       /**
@@ -1637,13 +1607,10 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
     }, {
       key: "_reorder",
       value: function _reorder(indexes) {
-        var _ = this;
-
-        _.els.dropdownItemNoResults.hide();
+        this.els.dropdownItemNoResults.hide();
 
         if (_typeof(indexes) === ( true ? "undefined" : undefined) || indexes.length == 0) {
-          _.els.dropdownItemNoResults.show();
-
+          this.els.dropdownItemNoResults.show();
           return;
         }
 
@@ -1651,10 +1618,10 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
 
         indexesReversed = indexesReversed.reverse();
         $.each(indexesReversed, function (index, value) {
-          _._dropdownItemByIndex(value).prependTo(_.els.dropdownItemsContainer);
+          this._dropdownItemByIndex(value).prependTo(this.els.dropdownItemsContainer);
         });
 
-        _._hideInitialControls();
+        this._hideInitialControls();
       }
       /**
        * Sort: Move selected items to the top.
@@ -1740,18 +1707,6 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
 
         return selector;
       }
-    }, {
-      key: "_alignLeft",
-      value: function _alignLeft() {//this.els.dropdownMenu.css('width', '100%');
-        //this.els.dropdownMenu.removeClass( ClassName.ALIGNMENT_RIGHT );
-        //this.els.btnSelect.dropdown('update');
-      }
-    }, {
-      key: "_alignRight",
-      value: function _alignRight() {} //this.els.dropdownMenu.css('width', 'auto');
-      //this.els.dropdownMenu.addClass( ClassName.ALIGNMENT_RIGHT );
-      //this.els.btnSelect.dropdown('update');
-
       /**
        * Helper: Compare two arrays.
        *
