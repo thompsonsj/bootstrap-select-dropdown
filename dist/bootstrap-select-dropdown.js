@@ -116,7 +116,7 @@ var external_$_default = /*#__PURE__*/__webpack_require__.n(external_$_);
 // CONCATENATED MODULE: ./node_modules/bootstrap/js/src/util.js
 /**
  * --------------------------------------------------------------------------
- * Bootstrap (v4.3.1): util.js
+ * Bootstrap (v4.4.1): util.js
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * --------------------------------------------------------------------------
  */
@@ -285,9 +285,27 @@ const Util = {
     }
 
     return Util.findShadowRoot(element.parentNode)
+  },
+
+  jQueryDetection() {
+    if (typeof external_$_default.a === 'undefined') {
+      throw new TypeError('Bootstrap\'s JavaScript requires jQuery. jQuery must be included before Bootstrap\'s JavaScript.')
+    }
+
+    const version = external_$_default.a.fn.jquery.split(' ')[0].split('.')
+    const minMajor = 1
+    const ltMajor = 2
+    const minMinor = 9
+    const minPatch = 1
+    const maxMajor = 4
+
+    if (version[0] < ltMajor && version[1] < minMinor || version[0] === minMajor && version[1] === minMinor && version[2] < minPatch || version[0] >= maxMajor) {
+      throw new Error('Bootstrap\'s JavaScript requires at least jQuery v1.9.1 but less than v4.0.0')
+    }
   }
 }
 
+Util.jQueryDetection()
 setTransitionEndSupport()
 
 /* harmony default export */ var util = (Util);
@@ -299,7 +317,7 @@ var external_Fuse_default = /*#__PURE__*/__webpack_require__.n(external_Fuse_);
 // CONCATENATED MODULE: ./src/js/bootstrap-select-dropdown.js
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -440,13 +458,12 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
   };
   var Keyword = {
     COUNT_SELECTED: '%count_selected%'
-    /**
-     * ------------------------------------------------------------------------
-     * Class Definition
-     * ------------------------------------------------------------------------
-     */
-
   };
+  /**
+   * ------------------------------------------------------------------------
+   * Class Definition
+   * ------------------------------------------------------------------------
+   */
 
   var SelectDropdown =
   /*#__PURE__*/
