@@ -346,7 +346,7 @@ var bootstrap_select_dropdown_SelectDropdown = function ($) {
    * ------------------------------------------------------------------------
    */
   var NAME = 'selectDropdown';
-  var VERSION = '0.14.5';
+  var VERSION = '0.14.6';
   var DATA_KEY = 'bs.selectDropdown';
   var EVENT_KEY = ".".concat(DATA_KEY);
   var DATA_API_KEY = '.data-api';
