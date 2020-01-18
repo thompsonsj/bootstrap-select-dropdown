@@ -9,6 +9,7 @@
     "serve": "webpack-serve --config webpack.dev.js",
     "version": "npm run dev && npm run build && git add .",
     "postversion": "git push && npm publish",
+    "test:server": "browser-sync start --port 8080 --server 'docs'",
     "test:chromium": "testcafe chromium test.js",
     "test:chrome": "testcafe chrome test.js",
     "test:firefox": "testcafe firefox test.js"

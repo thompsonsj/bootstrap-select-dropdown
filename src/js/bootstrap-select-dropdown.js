@@ -138,9 +138,14 @@ let SelectDropdownIndex = 1
       this._multiselect = this._isMultiselect(element)
       this._config  = this._getConfig(config)
       this._element = element
-      this._prefix  = 'bsd' + this._config.SelectDropdownIndex + '-'
-
-      this._indexes = []
+      this._prefix =
+        "bsd" + this._config.SelectDropdownIndex +
+        "-" +
+        Math.random()
+          .toString(36)
+          .substring(7) +
+        "-"
+        this._indexes = []
       this._lastSearch = null
       this._resultsChanged = false
       this._hoverItem = $()
