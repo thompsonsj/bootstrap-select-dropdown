@@ -38,7 +38,7 @@
     "handlebars": "^4.7.2",
     "handlebars-loader": "^1.7.1",
     "handlebars-webpack-plugin": "^1.8.0",
-    "highlight.js": "^9.17.1",
+    "highlight.js": "^10.4.1",
     "html-entities": "^1.2.1",
     "jquery": "^3.4.1",
     "node-sass": "^4.13.1",
