@@ -6,7 +6,7 @@ hljs.initHighlightingOnLoad();
 import SelectDropdown from './js/bootstrap-select-dropdown.js';
 
 $(document).ready(function(){
-  $('#version').text('v' + '[AIV]{version}[/AIV]')
+  $('#version').text('v' + __BSD_VERSION__)
   $( "select#demo_overview_minimal_multiselect" ).selectDropdown({
     'search': false,
     'badges': false,
