@@ -5,8 +5,8 @@ $container-max-widths: (
   xl: 1600px
 );
 
-@import "~bootstrap/scss/bootstrap";
-@import "~highlight.js/styles/default.css";
+@import "bootstrap/scss/bootstrap";
+@import "highlight.js/styles/default.css";
 
 /**
  * Styles for docs only (not for dist).

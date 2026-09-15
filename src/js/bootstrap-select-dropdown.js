@@ -18,7 +18,7 @@ let SelectDropdownIndex = 1
     */
 
    const NAME               = 'selectDropdown'
-   const VERSION            = '[AIV]{version}[/AIV]'
+   const VERSION            = __BSD_VERSION__
    const DATA_KEY           = 'bs.selectDropdown'
    const EVENT_KEY          = `.${DATA_KEY}`
    const DATA_API_KEY       = '.data-api'
